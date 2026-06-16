@@ -573,6 +573,10 @@ export interface HealthTopic {
          */
         description: string;
         /**
+         * Optional image shown on this section card. If empty, the card uses an automatic icon.
+         */
+        image?: (string | null) | Media;
+        /**
          * Create a page in the Pages collection using the standard page template, then link it here.
          */
         detailPage: string | Page;
@@ -1791,6 +1795,7 @@ export interface HealthTopicsSelect<T extends boolean = true> {
     | {
         title?: T;
         description?: T;
+        image?: T;
         detailPage?: T;
         keyPoints?:
           | T

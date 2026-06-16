@@ -431,73 +431,51 @@ export function HomeTopicsAndResources({
           const topicAccent = getTopicAccent(topic.slug, topic.icon)
           const TopicIcon = topic.icon ? TOPIC_ICON_MAP[topic.icon] : undefined
           const canRenderImage = Boolean(topic.iconImageUrl) && !failedImageIds.has(topic.id)
-          const hasHealthcareBackground = topic.slug === 'healthcare-system'
 
           return (
             <Link
               key={topic.id}
               href={getTopicHref(topic.slug)}
-              className={`group animate-fadeInScale rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-800 ${topicAccent.card}`}
+              className={`group animate-fadeInScale rounded-2xl border border-slate-200 bg-white p-3 shadow-sm transition-colors dark:border-slate-700 dark:bg-slate-800 ${topicAccent.card}`}
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div
-                className={`relative mb-4 flex h-32 items-center overflow-hidden rounded-xl bg-gradient-to-br bg-cover bg-center px-4 ${topicAccent.panel}`}
-                style={
-                  hasHealthcareBackground ? { backgroundImage: "url('/Section1.png')" } : undefined
-                }
+                className={`relative mb-3 flex h-28 items-end overflow-hidden rounded-xl bg-gradient-to-br p-2.5 ${topicAccent.panel}`}
               >
-                {hasHealthcareBackground ? (
-                  <span
-                    className="absolute inset-0 bg-gradient-to-r from-slate-900/55 via-slate-900/20 to-transparent"
-                    aria-hidden="true"
+                {canRenderImage ? (
+                  <Image
+                    src={topic.iconImageUrl}
+                    alt={topic.iconImageAlt}
+                    fill
+                    sizes="(min-width: 1280px) 280px, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover"
+                    onError={() => markImageFailed(topic.id)}
                   />
                 ) : null}
-                {canRenderImage ? (
-                  <div className="relative z-10 flex w-full items-center justify-between gap-3">
-                    <div className="min-w-0 flex-1">
-                      <Image
-                        src={topic.iconImageUrl}
-                        alt={topic.iconImageAlt}
-                        width={220}
-                        height={132}
-                        className="h-[104px] w-auto max-w-full object-contain"
-                        onError={() => markImageFailed(topic.id)}
-                      />
-                    </div>
-                    <span
-                      className={`flex h-16 w-16 shrink-0 items-center justify-center rounded-full border shadow-sm ${topicAccent.frame}`}
-                    >
-                      {TopicIcon ? (
-                        <TopicIcon className="h-8 w-8" strokeWidth={1.85} />
-                      ) : (
-                        <span className="text-xl font-bold">
-                          {topic.title.trim().charAt(0).toUpperCase()}
-                        </span>
-                      )}
+                <span
+                  className="absolute inset-0 bg-gradient-to-t from-white/55 via-white/20 to-transparent dark:from-slate-900/60 dark:via-slate-900/20"
+                  aria-hidden="true"
+                />
+                <span
+                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm ${topicAccent.frame}`}
+                >
+                  {TopicIcon ? (
+                    <TopicIcon className="h-5 w-5" strokeWidth={1.85} />
+                  ) : (
+                    <span className="text-base font-bold">
+                      {topic.title.trim().charAt(0).toUpperCase()}
                     </span>
-                  </div>
-                ) : (
-                  <span
-                    className={`relative z-10 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border shadow-sm ${topicAccent.frame}`}
-                  >
-                    {TopicIcon ? (
-                      <TopicIcon className="h-8 w-8" strokeWidth={1.85} />
-                    ) : (
-                      <span className="text-xl font-bold">
-                        {topic.title.trim().charAt(0).toUpperCase()}
-                      </span>
-                    )}
-                  </span>
-                )}
+                  )}
+                </span>
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-[15px] font-bold leading-tight tracking-tight text-slate-900 dark:text-white">
                 {topic.title}
               </h3>
-              <p className="mt-1 line-clamp-2 text-sm leading-6 text-slate-600 dark:text-slate-400">
+              <p className="mt-1 line-clamp-2 text-xs font-medium leading-5 text-slate-600 dark:text-slate-400">
                 {topic.description}
               </p>
               <span
-                className={`mt-4 inline-flex items-center gap-1 text-sm font-semibold ${topicAccent.arrow}`}
+                className={`mt-3 inline-flex items-center gap-1 text-xs font-bold ${topicAccent.arrow}`}
               >
                 Learn More
                 <ChevronRight className="h-4 w-4" />

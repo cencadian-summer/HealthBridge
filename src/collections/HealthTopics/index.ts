@@ -221,6 +221,15 @@ export const HealthTopics: CollectionConfig = {
               admin: { description: 'One-to-two sentence description of this section.' },
             },
             {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Optional image shown on this section card. If empty, the card uses an automatic icon.',
+              },
+            },
+            {
               name: 'detailPage',
               type: 'relationship',
               relationTo: 'pages',

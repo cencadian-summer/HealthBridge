@@ -26,7 +26,7 @@ export async function Footer() {
           aria-hidden="true"
         />
         <div
-          className="absolute inset-0 -z-10 bg-slate-900/45 backdrop-brightness-75"
+          className="absolute inset-0 -z-10 bg-green-950/60 backdrop-brightness-75"
           aria-hidden="true"
         />
 
@@ -44,11 +44,11 @@ export async function Footer() {
                 name="email"
                 type="email"
                 placeholder="email@address.com"
-                className="h-14 w-full rounded-lg border border-white/70 bg-white px-4 text-base text-slate-800 outline-none ring-blue-500 placeholder:text-slate-500 focus:ring-2"
+                className="h-14 w-full rounded-lg border border-green-100 bg-white px-4 text-base text-slate-800 outline-none ring-green-500 placeholder:text-slate-500 focus:ring-2"
               />
               <button
                 type="submit"
-                className="h-14 rounded-lg bg-blue-600 px-8 text-base font-semibold text-white transition-colors hover:bg-blue-700"
+                className="h-14 rounded-lg bg-green-600 px-8 text-base font-semibold text-white transition-colors hover:bg-green-700"
               >
                 Join
               </button>

@@ -33,6 +33,8 @@ const PlayBadgeIcon = () => (
 type TopicSection = {
   title: string
   description: string
+  imageUrl?: string
+  imageAlt?: string
   detailPageSlug: string
   keyPoints: string[]
 }
@@ -121,11 +123,11 @@ export function TopicDetailTemplate({
   }))
 
   return (
-    <div className="grid gap-5 lg:grid-cols-[246px_minmax(0,1fr)]">
-      <aside className="space-y-4">
-        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800/60">
+    <div className="grid gap-5 lg:grid-cols-[232px_minmax(0,1fr)]">
+      <aside className="space-y-3">
+        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3.5 dark:border-slate-700 dark:bg-slate-800/60">
           <h2
-            className={`text-2xl font-semibold tracking-tight ${topicAccent.arrow} dark:text-white`}
+            className={`text-xl font-semibold tracking-tight ${topicAccent.arrow} dark:text-white`}
           >
             {sidebarTitle}
           </h2>
@@ -142,18 +144,14 @@ export function TopicDetailTemplate({
           />
         </div>
 
-        <div className={`rounded-2xl border p-4 ${topicAccent.panel} border-transparent`}>
-          <h3
-            className={`text-xl font-semibold tracking-tight ${topicAccent.arrow} dark:text-white`}
-          >
-            Need Help?
-          </h3>
-          <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-300">
+        <div className="rounded-2xl border border-blue-500/30 bg-gradient-to-br from-blue-600 to-cyan-600 p-3.5 text-white shadow-sm shadow-blue-200/50 dark:border-blue-400/30 dark:from-blue-700 dark:to-cyan-700 dark:shadow-none">
+          <h3 className="text-lg font-semibold tracking-tight">Need Help?</h3>
+          <p className="mt-1 text-sm leading-6 text-blue-50">
             Ask a question or chat with our support team.
           </p>
           <button
             type="button"
-            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl border bg-white px-3 py-2 text-sm font-semibold shadow-sm ${topicAccent.arrow} border-white/70 dark:bg-slate-900/40 dark:border-white/10`}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-white/70 bg-white px-3 py-2 text-sm font-semibold text-blue-700 shadow-sm transition-colors hover:bg-blue-50 dark:border-white/20 dark:bg-white dark:text-blue-700 dark:hover:bg-blue-50"
           >
             <PhoneCall className="h-4 w-4" />
             Ask a Question
@@ -166,7 +164,7 @@ export function TopicDetailTemplate({
             download
             target="_blank"
             rel="noopener noreferrer"
-            className={`block rounded-2xl border p-4 transition-opacity hover:opacity-90 ${topicAccent.panel} border-transparent`}
+            className={`block rounded-2xl border p-3.5 transition-opacity hover:opacity-90 ${topicAccent.panel} border-transparent`}
           >
             <h3
               className={`flex items-center gap-1.5 text-sm font-semibold ${topicAccent.arrow} dark:text-white`}
@@ -189,7 +187,7 @@ export function TopicDetailTemplate({
             </p>
           </a>
         ) : (
-          <div className={`rounded-2xl border p-4 ${topicAccent.panel} border-transparent`}>
+          <div className={`rounded-2xl border p-3.5 ${topicAccent.panel} border-transparent`}>
             <h3
               className={`flex items-center gap-1.5 text-sm font-semibold ${topicAccent.arrow} dark:text-white`}
             >
@@ -216,21 +214,21 @@ export function TopicDetailTemplate({
 
       <section>
         <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-          <div className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_320px] xl:items-start">
+          <div className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_300px] xl:items-start">
             <div>
               <div className="flex items-start gap-3">
                 <span
-                  className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl border shadow-sm ${topicAccent.frame}`}
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border shadow-sm ${topicAccent.frame}`}
                 >
-                  <TopicIcon className="h-7 w-7" strokeWidth={1.8} />
+                  <TopicIcon className="h-6 w-6" strokeWidth={1.8} />
                 </span>
                 <div>
                   <h1
-                    className={`max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl ${topicAccent.arrow} dark:text-white`}
+                    className={`max-w-3xl text-3xl font-bold tracking-tight sm:text-4xl ${topicAccent.arrow} dark:text-white`}
                   >
                     {title}
                   </h1>
-                  <p className="mt-2 max-w-2xl text-base leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-2 max-w-2xl text-sm font-medium leading-6 text-slate-600 sm:text-base dark:text-slate-300">
                     {subtitle}
                   </p>
                 </div>
@@ -241,7 +239,7 @@ export function TopicDetailTemplate({
                   href={videoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`mt-4 inline-flex rounded-2xl border px-5 py-4 text-sm font-semibold transition-opacity hover:opacity-90 ${topicAccent.panel} border-transparent`}
+                  className={`mt-4 inline-flex rounded-2xl border px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 ${topicAccent.panel} border-transparent`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
@@ -255,7 +253,7 @@ export function TopicDetailTemplate({
                 </Link>
               ) : (
                 <div
-                  className={`mt-4 inline-flex rounded-2xl border px-5 py-4 text-sm font-semibold ${topicAccent.panel} border-transparent`}
+                  className={`mt-4 inline-flex rounded-2xl border px-4 py-3 text-sm font-semibold ${topicAccent.panel} border-transparent`}
                 >
                   <div>
                     <div className="flex items-center gap-2">
@@ -277,12 +275,12 @@ export function TopicDetailTemplate({
                   alt={detailImageAlt || title}
                   width={960}
                   height={720}
-                  className="h-full min-h-[240px] w-full object-cover"
+                  className="h-full min-h-[210px] w-full object-cover"
                 />
                 <span
-                  className={`absolute bottom-4 left-4 flex h-14 w-14 items-center justify-center rounded-2xl border shadow-lg ${topicAccent.frame}`}
+                  className={`absolute bottom-3 left-3 flex h-12 w-12 items-center justify-center rounded-2xl border shadow-lg ${topicAccent.frame}`}
                 >
-                  <TopicIcon className="h-7 w-7" strokeWidth={1.8} />
+                  <TopicIcon className="h-6 w-6" strokeWidth={1.8} />
                 </span>
               </div>
             ) : null}
@@ -297,44 +295,64 @@ export function TopicDetailTemplate({
               <article
                 key={section.title}
                 id={sectionAnchors[index]?.id}
-                className={`grid gap-3 rounded-2xl border bg-white p-3 shadow-sm transition-colors md:grid-cols-[214px_minmax(0,1fr)_222px] dark:bg-slate-800 ${topicAccent.card}`}
+                className={`grid gap-3 rounded-2xl border bg-white p-3 shadow-sm transition-colors md:grid-cols-[184px_minmax(0,1fr)_204px] dark:bg-slate-800 ${topicAccent.card}`}
               >
                 <div
-                  className={`relative flex h-28 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${topicAccent.panel}`}
+                  className={`relative flex h-24 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${topicAccent.panel}`}
                 >
-                  <div className="absolute -left-8 -top-8 h-20 w-20 rounded-full bg-white/30 dark:bg-white/10" />
-                  <div className="absolute -bottom-7 -right-8 h-20 w-20 rounded-full bg-white/40 dark:bg-white/10" />
-                  <div className={`z-10 rounded-full border p-4 shadow-sm ${topicAccent.frame}`}>
-                    <Icon className="h-11 w-11" strokeWidth={1.75} />
-                  </div>
+                  {section.imageUrl ? (
+                    <>
+                      <Image
+                        src={section.imageUrl}
+                        alt={section.imageAlt || section.title}
+                        fill
+                        sizes="(min-width: 1024px) 184px, 100vw"
+                        className="object-cover"
+                      />
+                      <span
+                        className="absolute inset-0 bg-gradient-to-t from-slate-950/20 to-transparent"
+                        aria-hidden="true"
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div className="absolute -left-7 -top-7 h-16 w-16 rounded-full bg-white/30 dark:bg-white/10" />
+                      <div className="absolute -bottom-6 -right-7 h-16 w-16 rounded-full bg-white/40 dark:bg-white/10" />
+                      <div
+                        className={`z-10 rounded-full border p-3 shadow-sm ${topicAccent.frame}`}
+                      >
+                        <Icon className="h-8 w-8" strokeWidth={1.75} />
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 <div>
-                  <h2 className="text-[33px] font-semibold leading-[1.1] tracking-tight text-slate-900 dark:text-white">
+                  <h2 className="text-xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white">
                     {index + 1}. {section.title}
                   </h2>
-                  <p className="mt-1.5 text-[16px] leading-6 text-slate-600 dark:text-slate-300">
+                  <p className="mt-1.5 text-sm font-medium leading-6 text-slate-600 dark:text-slate-300">
                     {section.description}
                   </p>
                   {section.detailPageSlug ? (
                     <Link
                       href={localizePath(`/${encodeURIComponent(section.detailPageSlug)}`, locale)}
-                      className={`mt-2 inline-flex text-sm font-semibold ${topicAccent.arrow}`}
+                      className={`mt-2 inline-flex text-sm font-bold ${topicAccent.arrow}`}
                     >
                       Learn More <span aria-hidden="true">→</span>
                     </Link>
                   ) : (
-                    <span className="mt-2 inline-flex text-sm font-semibold text-slate-400 dark:text-slate-500">
+                    <span className="mt-2 inline-flex text-sm font-bold text-slate-400 dark:text-slate-500">
                       Learn More <span aria-hidden="true">→</span>
                     </span>
                   )}
                 </div>
 
                 <div className={`rounded-xl border p-3 ${topicAccent.panel} border-transparent`}>
-                  <h3 className={`text-sm font-semibold ${topicAccent.arrow} dark:text-white`}>
+                  <h3 className={`text-xs font-bold ${topicAccent.arrow} dark:text-white`}>
                     Key Points:
                   </h3>
-                  <ul className="mt-2 space-y-1.5 text-xs text-slate-700 dark:text-slate-200">
+                  <ul className="mt-2 space-y-1.5 text-xs font-medium leading-5 text-slate-700 dark:text-slate-200">
                     {section.keyPoints.map((point) => (
                       <li key={point} className="flex items-start gap-1.5">
                         <Check className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${topicAccent.arrow}`} />
@@ -349,12 +367,12 @@ export function TopicDetailTemplate({
         </div>
 
         <div
-          className={`mt-4 rounded-2xl border px-5 py-4 ${topicAccent.panel} border-transparent`}
+          className={`mt-4 rounded-2xl border px-4 py-3 ${topicAccent.panel} border-transparent`}
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
               <p
-                className={`text-[27px] font-semibold leading-tight tracking-tight ${topicAccent.arrow} dark:text-white`}
+                className={`text-xl font-bold leading-tight tracking-tight ${topicAccent.arrow} dark:text-white`}
               >
                 Need help navigating the healthcare system?
               </p>
@@ -362,7 +380,7 @@ export function TopicDetailTemplate({
                 Call Health Links - Info Sante 24/7 for free and confidential health advice.
               </p>
             </div>
-            <p className={`text-4xl font-bold tracking-tight ${topicAccent.arrow}`}>
+            <p className={`text-2xl font-bold tracking-tight ${topicAccent.arrow}`}>
               {supportPhone}
             </p>
           </div>
