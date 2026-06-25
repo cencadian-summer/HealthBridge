@@ -21,7 +21,7 @@ const DEFAULTS = {
   primaryCTAUrl: '/topic',
   secondaryCTALabel: 'Browse Resources',
   secondaryCTAUrl: '/resources',
-  footerNote: 'Free · Multilingual · Trusted by immigrants, students & newcomers',
+  footerNote: 'Free · Multilingual · Trusted by newcomers',
   canadianBadgeText: '🍁 Canada-focused health guidance',
 }
 
@@ -250,7 +250,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">{d.footerNote}</p>
+            <p className="mt-6 text-xs font-semibold text-slate-800 dark:text-slate-200">
+              {d.footerNote}
+            </p>
           </div>
         </div>
 
