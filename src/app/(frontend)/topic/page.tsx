@@ -126,6 +126,10 @@ export default async function TopicIndexPage() {
             t.iconImage && typeof t.iconImage === 'object'
               ? (t.iconImage as MediaFromPayload)
               : null
+          const badgeMedia =
+            t.badgeImage && typeof t.badgeImage === 'object'
+              ? (t.badgeImage as MediaFromPayload)
+              : null
 
           const canonicalSlug = resolveFallbackTopicSlug(t.slug)
 
@@ -138,6 +142,8 @@ export default async function TopicIndexPage() {
             iconName: t.icon ?? 'Stethoscope',
             iconImageUrl: getMediaUrl(media?.url) || null,
             iconImageAlt: media?.alt ?? t.title,
+            badgeImageUrl: getMediaUrl(badgeMedia?.url) || null,
+            badgeImageAlt: badgeMedia?.alt ?? t.title,
           }
         })
       : STATIC_TOPICS.map((t) => ({
@@ -145,6 +151,8 @@ export default async function TopicIndexPage() {
           slug: resolveFallbackTopicSlug(t.slug),
           iconImageUrl: null,
           iconImageAlt: '',
+          badgeImageUrl: null,
+          badgeImageAlt: '',
         }))
 
   return (
@@ -165,6 +173,8 @@ export default async function TopicIndexPage() {
           iconName: t.iconName,
           iconImageUrl: t.iconImageUrl,
           iconImageAlt: t.iconImageAlt,
+          badgeImageUrl: t.badgeImageUrl,
+          badgeImageAlt: t.badgeImageAlt,
         }))}
       />
 

@@ -37,6 +37,8 @@ export type HomeTopic = {
   icon: string | null
   iconImageUrl: string | null
   iconImageAlt: string
+  badgeImageUrl: string | null
+  badgeImageAlt: string
 }
 
 type Props = {
@@ -58,6 +60,8 @@ const CLIENT_TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Stethoscope',
     iconImageUrl: null,
     iconImageAlt: 'Healthcare',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Healthcare',
   },
   {
     id: 'mental-health',
@@ -67,6 +71,8 @@ const CLIENT_TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Brain',
     iconImageUrl: null,
     iconImageAlt: 'Mental Health',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Mental Health',
   },
   {
     id: 'nutrition',
@@ -76,6 +82,8 @@ const CLIENT_TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'HeartPulse',
     iconImageUrl: null,
     iconImageAlt: 'Nutrition',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Nutrition',
   },
   {
     id: 'youth-health',
@@ -85,6 +93,8 @@ const CLIENT_TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Users',
     iconImageUrl: null,
     iconImageAlt: 'Youth Health',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Youth Health',
   },
 ]
 
@@ -122,90 +132,6 @@ type QuickAccessItem = {
   kind: 'topic' | 'resource'
   topicSlug?: string
 }
-
-const HolisticCareIllustration = () => (
-  <svg viewBox="0 0 120 120" fill="none" className="h-28 w-28" aria-hidden="true">
-    <path
-      d="M22 83c9-11 18-15 29-15h15c4 0 7-3 7-7 0-4-3-7-7-7H52"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M20 84l11 17m53-30l10-4c5-2 10 3 8 8-1 2-3 4-6 5l-15 6c-4 2-8 3-12 3H43"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M60 22c7-8 20-8 27 0 8 9 8 22 0 30L60 80 33 52c-8-8-8-21 0-30 7-8 20-8 27 0Z"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M60 33v14m-7-7h14" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-  </svg>
-)
-
-const NativeLanguageIllustration = () => (
-  <svg viewBox="0 0 120 120" fill="none" className="h-28 w-28" aria-hidden="true">
-    <circle cx="36" cy="49" r="14" stroke="currentColor" strokeWidth="3.5" />
-    <circle cx="84" cy="44" r="10" stroke="currentColor" strokeWidth="3.5" />
-    <path
-      d="M26 72c3-6 8-10 15-10s12 4 15 10m36-19c-2-4-5-6-8-6s-6 2-8 6"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M48 56l20 15m-2-26l10 7"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-    />
-    <path
-      d="M31 89h35l10 9v-9h13c5 0 9-4 9-9V67c0-5-4-9-9-9H31c-5 0-9 4-9 9v13c0 5 4 9 9 9Z"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M37 73h24m-24 8h34" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-  </svg>
-)
-
-const AlwaysOnSupportIllustration = () => (
-  <svg viewBox="0 0 120 120" fill="none" className="h-28 w-28" aria-hidden="true">
-    <circle cx="60" cy="62" r="34" stroke="currentColor" strokeWidth="4" />
-    <path
-      d="M60 43v20l13 8"
-      stroke="currentColor"
-      strokeWidth="4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M32 30l-8-8m72 8 8-8" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-    <path
-      d="M94 34a22 22 0 1 1-12-20"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path
-      d="M91 16h10V6"
-      stroke="currentColor"
-      strokeWidth="3.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M101 6 91 16" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-    <path d="M45 86h30" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
-  </svg>
-)
 
 export function HomeTopicsAndResources({
   locale,
@@ -317,15 +243,15 @@ export function HomeTopicsAndResources({
                 style={{ animationDelay: `${index * 0.08}s` }}
               >
                 <span
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border shadow-sm ${topicAccent.frame}`}
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-sm ${topicAccent.frame}`}
                 >
                   {canRenderImage ? (
                     <Image
                       src={item.imageUrl as string}
                       alt={item.imageAlt}
-                      width={28}
-                      height={28}
-                      className="h-7 w-auto max-w-7 object-contain"
+                      width={44}
+                      height={44}
+                      className="h-full w-full rounded-full object-cover"
                       onError={() => markImageFailed(item.id)}
                     />
                   ) : TopicIcon ? (
@@ -363,8 +289,14 @@ export function HomeTopicsAndResources({
 
         <div className="mt-10 grid gap-8 md:grid-cols-3">
           <article className="px-2 text-center">
-            <div className="mx-auto mb-5 inline-flex h-28 w-28 items-center justify-center text-emerald-500 dark:text-emerald-300">
-              <HolisticCareIllustration />
+            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
+              <Image
+                src="/media/heart-rate.png"
+                alt="Healthcare services"
+                width={112}
+                height={112}
+                className="h-full w-full object-cover"
+              />
             </div>
             <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
               Take control of your health
@@ -376,8 +308,14 @@ export function HomeTopicsAndResources({
           </article>
 
           <article className="px-2 text-center">
-            <div className="mx-auto mb-5 inline-flex h-28 w-28 items-center justify-center text-emerald-500 dark:text-emerald-300">
-              <NativeLanguageIllustration />
+            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
+              <Image
+                src="/media/walk-in.png"
+                alt="People accessing health information"
+                width={112}
+                height={112}
+                className="h-full w-full object-cover"
+              />
             </div>
             <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
               Access health topics and resources in your native language
@@ -389,8 +327,14 @@ export function HomeTopicsAndResources({
           </article>
 
           <article className="px-2 text-center">
-            <div className="mx-auto mb-5 inline-flex h-28 w-28 items-center justify-center text-emerald-500 dark:text-emerald-300">
-              <AlwaysOnSupportIllustration />
+            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
+              <Image
+                src="/media/medical-practitioner-answering-phone-calls-900x600.jpg"
+                alt="Healthcare support by phone"
+                width={112}
+                height={112}
+                className="h-full w-full object-cover"
+              />
             </div>
             <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
               Get online support 24/7
@@ -430,7 +374,10 @@ export function HomeTopicsAndResources({
         {displayTopics.map((topic, index) => {
           const topicAccent = getTopicAccent(topic.slug, topic.icon)
           const TopicIcon = topic.icon ? TOPIC_ICON_MAP[topic.icon] : undefined
+          const badgeImageId = `${topic.id}-badge`
           const canRenderImage = Boolean(topic.iconImageUrl) && !failedImageIds.has(topic.id)
+          const canRenderBadgeImage =
+            Boolean(topic.badgeImageUrl) && !failedImageIds.has(badgeImageId)
 
           return (
             <Link
@@ -457,9 +404,18 @@ export function HomeTopicsAndResources({
                   aria-hidden="true"
                 />
                 <span
-                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm ${topicAccent.frame}`}
+                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-sm backdrop-blur-sm ${topicAccent.frame}`}
                 >
-                  {TopicIcon ? (
+                  {canRenderBadgeImage ? (
+                    <Image
+                      src={topic.badgeImageUrl as string}
+                      alt={topic.badgeImageAlt}
+                      width={28}
+                      height={28}
+                      className="h-7 w-7 rounded-full object-cover"
+                      onError={() => markImageFailed(badgeImageId)}
+                    />
+                  ) : TopicIcon ? (
                     <TopicIcon className="h-5 w-5" strokeWidth={1.85} />
                   ) : (
                     <span className="text-base font-bold">

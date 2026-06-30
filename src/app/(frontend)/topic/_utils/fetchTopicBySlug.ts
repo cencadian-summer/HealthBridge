@@ -38,6 +38,7 @@ export type TopicFromPayload = {
   description?: string
   icon?: string
   iconImage?: MediaFromPayload | string | null
+  badgeImage?: MediaFromPayload | string | null
   lessonsCount?: number
   order?: number
   subtitle?: string

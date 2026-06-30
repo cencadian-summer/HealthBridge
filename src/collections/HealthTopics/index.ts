@@ -97,6 +97,15 @@ export const HealthTopics: CollectionConfig = {
       },
     },
     {
+      name: 'badgeImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description:
+          'Optional image for the small circular badge on the topic card. If empty, the selected icon is used.',
+      },
+    },
+    {
       name: 'lessonsCount',
       type: 'number',
       defaultValue: 10,

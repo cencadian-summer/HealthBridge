@@ -63,6 +63,24 @@ export const ResourceItems: CollectionConfig = {
       admin: { description: 'Short description shown on the card.' },
     },
     {
+      name: 'categoryLabel',
+      type: 'text',
+      localized: true,
+      defaultValue: 'Community',
+      admin: {
+        description: 'Small category label shown above the card title on the Resources page.',
+      },
+    },
+    {
+      name: 'readTime',
+      type: 'text',
+      localized: true,
+      defaultValue: '3 min read',
+      admin: {
+        description: 'Short reading-time label shown below the card title, e.g. "5 min read".',
+      },
+    },
+    {
       type: 'collapsible',
       label: 'Detail Page Content',
       admin: {

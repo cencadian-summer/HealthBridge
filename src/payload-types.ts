@@ -511,6 +511,10 @@ export interface HealthTopic {
    */
   iconImage?: (string | null) | Media;
   /**
+   * Optional image for the small circular badge on the topic card. If empty, the selected icon is used.
+   */
+  badgeImage?: (string | null) | Media;
+  /**
    * Number of lessons to display on the card badge.
    */
   lessonsCount?: number | null;
@@ -1023,6 +1027,14 @@ export interface ResourceItem {
    * Short description shown on the card.
    */
   description: string;
+  /**
+   * Small category label shown above the card title on the Resources page.
+   */
+  categoryLabel?: string | null;
+  /**
+   * Short reading-time label shown below the card title, e.g. "5 min read".
+   */
+  readTime?: string | null;
   /**
    * Short intro paragraph shown near the top of the detail page.
    */
@@ -1774,6 +1786,7 @@ export interface HealthTopicsSelect<T extends boolean = true> {
   description?: T;
   icon?: T;
   iconImage?: T;
+  badgeImage?: T;
   lessonsCount?: T;
   order?: T;
   subtitle?: T;
@@ -1817,6 +1830,8 @@ export interface ResourceItemsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   description?: T;
+  categoryLabel?: T;
+  readTime?: T;
   detailIntro?: T;
   videoDuration?: T;
   videoUrl?: T;

@@ -58,6 +58,8 @@ const STATIC_RESOURCES = [
     icon: 'Hospital',
     imageUrl: null,
     imageAlt: 'Find Healthcare Services',
+    categoryLabel: 'Community',
+    readTime: '3 min read',
     slug: 'healthcare-services',
   },
   {
@@ -67,6 +69,8 @@ const STATIC_RESOURCES = [
     icon: 'ShieldAlert',
     imageUrl: null,
     imageAlt: 'Emergency and Crisis Help',
+    categoryLabel: 'Support',
+    readTime: '3 min read',
     slug: 'emergency-help',
   },
   {
@@ -77,6 +81,8 @@ const STATIC_RESOURCES = [
     icon: 'Brain',
     imageUrl: null,
     imageAlt: 'Mental Health Support',
+    categoryLabel: 'Wellness',
+    readTime: '4 min read',
     slug: 'mental-health',
   },
   {
@@ -86,6 +92,8 @@ const STATIC_RESOURCES = [
     icon: 'BookOpen',
     imageUrl: null,
     imageAlt: 'Health Learning Library',
+    categoryLabel: 'Learning',
+    readTime: '5 min read',
     slug: 'health-library',
   },
   {
@@ -95,6 +103,8 @@ const STATIC_RESOURCES = [
     icon: 'FlaskConical',
     imageUrl: null,
     imageAlt: 'Understand Lab Results',
+    categoryLabel: 'News',
+    readTime: '3 min read',
     slug: 'lab-results',
   },
   {
@@ -104,6 +114,8 @@ const STATIC_RESOURCES = [
     icon: 'Apple',
     imageUrl: null,
     imageAlt: 'Nutrition and Wellness',
+    categoryLabel: 'Wellness',
+    readTime: '4 min read',
     slug: 'nutrition',
   },
   {
@@ -113,6 +125,8 @@ const STATIC_RESOURCES = [
     icon: 'Globe',
     imageUrl: null,
     imageAlt: 'Newcomer Support',
+    categoryLabel: 'Community',
+    readTime: '3 min read',
     slug: 'newcomer-support',
   },
   {
@@ -122,6 +136,8 @@ const STATIC_RESOURCES = [
     icon: 'HeartPulse',
     imageUrl: null,
     imageAlt: 'Youth Health Resources',
+    categoryLabel: 'Youth',
+    readTime: '4 min read',
     slug: 'youth-health',
   },
   {
@@ -131,6 +147,8 @@ const STATIC_RESOURCES = [
     icon: 'Pill',
     imageUrl: null,
     imageAlt: 'Medication and Pharmacy Help',
+    categoryLabel: 'Health',
+    readTime: '3 min read',
     slug: 'pharmacy',
   },
   {
@@ -140,6 +158,8 @@ const STATIC_RESOURCES = [
     icon: 'Users',
     imageUrl: null,
     imageAlt: 'Community Services',
+    categoryLabel: 'Community',
+    readTime: '3 min read',
     slug: 'community-services',
   },
   {
@@ -149,6 +169,8 @@ const STATIC_RESOURCES = [
     icon: 'FileText',
     imageUrl: null,
     imageAlt: 'Printable Resources',
+    categoryLabel: 'Guides',
+    readTime: '2 min read',
     slug: 'printable-resources',
   },
   {
@@ -158,6 +180,8 @@ const STATIC_RESOURCES = [
     icon: 'Languages',
     imageUrl: null,
     imageAlt: 'Language and Translation Support',
+    categoryLabel: 'Language',
+    readTime: '3 min read',
     slug: 'language-support',
   },
   {
@@ -167,6 +191,8 @@ const STATIC_RESOURCES = [
     icon: 'PlayCircle',
     imageUrl: null,
     imageAlt: 'Interactive Learning',
+    categoryLabel: 'Learning',
+    readTime: '5 min read',
     slug: 'interactive-learning',
   },
 ]
@@ -214,7 +240,7 @@ export default async function ResourcesPage() {
 
             <div className="resources-hero-image-wrap" aria-hidden="true">
               <Image
-                src="/media/ChatGPT Image May 7, 2026, 10_17_29 AM-900x600.png"
+                src="/hero.jpg"
                 alt=""
                 width={900}
                 height={600}
@@ -245,7 +271,11 @@ export default async function ResourcesPage() {
               const hasCardImage = Boolean(resource.imageUrl)
 
               return (
-                <Link key={resource.id} href={href} className="resource-card">
+                <Link
+                  key={resource.id}
+                  href={href}
+                  className="resource-card resource-card--listing"
+                >
                   {hasCardImage ? (
                     <div className="resource-card-media">
                       <Image
@@ -263,11 +293,13 @@ export default async function ResourcesPage() {
                   )}
 
                   <div className="resource-card-content">
+                    <p className="resource-card-category">
+                      {resource.categoryLabel || 'Community'}
+                    </p>
+
                     <h3 className="resource-card-title">{resource.title}</h3>
 
-                    <p className="resource-card-description">{resource.description}</p>
-
-                    <div className="resource-card-link">Learn More →</div>
+                    <p className="resource-card-read-time">{resource.readTime || '3 min read'}</p>
                   </div>
                 </Link>
               )

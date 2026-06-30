@@ -48,6 +48,8 @@ export type SearchTopic = {
   iconName: string
   iconImageUrl: string | null
   iconImageAlt: string
+  badgeImageUrl: string | null
+  badgeImageAlt: string
 }
 
 type Props = {
@@ -143,7 +145,9 @@ export function TopicSearchFilter({ locale, topics }: Props) {
         {filteredTopics.map((t) => {
           const topicAccent = getTopicAccent(t.slug)
           const TopicIcon = TOPIC_ICON_MAP[t.iconName] || Stethoscope
+          const badgeImageId = `${t.id}-badge`
           const canRenderImage = Boolean(t.iconImageUrl) && !failedImageIds.has(t.id)
+          const canRenderBadgeImage = Boolean(t.badgeImageUrl) && !failedImageIds.has(badgeImageId)
 
           return (
             <Link
@@ -169,9 +173,20 @@ export function TopicSearchFilter({ locale, topics }: Props) {
                   aria-hidden="true"
                 />
                 <span
-                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center rounded-full border shadow-sm backdrop-blur-sm ${topicAccent.frame}`}
+                  className={`relative z-10 flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-full border shadow-sm backdrop-blur-sm ${topicAccent.frame}`}
                 >
-                  <TopicIcon className="h-5 w-5" strokeWidth={1.85} />
+                  {canRenderBadgeImage ? (
+                    <Image
+                      src={t.badgeImageUrl as string}
+                      alt={t.badgeImageAlt}
+                      width={28}
+                      height={28}
+                      className="h-7 w-7 rounded-full object-cover"
+                      onError={() => markImageFailed(badgeImageId)}
+                    />
+                  ) : (
+                    <TopicIcon className="h-5 w-5" strokeWidth={1.85} />
+                  )}
                 </span>
               </div>
 
