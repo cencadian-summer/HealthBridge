@@ -291,7 +291,7 @@ export function HomeTopicsAndResources({
           <article className="px-2 text-center">
             <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
               <Image
-                src="/media/heart-rate.png"
+                src="/media/ChatGPT Image Jun 16, 2026, 09_46_27 AM.png"
                 alt="Healthcare services"
                 width={112}
                 height={112}

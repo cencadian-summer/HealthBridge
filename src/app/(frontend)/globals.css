@@ -30,6 +30,30 @@
   }
 }
 
+@layer utilities {
+  @keyframes about-card-reveal {
+    from {
+      opacity: 0;
+      transform: translateX(-1.5rem);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-about-card-reveal {
+    animation: about-card-reveal 0.62s ease-out both;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-about-card-reveal {
+      animation: none;
+    }
+  }
+}
+
 @layer components {
   .resources-page {
     min-height: 100vh;
