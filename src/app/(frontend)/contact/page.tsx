@@ -1,266 +1,293 @@
-import type { Metadata } from 'next'
-import Link from 'next/link'
+import { getRequestLocale } from '@/i18n/server'
+import { localizePath } from '@/i18n/routing'
 import {
+  BookOpen,
+  CircleHelp,
   Clock3,
-  FileQuestion,
-  Globe,
-  HeartHandshake,
   Mail,
   MapPin,
   MessageCircle,
   Phone,
   Send,
   ShieldCheck,
+  TriangleAlert,
+  UserRound,
 } from 'lucide-react'
-import { getRequestLocale } from '@/i18n/server'
-import { localizePath } from '@/i18n/routing'
+import type { Metadata } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
-  title: 'Contact | HealthBridge',
-  description:
-    'Contact HealthBridge for help with health topics, resources, and newcomer support in Canada.',
+  title: 'Contact Us | HealthBridge',
+  description: 'Contact HealthBridge for support, questions, partnerships, and feedback.',
 }
 
 const contactMethods = [
   {
-    title: 'Call Support',
-    detail: '1-888-315-9257',
-    note: '24/7 support with language assistance',
-    icon: Phone,
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300',
-  },
-  {
-    title: 'Email Us',
-    detail: 'info@healthbridge.ca',
-    note: 'Response within 1 business day',
     icon: Mail,
-    className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300',
+    title: 'Email us',
+    detail: 'info@healthbridge.ca',
+    note: "We're happy to help.",
+    href: 'mailto:info@healthbridge.ca',
   },
   {
-    title: 'Service Area',
-    detail: 'Canada-wide',
-    note: 'Based in Winnipeg, supporting newcomers nationally',
-    icon: MapPin,
-    className: 'bg-violet-100 text-violet-700 dark:bg-violet-900/50 dark:text-violet-300',
+    icon: Phone,
+    title: 'Call us',
+    detail: '1-204-123-4567',
+    note: 'Monday to Friday, 9 AM ? 5 PM CT',
+    href: 'tel:+12041234567',
   },
-]
-
-const supportTopics = [
-  { label: 'Health topic guidance', icon: HeartHandshake },
-  { label: 'Resource navigation', icon: FileQuestion },
-  { label: 'Multilingual support', icon: Globe },
-  { label: 'Safety information', icon: ShieldCheck },
+  {
+    icon: MessageCircle,
+    title: 'Live chat',
+    detail: 'Chat with our team',
+    note: 'Available on weekdays, 9 AM ? 5 PM CT',
+    href: '#contact-form',
+  },
+  {
+    icon: MapPin,
+    title: 'Mailing address',
+    detail: 'HealthBridge',
+    note: '123 Wellness Way, Suite 200 ? Winnipeg, MB R3B 3N3 ? Canada',
+  },
 ]
 
 export default async function ContactPage() {
   const locale = await getRequestLocale()
+  const inputClass =
+    'h-12 w-full rounded-xl border border-slate-300 bg-white px-4 text-sm text-slate-950 outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-100'
 
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-950 dark:bg-slate-950 dark:text-white">
-      <section className="border-b border-blue-100 bg-gradient-to-br from-white via-blue-50 to-cyan-50 dark:border-slate-800 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950">
-        <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 md:py-16 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-bold uppercase text-blue-700 ring-1 ring-blue-100 dark:bg-slate-900 dark:text-blue-300 dark:ring-slate-700">
-              <MessageCircle className="h-4 w-4" />
-              Contact HealthBridge
+    <main className="min-h-screen bg-white text-[#08294d]">
+      <section className="relative isolate min-h-[31rem] overflow-hidden border-b border-slate-100">
+        <Image
+          alt=""
+          aria-hidden="true"
+          className="-z-20 object-cover object-center"
+          fill
+          priority
+          sizes="100vw"
+          src="/contact-hero.png"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-blue-50/98 via-blue-50/90 via-42% to-blue-50/10 to-78% dark:from-slate-950/98 dark:via-slate-900/90 dark:to-slate-950/25"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 -z-10 w-[38%] bg-gradient-to-l from-teal-900/10 to-transparent"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-24 top-1/2 -z-10 h-72 w-72 -translate-y-1/2 rounded-full bg-cyan-200/35 blur-3xl"
+        />
+        <div className="relative z-10 mx-auto flex min-h-[31rem] max-w-[1340px] items-center px-5 py-16 sm:px-8 lg:py-20">
+          <div className="max-w-xl">
+            <span className="inline-flex rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wide text-teal-700 ring-1 ring-teal-100">
+              We are here to help
             </span>
-            <h1 className="mt-5 max-w-2xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-              We are here to help you find the right health information.
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-slate-700 sm:text-lg dark:text-slate-300">
-              Send a question, request a resource, or tell us what kind of support would make
-              healthcare easier to navigate.
+            <h1 className="mt-6 text-5xl font-extrabold tracking-tight sm:text-6xl">Contact Us</h1>
+            <p className="mt-6 text-lg leading-8 text-slate-700">
+              Have a question, need support, or want to share feedback? We&apos;re here for you.
+              Reach out and our team will get back to you as soon as possible.
             </p>
-
-            <div className="mt-8 grid gap-3 sm:grid-cols-2">
-              {supportTopics.map(({ label, icon: Icon }) => (
-                <div
-                  key={label}
-                  className="flex items-center gap-3 rounded-lg border border-blue-100 bg-white/80 px-4 py-3 text-sm font-semibold text-slate-800 shadow-sm dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200"
-                >
-                  <Icon className="h-5 w-5 text-blue-600 dark:text-blue-300" />
-                  {label}
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid gap-4">
-            {contactMethods.map(({ title, detail, note, icon: Icon, className }) => (
-              <article
-                key={title}
-                className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900"
-              >
-                <div className="flex gap-4">
-                  <div
-                    className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full ${className}`}
-                  >
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-sm font-bold uppercase text-slate-500 dark:text-slate-400">
-                      {title}
-                    </h2>
-                    <p className="mt-1 text-xl font-extrabold text-slate-950 dark:text-white">
-                      {detail}
-                    </p>
-                    <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                      {note}
-                    </p>
-                  </div>
-                </div>
-              </article>
-            ))}
+            <p className="mt-7 flex items-center gap-2 text-sm text-slate-600">
+              <ShieldCheck aria-hidden="true" className="h-5 w-5 text-teal-700" />
+              Your privacy matters. Your information is safe with us.
+            </p>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto grid max-w-[1280px] gap-5 px-4 py-8 sm:px-6 lg:grid-cols-[1fr_360px] lg:px-8">
+      <section className="mx-auto grid max-w-[1340px] gap-7 px-5 py-10 sm:px-8 lg:grid-cols-2 lg:py-14">
         <form
           action="#"
-          className="rounded-lg border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 sm:p-6"
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8"
+          id="contact-form"
         >
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-bold tracking-tight">Send a Message</h2>
-              <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400">
-                Share a few details and our team will follow up.
-              </p>
-            </div>
-            <div className="hidden rounded-full bg-blue-100 p-3 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 sm:block">
-              <Send className="h-6 w-6" />
-            </div>
-          </div>
+          <h2 className="text-3xl font-bold tracking-tight">Send us a message</h2>
+          <p className="mt-2 text-slate-600">
+            Fill out the form below and we&apos;ll get back to you.
+          </p>
 
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <div className="mt-7 space-y-5">
             <div>
-              <label htmlFor="contact-name" className="mb-2 block text-sm font-semibold">
-                Full Name
+              <label className="mb-2 block text-sm font-semibold" htmlFor="contact-name">
+                Full name
               </label>
-              <input
-                id="contact-name"
-                name="name"
-                type="text"
-                placeholder="Your name"
-                className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:focus:ring-blue-900"
-              />
+              <div className="relative">
+                <UserRound
+                  aria-hidden="true"
+                  className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  className={`${inputClass} pl-12`}
+                  id="contact-name"
+                  name="name"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
             </div>
-
             <div>
-              <label htmlFor="contact-email" className="mb-2 block text-sm font-semibold">
-                Email Address
+              <label className="mb-2 block text-sm font-semibold" htmlFor="contact-email">
+                Email address
               </label>
-              <input
-                id="contact-email"
-                name="email"
-                type="email"
-                placeholder="you@example.com"
-                className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:focus:ring-blue-900"
-              />
+              <div className="relative">
+                <Mail
+                  aria-hidden="true"
+                  className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+                />
+                <input
+                  className={`${inputClass} pl-12`}
+                  id="contact-email"
+                  name="email"
+                  placeholder="Enter your email address"
+                  required
+                  type="email"
+                />
+              </div>
             </div>
-          </div>
-
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="contact-topic" className="mb-2 block text-sm font-semibold">
-                Topic
+              <label className="mb-2 block text-sm font-semibold" htmlFor="contact-subject">
+                Subject
               </label>
               <select
-                id="contact-topic"
-                name="topic"
-                className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:focus:ring-blue-900"
+                className={inputClass}
                 defaultValue=""
+                id="contact-subject"
+                name="subject"
+                required
               >
-                <option value="" disabled>
-                  Choose a topic
+                <option disabled value="">
+                  Select a subject
                 </option>
-                <option>Health topics</option>
-                <option>Community resources</option>
-                <option>Language support</option>
-                <option>Partnerships</option>
-                <option>Feedback</option>
+                <option value="general">General question</option>
+                <option value="resource">Resource support</option>
+                <option value="technical">Technical issue</option>
+                <option value="partnership">Partnership</option>
+                <option value="feedback">Feedback</option>
               </select>
             </div>
-
             <div>
-              <label htmlFor="contact-language" className="mb-2 block text-sm font-semibold">
-                Preferred Language
+              <label className="mb-2 block text-sm font-semibold" htmlFor="contact-message">
+                Message
               </label>
-              <input
-                id="contact-language"
-                name="language"
-                type="text"
-                placeholder="English, French, Hindi..."
-                className="h-12 w-full rounded-lg border border-slate-200 bg-white px-4 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:focus:ring-blue-900"
+              <textarea
+                className="min-h-36 w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-950 outline-none transition focus:border-teal-600 focus:ring-4 focus:ring-teal-100"
+                id="contact-message"
+                maxLength={1000}
+                name="message"
+                placeholder="How can we help you?"
+                required
               />
+              <p className="mt-1 text-right text-xs text-slate-400">Maximum 1000 characters</p>
             </div>
-          </div>
-
-          <div className="mt-4">
-            <label htmlFor="contact-message" className="mb-2 block text-sm font-semibold">
-              Message
+            <label className="flex items-start gap-3 text-sm leading-6 text-slate-700">
+              <input className="mt-1 h-4 w-4 accent-teal-700" required type="checkbox" />I agree to
+              HealthBridge&apos;s Privacy Policy.
             </label>
-            <textarea
-              id="contact-message"
-              name="message"
-              rows={6}
-              placeholder="Tell us how we can help."
-              className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 dark:border-slate-700 dark:bg-slate-950 dark:focus:ring-blue-900"
-            />
-          </div>
-
-          <div className="mt-5 flex flex-wrap items-center gap-3">
             <button
+              className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-600 font-bold text-white shadow-lg transition hover:-translate-y-0.5"
               type="submit"
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-blue-600 px-5 text-sm font-bold text-white transition-colors hover:bg-blue-700"
             >
-              <Send className="h-4 w-4" />
-              Submit Message
+              Send Message <Send aria-hidden="true" className="h-4 w-4" />
             </button>
-            <p className="text-xs leading-5 text-slate-500 dark:text-slate-400">
-              This sample form is ready for a future form handler or CMS integration.
+            <p className="text-center text-xs text-slate-500">
+              We aim to respond within 1?2 business days.
             </p>
           </div>
         </form>
 
-        <aside className="space-y-5">
-          <section className="rounded-lg border border-emerald-100 bg-emerald-50 p-5 dark:border-emerald-900/60 dark:bg-emerald-950/25">
-            <div className="flex items-center gap-3">
-              <Clock3 className="h-6 w-6 text-emerald-700 dark:text-emerald-300" />
-              <h2 className="text-lg font-bold text-emerald-800 dark:text-emerald-200">
-                Response Time
-              </h2>
-            </div>
-            <p className="mt-3 text-sm leading-6 text-slate-700 dark:text-slate-300">
-              Email messages are usually answered within 1 business day. Urgent safety concerns
-              should use local emergency or crisis services.
-            </p>
-          </section>
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-3xl font-bold tracking-tight">Other ways to reach us</h2>
+          <div className="mt-6 space-y-4">
+            {contactMethods.map(({ detail, href, icon: Icon, note, title }) => {
+              const content = (
+                <>
+                  <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 text-white">
+                    <Icon aria-hidden="true" className="h-6 w-6" />
+                  </span>
+                  <span>
+                    <strong className="block text-base text-slate-950">{title}</strong>
+                    <span className="mt-1 block font-semibold text-teal-700">{detail}</span>
+                    <span className="mt-1 block text-sm leading-6 text-slate-600">{note}</span>
+                  </span>
+                </>
+              )
+              const className =
+                'flex items-start gap-4 rounded-xl border border-slate-200 p-5 transition hover:border-teal-300 hover:bg-teal-50/30'
+              return href ? (
+                <a className={className} href={href} key={title}>
+                  {content}
+                </a>
+              ) : (
+                <div className={className} key={title}>
+                  {content}
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      </section>
 
-          <section className="rounded-lg border border-blue-100 bg-blue-50 p-5 dark:border-blue-900/60 dark:bg-blue-950/30">
-            <h2 className="text-lg font-bold text-blue-800 dark:text-blue-200">Quick Links</h2>
-            <div className="mt-4 grid gap-2">
-              <Link
-                href={localizePath('/resources', locale)}
-                className="rounded-md bg-white px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:bg-slate-900 dark:text-blue-300 dark:hover:bg-slate-800"
-              >
-                Browse Resources
-              </Link>
-              <Link
-                href={localizePath('/topic', locale)}
-                className="rounded-md bg-white px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:bg-slate-900 dark:text-blue-300 dark:hover:bg-slate-800"
-              >
-                Explore Health Topics
-              </Link>
-              <Link
-                href={localizePath('/about-us', locale)}
-                className="rounded-md bg-white px-4 py-3 text-sm font-semibold text-blue-700 transition-colors hover:bg-blue-100 dark:bg-slate-900 dark:text-blue-300 dark:hover:bg-slate-800"
-              >
-                Learn About HealthBridge
-              </Link>
-            </div>
-          </section>
-        </aside>
+      <section className="mx-auto grid max-w-[1340px] gap-7 px-5 pb-16 sm:px-8 lg:grid-cols-2">
+        <div className="rounded-2xl border border-cyan-100 bg-gradient-to-br from-[#f5fcfd] to-[#edf9fa] p-7 sm:p-8">
+          <h2 className="text-2xl font-bold">Before you contact us?</h2>
+          <p className="mt-2 text-slate-600">Find quick answers to common questions.</p>
+          <div className="mt-5 overflow-hidden rounded-xl border border-slate-200 bg-white">
+            <Link
+              className="flex items-center gap-4 border-b border-slate-200 p-4 hover:bg-teal-50"
+              href={localizePath('/resources', locale)}
+            >
+              <CircleHelp className="h-7 w-7 text-teal-700" />
+              <span>
+                <strong className="block text-slate-950">Visit our resources</strong>
+                <span className="text-sm text-slate-600">Get answers to common questions</span>
+              </span>
+            </Link>
+            <Link
+              className="flex items-center gap-4 border-b border-slate-200 p-4 hover:bg-teal-50"
+              href={localizePath('/topic', locale)}
+            >
+              <BookOpen className="h-7 w-7 text-teal-700" />
+              <span>
+                <strong className="block text-slate-950">Browse health topics</strong>
+                <span className="text-sm text-slate-600">Find guides and helpful information</span>
+              </span>
+            </Link>
+            <a className="flex items-center gap-4 p-4 hover:bg-teal-50" href="#contact-form">
+              <TriangleAlert className="h-7 w-7 text-teal-700" />
+              <span>
+                <strong className="block text-slate-950">Report a technical issue</strong>
+                <span className="text-sm text-slate-600">
+                  Let us know if something is not working
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
+
+        <div className="relative overflow-hidden rounded-2xl border border-cyan-100 bg-gradient-to-br from-[#f6fbfd] to-[#e7f6fa] p-7 sm:p-8">
+          <Clock3
+            aria-hidden="true"
+            className="absolute -bottom-10 -right-8 h-52 w-52 text-cyan-100"
+          />
+          <div className="relative">
+            <h2 className="text-2xl font-bold">Our office hours</h2>
+            <p className="mt-2 text-slate-600">We&apos;re here to support you.</p>
+            <dl className="mt-7 grid grid-cols-[1fr_auto] gap-x-8 gap-y-5 text-sm">
+              <dt>Monday ? Friday</dt>
+              <dd className="font-semibold">9:00 AM ? 5:00 PM CT</dd>
+              <dt>Saturday</dt>
+              <dd className="font-semibold">Closed</dd>
+              <dt>Sunday</dt>
+              <dd className="font-semibold">Closed</dd>
+              <dt>Statutory holidays</dt>
+              <dd className="font-semibold">Closed</dd>
+            </dl>
+          </div>
+        </div>
       </section>
     </main>
   )

@@ -16,6 +16,7 @@ import { draftMode } from 'next/headers'
 import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getRequestLocale } from '@/i18n/server'
+import { SiteChrome } from './_components/SiteChrome'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const { isEnabled } = await draftMode()
@@ -40,9 +41,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             }}
           />
 
-          <Header />
-          {children}
-          <Footer />
+          <SiteChrome footer={<Footer />} header={<Header />}>
+            {children}
+          </SiteChrome>
         </Providers>
       </body>
     </html>

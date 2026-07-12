@@ -84,11 +84,18 @@ const profiles = [
 type Audience = (typeof profiles)[number]['value']
 
 type ProfileSelectorProps = {
+  buttonLabel?: string
   initialAudiences: string[]
+  redirectTo?: string
   userId: string
 }
 
-export function ProfileSelector({ initialAudiences, userId }: ProfileSelectorProps) {
+export function ProfileSelector({
+  buttonLabel = 'Continue',
+  initialAudiences,
+  redirectTo = '/',
+  userId,
+}: ProfileSelectorProps) {
   const allowed = new Set(profiles.map((profile) => profile.value))
   const [selected, setSelected] = useState<Audience[]>(
     initialAudiences.filter((value): value is Audience => allowed.has(value as Audience)),
@@ -125,7 +132,7 @@ export function ProfileSelector({ initialAudiences, userId }: ProfileSelectorPro
       }
       if (!response.ok) throw new Error('We could not save your profiles. Please try again.')
 
-      window.location.assign('/topic')
+      window.location.assign(redirectTo)
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'We could not save your profiles.')
       setIsSaving(false)
@@ -185,7 +192,7 @@ export function ProfileSelector({ initialAudiences, userId }: ProfileSelectorPro
           onClick={saveProfiles}
           type="button"
         >
-          {isSaving ? 'Saving your profiles?' : 'Continue'}
+          {isSaving ? 'Saving your profiles…' : buttonLabel}
           {!isSaving ? <ChevronRight aria-hidden="true" className="h-5 w-5" /> : null}
         </button>
         <p className="mt-5 text-center text-sm text-slate-600">
