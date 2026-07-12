@@ -449,6 +449,24 @@ export interface Category {
 export interface User {
   id: string;
   name?: string | null;
+  dateOfBirth?: string | null;
+  gender?: ('woman' | 'man' | 'non-binary' | 'prefer-not-to-say' | 'self-described') | null;
+  phone?: string | null;
+  role?: ('member' | 'editor' | 'admin') | null;
+  audiences?:
+    | (
+        | 'new-immigrant'
+        | 'international-student'
+        | 'parent'
+        | 'youth'
+        | 'refugee'
+        | 'healthcare-provider'
+        | 'settlement-worker'
+        | 'other'
+      )[]
+    | null;
+  professionalStatus?: ('not-applicable' | 'pending' | 'verified' | 'rejected') | null;
+  onboardingComplete?: boolean | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -456,6 +474,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -1759,6 +1779,13 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  dateOfBirth?: T;
+  gender?: T;
+  phone?: T;
+  role?: T;
+  audiences?: T;
+  professionalStatus?: T;
+  onboardingComplete?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1766,6 +1793,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
