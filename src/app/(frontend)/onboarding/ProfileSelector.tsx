@@ -132,7 +132,9 @@ export function ProfileSelector({
       }
       if (!response.ok) throw new Error('We could not save your profiles. Please try again.')
 
-      window.location.assign(redirectTo)
+      const destination =
+        redirectTo === '/' && selected.includes('new-immigrant') ? '/dashboard' : redirectTo
+      window.location.assign(destination)
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'We could not save your profiles.')
       setIsSaving(false)

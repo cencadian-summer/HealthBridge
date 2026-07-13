@@ -7,7 +7,10 @@ import { FormEvent, useEffect, useState } from 'react'
 type LoginResponse = {
   errors?: Array<{ message?: string }>
   message?: string
-  user?: { onboardingComplete?: boolean | null }
+  user?: {
+    audiences?: string[] | null
+    onboardingComplete?: boolean | null
+  }
 }
 const rememberedEmailKey = 'healthbridge-remembered-email'
 
@@ -51,7 +54,13 @@ export function LoginForm() {
       }
       if (rememberEmail) window.localStorage.setItem(rememberedEmailKey, email.trim())
       else window.localStorage.removeItem(rememberedEmailKey)
-      window.location.assign(result.user?.onboardingComplete ? '/' : '/onboarding')
+      const hasNewImmigrantProfile = result.user?.audiences?.includes('new-immigrant')
+      const destination = result.user?.onboardingComplete
+        ? hasNewImmigrantProfile
+          ? '/dashboard'
+          : '/'
+        : '/onboarding'
+      window.location.assign(destination)
     } catch (loginError) {
       setError(loginError instanceof Error ? loginError.message : 'We could not sign you in.')
       setIsSubmitting(false)

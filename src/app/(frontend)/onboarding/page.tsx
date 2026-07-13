@@ -16,7 +16,10 @@ export default async function OnboardingPage() {
   const { user } = await payload.auth({ headers: await headers() })
 
   if (!user) redirect('/login')
-  if (user.onboardingComplete) redirect('/')
+  if (user.onboardingComplete) {
+    const hasNewImmigrantProfile = user.audiences?.includes('new-immigrant')
+    redirect(hasNewImmigrantProfile ? '/dashboard' : '/')
+  }
 
   const initialAudiences = Array.isArray(user.audiences) ? user.audiences : []
 

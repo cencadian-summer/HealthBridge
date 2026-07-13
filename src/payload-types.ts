@@ -467,6 +467,17 @@ export interface User {
     | null;
   professionalStatus?: ('not-applicable' | 'pending' | 'verified' | 'rejected') | null;
   onboardingComplete?: boolean | null;
+  /**
+   * Reading progress saved automatically from health topic pages.
+   */
+  topicProgress?:
+    | {
+        topicSlug: string;
+        completedSectionIds?: string[] | null;
+        lastReadAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1786,6 +1797,14 @@ export interface UsersSelect<T extends boolean = true> {
   audiences?: T;
   professionalStatus?: T;
   onboardingComplete?: T;
+  topicProgress?:
+    | T
+    | {
+        topicSlug?: T;
+        completedSectionIds?: T;
+        lastReadAt?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;

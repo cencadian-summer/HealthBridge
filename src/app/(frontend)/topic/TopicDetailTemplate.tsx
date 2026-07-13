@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { getTopicAccent } from './_utils/topicVisuals'
 import { TopicSidebarButtons } from './TopicSidebarButtons'
+import { TopicReadingProgress } from './TopicReadingProgress'
 import { defaultLocale, type Locale } from '@/i18n/config'
 import { localizePath } from '@/i18n/routing'
 
@@ -31,6 +32,7 @@ const PlayBadgeIcon = () => (
 )
 
 type TopicSection = {
+  id?: string
   title: string
   description: string
   imageUrl?: string
@@ -288,13 +290,22 @@ export function TopicDetailTemplate({
         </div>
 
         <div className="space-y-2.5">
+          <TopicReadingProgress
+            topicSlug={topicSlug}
+            sections={sections.map((section, index) => ({
+              id: section.id || topicSlug + '-' + index,
+              title: section.title,
+            }))}
+          />
           {sections.map((section, index) => {
             const Icon = pickSectionIcon(section.title, index)
+            const sectionID = section.id || topicSlug + '-' + index
 
             return (
               <article
                 key={section.title}
                 id={sectionAnchors[index]?.id}
+                data-reading-section={sectionID}
                 className={`grid gap-3 rounded-2xl border bg-white p-3 shadow-sm transition-colors md:grid-cols-[184px_minmax(0,1fr)_204px] dark:bg-slate-800 ${topicAccent.card}`}
               >
                 <div

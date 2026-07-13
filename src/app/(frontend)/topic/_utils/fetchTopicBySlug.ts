@@ -230,6 +230,7 @@ export function toTemplateProps(topic: TopicFromPayload, activeSidebarLabel?: st
     supportPhone: topic.supportPhone ?? '1-888-315-9257',
     sections:
       topic.sections?.map((s) => ({
+        id: s.id,
         imageUrl:
           s.image && typeof s.image === 'object'
             ? getMediaUrl((s.image as MediaFromPayload).url)

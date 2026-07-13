@@ -73,7 +73,7 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   const isHomeActive = activePathname === '/'
   const isAboutActive = activePathname.startsWith('/about')
   const isContactActive = activePathname.startsWith('/contact')
-  const isAccountActive = activePathname.startsWith('/account')
+  const isSignupActive = activePathname.startsWith('/signup')
 
   return (
     <nav className="relative flex flex-1 justify-end" ref={navRef}>
@@ -214,14 +214,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         </Link>
 
         <Link
-          href={localizePath('/account', locale)}
+          href={localizePath('/signup', locale)}
           className={`border-b-2 pb-0.5 font-medium transition-colors ${
-            isAccountActive
+            isSignupActive
               ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
               : 'border-transparent text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
           }`}
         >
-          My Account
+          Sign Up
         </Link>
 
         <div className="absolute right-0">
@@ -372,14 +372,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             </Link>
 
             <Link
-              href={localizePath('/account', locale)}
+              href={localizePath('/signup', locale)}
               className={`rounded-lg px-3 py-2 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
-                isAccountActive
+                isSignupActive
                   ? 'text-blue-600 underline decoration-blue-600 underline-offset-4 dark:text-blue-400'
                   : 'text-slate-700 dark:text-slate-300'
               }`}
             >
-              My Account
+              Sign Up
             </Link>
 
             <div className="mt-2 border-t border-slate-200 pt-3 dark:border-slate-700">

@@ -116,6 +116,24 @@ export const Users: CollectionConfig = {
       type: 'checkbox',
       defaultValue: false,
     },
+    {
+      name: 'topicProgress',
+      type: 'array',
+      admin: {
+        description: 'Reading progress saved automatically from health topic pages.',
+        initCollapsed: true,
+      },
+      fields: [
+        { name: 'topicSlug', type: 'text', required: true },
+        {
+          name: 'completedSectionIds',
+          type: 'text',
+          hasMany: true,
+          defaultValue: [],
+        },
+        { name: 'lastReadAt', type: 'date' },
+      ],
+    },
   ],
   timestamps: true,
 }
