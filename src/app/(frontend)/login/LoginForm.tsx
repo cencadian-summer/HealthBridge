@@ -4,14 +4,9 @@ import { Eye, EyeOff, LockKeyhole, Mail, ShieldCheck } from 'lucide-react'
 import Link from 'next/link'
 import { FormEvent, useEffect, useState } from 'react'
 
-type LoginResponse = {
-  errors?: Array<{ message?: string }>
-  message?: string
-  user?: {
-    audiences?: string[] | null
-    onboardingComplete?: boolean | null
-  }
-}
+import { createClient } from '@/lib/supabase/client'
+import { getUserAudiences, hasCompletedOnboarding } from '@/lib/supabase/userProfile'
+
 const rememberedEmailKey = 'healthbridge-remembered-email'
 
 export function LoginForm() {
@@ -39,23 +34,18 @@ export function LoginForm() {
     setError('')
     setIsSubmitting(true)
     try {
-      const response = await fetch('/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
+      const supabase = createClient()
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
       })
-      const result = (await response.json().catch(() => ({}))) as LoginResponse
-      if (!response.ok) {
-        throw new Error(
-          result.errors?.[0]?.message ||
-            result.message ||
-            'We could not sign you in. Check your email and password.',
-        )
-      }
+      if (authError) throw authError
+      if (!data.user) throw new Error('We could not sign you in.')
+
       if (rememberEmail) window.localStorage.setItem(rememberedEmailKey, email.trim())
       else window.localStorage.removeItem(rememberedEmailKey)
-      const hasNewImmigrantProfile = result.user?.audiences?.includes('new-immigrant')
-      const destination = result.user?.onboardingComplete
+      const hasNewImmigrantProfile = getUserAudiences(data.user).includes('new-immigrant')
+      const destination = hasCompletedOnboarding(data.user)
         ? hasNewImmigrantProfile
           ? '/dashboard'
           : '/'

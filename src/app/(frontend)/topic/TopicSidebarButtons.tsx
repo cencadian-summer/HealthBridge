@@ -3,6 +3,8 @@
 import { LogOut } from 'lucide-react'
 import { useState } from 'react'
 
+import { createClient } from '@/lib/supabase/client'
+
 type TopicSidebarButtonsProps = {
   items: string[]
   initialActive: string
@@ -33,12 +35,9 @@ export function TopicSidebarButtons({
     setLogoutError('')
 
     try {
-      const response = await fetch('/api/users/logout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      })
-
-      if (!response.ok) throw new Error('Unable to log out. Please try again.')
+      const supabase = createClient()
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
       window.location.assign('/login')
     } catch (error) {
       setLogoutError(error instanceof Error ? error.message : 'Unable to log out.')

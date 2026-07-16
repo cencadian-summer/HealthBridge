@@ -1,22 +1,23 @@
 import { ProfileSelector } from '@/app/(frontend)/onboarding/ProfileSelector'
-import config from '@payload-config'
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getPayload } from 'payload'
 
+import { createClient } from '@/lib/supabase/server'
+import { getUserAudiences } from '@/lib/supabase/userProfile'
 export const metadata: Metadata = {
   title: 'My account | HealthBridge',
   description: 'Update your HealthBridge profile and information preferences.',
 }
 
 export default async function AccountPage() {
-  const payload = await getPayload({ config })
-  const { user } = await payload.auth({ headers: await headers() })
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
 
-  const initialAudiences = Array.isArray(user.audiences) ? user.audiences : []
+  const initialAudiences = getUserAudiences(user)
 
   return (
     <main className="min-h-screen bg-[#eef9fc] px-4 py-10 sm:px-6 lg:py-16">
@@ -35,8 +36,7 @@ export default async function AccountPage() {
         <ProfileSelector
           buttonLabel="Save preferences"
           initialAudiences={initialAudiences}
-          redirectTo="/"
-          userId={String(user.id)}
+          redirectTo="/dashboard"
         />
       </section>
     </main>

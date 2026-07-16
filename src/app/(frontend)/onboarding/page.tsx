@@ -1,9 +1,8 @@
-import config from '@payload-config'
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getPayload } from 'payload'
 
+import { createClient } from '@/lib/supabase/server'
+import { getUserAudiences, hasCompletedOnboarding } from '@/lib/supabase/userProfile'
 import { ProfileSelector } from './ProfileSelector'
 
 export const metadata: Metadata = {
@@ -12,16 +11,17 @@ export const metadata: Metadata = {
 }
 
 export default async function OnboardingPage() {
-  const payload = await getPayload({ config })
-  const { user } = await payload.auth({ headers: await headers() })
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
-  if (user.onboardingComplete) {
-    const hasNewImmigrantProfile = user.audiences?.includes('new-immigrant')
+  const initialAudiences = getUserAudiences(user)
+  if (hasCompletedOnboarding(user)) {
+    const hasNewImmigrantProfile = initialAudiences.includes('new-immigrant')
     redirect(hasNewImmigrantProfile ? '/dashboard' : '/')
   }
-
-  const initialAudiences = Array.isArray(user.audiences) ? user.audiences : []
 
   return (
     <main className="relative isolate min-h-screen overflow-hidden bg-[#eef9fc] px-4 py-10 sm:px-6 lg:py-16">
@@ -67,7 +67,7 @@ export default async function OnboardingPage() {
           </li>
         </ol>
 
-        <ProfileSelector initialAudiences={initialAudiences} userId={String(user.id)} />
+        <ProfileSelector initialAudiences={initialAudiences} />
       </section>
     </main>
   )

@@ -1,10 +1,14 @@
-import config from '@payload-config'
 import type { Metadata } from 'next'
-import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { getPayload } from 'payload'
 
-import { NewImmigrantDashboard } from './NewImmigrantDashboard'
+import { createClient } from '@/lib/supabase/server'
+import {
+  getUserAudiences,
+  getUserName,
+  getUserRole,
+  hasCompletedOnboarding,
+} from '@/lib/supabase/userProfile'
+import { PersonalizedDashboard } from './NewImmigrantDashboard'
 
 export const metadata: Metadata = {
   title: 'Dashboard | HealthBridge',
@@ -12,13 +16,21 @@ export const metadata: Metadata = {
 }
 
 export default async function DashboardPage() {
-  const payload = await getPayload({ config })
-  const { user } = await payload.auth({ headers: await headers() })
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) redirect('/login')
-  if (!user.onboardingComplete) redirect('/onboarding')
+  if (!hasCompletedOnboarding(user)) redirect('/onboarding')
 
-  const firstName = user.name?.trim().split(/s+/)[0] || 'there'
+  const firstName = getUserName(user).trim().split(/\s+/)[0] || 'there'
 
-  return <NewImmigrantDashboard firstName={firstName} />
+  return (
+    <PersonalizedDashboard
+      audiences={getUserAudiences(user)}
+      firstName={firstName}
+      role={getUserRole(user)}
+    />
+  )
 }

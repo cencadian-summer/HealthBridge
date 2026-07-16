@@ -14,6 +14,8 @@ import {
 import Link from 'next/link'
 import { FormEvent, useState } from 'react'
 
+import { createClient } from '@/lib/supabase/client'
+
 const audienceOptions = [
   ['new-immigrant', 'New immigrant'],
   ['international-student', 'International student'],
@@ -24,8 +26,6 @@ const audienceOptions = [
   ['settlement-worker', 'Settlement worker'],
   ['other', 'Other / not sure'],
 ] as const
-
-type ApiResponse = { field?: string; message?: string }
 
 export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false)
@@ -45,28 +45,41 @@ export function SignupForm() {
       setError('Passwords do not match.')
       return
     }
+    if (
+      password.length < 8 ||
+      !/[A-Za-z]/.test(password) ||
+      !/\d/.test(password) ||
+      !/[^A-Za-z0-9]/.test(password)
+    ) {
+      setError('Use at least 8 characters with a letter, number, and symbol.')
+      return
+    }
 
     setIsSubmitting(true)
 
     try {
-      const response = await fetch('/api/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.get('name'),
-          email: form.get('email'),
-          password,
-          dateOfBirth: form.get('dateOfBirth'),
-          gender: form.get('gender'),
-          phone: form.get('phone'),
-          audience: form.get('audience'),
-          termsAccepted: form.get('terms') === 'on',
-        }),
+      const audience = String(form.get('audience') || '')
+      const supabase = createClient()
+      const { data, error: authError } = await supabase.auth.signUp({
+        email: String(form.get('email') || '').trim(),
+        password,
+        options: {
+          emailRedirectTo: window.location.origin + '/auth/callback',
+          data: {
+            name: String(form.get('name') || '').trim(),
+            dateOfBirth: String(form.get('dateOfBirth') || ''),
+            gender: String(form.get('gender') || ''),
+            phone: String(form.get('phone') || '').trim(),
+            audiences: audience ? [audience] : [],
+            onboardingComplete: false,
+          },
+        },
       })
-      const result = (await response.json().catch(() => ({}))) as ApiResponse
 
-      if (!response.ok) throw new Error(result.message || 'We could not create your account.')
-      setSuccess(result.message || 'Account created. Check your email to verify it.')
+      if (authError) throw authError
+      if (!data.user) throw new Error('We could not create your account.')
+
+      setSuccess('Account created. Check your email to verify it before logging in.')
     } catch (signupError) {
       setError(
         signupError instanceof Error ? signupError.message : 'We could not create your account.',

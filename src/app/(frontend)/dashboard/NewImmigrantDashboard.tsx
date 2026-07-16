@@ -10,12 +10,9 @@ import {
   ChevronRight,
   CircleHelp,
   ClipboardCheck,
-  CreditCard,
-  FlaskConical,
   Globe2,
   HeartHandshake,
   Home,
-  Hospital,
   Languages,
   LogOut,
   MapPin,
@@ -23,16 +20,18 @@ import {
   Search,
   Settings,
   SlidersHorizontal,
-  Stethoscope,
   UserRound,
-  UsersRound,
   X,
   type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 
-type DashboardProps = { firstName: string }
+import { createClient } from '@/lib/supabase/client'
+import type { Audience, UserRole } from '@/lib/supabase/userProfile'
+import { getDashboardProfile, getRoleLabel } from './dashboardProfiles'
+
+type DashboardProps = { audiences: Audience[]; firstName: string; role: UserRole }
 type NavItem = { label: string; icon: LucideIcon; href: string; badge?: string }
 
 const navigation: NavItem[] = [
@@ -51,22 +50,6 @@ const accountNavigation: NavItem[] = [
   { label: 'Personalization', icon: SlidersHorizontal, href: '/account' },
   { label: 'Settings', icon: Settings, href: '/account' },
   { label: 'Help & Support', icon: CircleHelp, href: '/contact' },
-]
-
-const journey = [
-  ['Apply for a Provincial Health Card', true],
-  ['Learn how the healthcare system works', true],
-  ['Register with a Family Doctor', false],
-  ['Find a Walk-in Clinic near you', false],
-  ['Understand Emergency vs. Urgent Care', false],
-  ['Learn about Lab Tests & Results', false],
-] as const
-
-const services = [
-  { label: 'Walk-in Clinics', detail: '5 locations nearby', icon: Hospital },
-  { label: 'Family Doctors', detail: '12 accepting patients', icon: UserRound },
-  { label: 'Hospitals', detail: '3 hospitals nearby', icon: Stethoscope },
-  { label: 'Settlement & Community Services', detail: '8 organizations', icon: UsersRound },
 ]
 
 function Card({
@@ -104,14 +87,17 @@ function Card({
   )
 }
 
-export function NewImmigrantDashboard({ firstName }: DashboardProps) {
+export function PersonalizedDashboard({ audiences, firstName, role }: DashboardProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const dashboard = getDashboardProfile(audiences)
+  const roleLabel = getRoleLabel(role)
 
   const logout = async () => {
     setIsLoggingOut(true)
-    const response = await fetch('/api/users/logout', { method: 'POST' })
-    if (response.ok) window.location.assign('/login')
+    const supabase = createClient()
+    const { error } = await supabase.auth.signOut()
+    if (!error) window.location.assign('/login')
     else setIsLoggingOut(false)
   }
 
@@ -232,15 +218,15 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/10" />
             <div className="relative">
               <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-700">
-                New immigrant dashboard
+                {dashboard.label}
               </span>
+              <small className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">
+                {roleLabel}
+              </small>
               <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
                 Welcome back, {firstName}! 👋
               </h1>
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-                We’re happy to have you here. Let’s continue your journey to better health in
-                Canada.
-              </p>
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">{dashboard.intro}</p>
             </div>
           </section>
 
@@ -250,23 +236,18 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
               <label className="flex min-w-0 flex-1 items-center rounded-xl border border-slate-200 px-4 py-3">
                 <input
                   className="w-full bg-transparent text-sm outline-none"
-                  placeholder="Search topics, resources, or ask a question…"
+                  placeholder={dashboard.searchPlaceholder}
                 />
                 <Search className="h-5 w-5 text-slate-500" />
               </label>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {[
-                  ['Find a Family Doctor', UserRound],
-                  ['Health Card', CreditCard],
-                  ['Walk-in Clinics', Hospital],
-                  ['Understand Lab Results', FlaskConical],
-                ].map(([label, Icon]) => (
+                {dashboard.quickActions.map(({ label, href, icon: Icon }) => (
                   <Link
-                    key={label as string}
-                    href="/topic/healthcare-system"
+                    key={label}
+                    href={href}
                     className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold hover:border-teal-300 hover:bg-teal-50"
                   >
-                    <Icon className="h-6 w-6 text-teal-600" /> {label as string}
+                    {Icon ? <Icon className="h-6 w-6 text-teal-600" /> : null} {label}
                   </Link>
                 ))}
               </div>
@@ -288,15 +269,15 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
               }
             >
               <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-                {journey.map(([label, done]) => (
+                {dashboard.journey.map(({ label, detail }) => (
                   <div key={label} className="flex items-center gap-3 px-3 py-2.5 text-xs">
                     <span
-                      className={`flex h-5 w-5 items-center justify-center rounded-full border ${done ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-400'}`}
+                      className={`flex h-5 w-5 items-center justify-center rounded-full border ${detail === 'completed' ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-400'}`}
                     >
-                      {done ? <Check className="h-3 w-3" /> : null}
+                      {detail === 'completed' ? <Check className="h-3 w-3" /> : null}
                     </span>
                     <span>{label}</span>
-                    {done ? (
+                    {detail === 'completed' ? (
                       <b className="ml-auto text-[10px] text-teal-600">Completed</b>
                     ) : (
                       <ChevronRight className="ml-auto h-4 w-4" />
@@ -314,19 +295,22 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
                 footer={
                   <Link
                     className="text-sm font-semibold text-teal-700"
-                    href="/topic/healthcare-system"
+                    href={dashboard.learning.href}
                   >
                     Go to My Learning →
                   </Link>
                 }
               >
                 <div className="rounded-xl border border-slate-200 p-3">
-                  <p className="text-sm font-bold">Understanding Canadian Healthcare</p>
+                  <p className="text-sm font-bold">{dashboard.learning.label}</p>
                   <div className="mt-3 flex items-center gap-3">
                     <div className="h-2 flex-1 rounded-full bg-slate-200">
-                      <div className="h-full w-3/4 rounded-full bg-teal-600" />
+                      <div
+                        className="h-full rounded-full bg-teal-600"
+                        style={{ width: `${dashboard.learning.progress}%` }}
+                      />
                     </div>
-                    <span className="text-xs text-slate-500">75%</span>
+                    <span className="text-xs text-slate-500">{dashboard.learning.progress}%</span>
                   </div>
                 </div>
               </Card>
@@ -340,17 +324,13 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
                   </Link>
                 }
               >
-                {[
-                  'Health Insurance in Canada',
-                  'How to Register a Family Doctor',
-                  'Walk-in Clinics: What to Know',
-                ].map((item) => (
+                {dashboard.recommendations.map((item) => (
                   <Link
-                    key={item}
-                    href="/resources"
+                    key={item.label}
+                    href={item.href}
                     className="flex items-center border-b border-slate-100 py-2 text-xs last:border-0"
                   >
-                    {item}
+                    {item.label}
                     <ChevronRight className="ml-auto h-4 w-4" />
                   </Link>
                 ))}
@@ -368,10 +348,10 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
               }
             >
               <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-                {services.map(({ label, detail, icon: Icon }) => (
-                  <Link key={label} href="/resources" className="flex items-center gap-3 px-3 py-3">
+                {dashboard.services.map(({ label, detail, href, icon: Icon }) => (
+                  <Link key={label} href={href} className="flex items-center gap-3 px-3 py-3">
                     <span className="rounded-lg bg-teal-50 p-2 text-teal-700">
-                      <Icon className="h-5 w-5" />
+                      {Icon ? <Icon className="h-5 w-5" /> : null}
                     </span>
                     <span>
                       <b className="block text-xs">{label}</b>
@@ -394,24 +374,23 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
                 </Link>
               }
             >
-              {[
-                ['MAY 24', 'Health Insurance Workshop', 'Sat, May 24 · 1:00 PM – 3:00 PM'],
-                ['MAY 31', 'Newcomer Health Orientation', 'Sat, May 31 · 10:00 AM – 12:00 PM'],
-              ].map(([date, title, time]) => (
-                <div
-                  key={title}
-                  className="mb-2 flex gap-3 rounded-xl border border-slate-200 p-3 last:mb-0"
-                >
-                  <b className="w-12 text-center text-xs text-teal-700">{date}</b>
-                  <span>
-                    <b className="block text-xs">{title}</b>
-                    <small className="text-slate-500">{time}</small>
-                  </span>
-                  <button className="ml-auto rounded-lg bg-teal-50 px-3 text-xs font-semibold text-teal-700">
-                    Register
-                  </button>
-                </div>
-              ))}
+              {[['UPCOMING', dashboard.eventTitle, 'View the event page for schedule details']].map(
+                ([date, title, time]) => (
+                  <div
+                    key={title}
+                    className="mb-2 flex gap-3 rounded-xl border border-slate-200 p-3 last:mb-0"
+                  >
+                    <b className="w-12 text-center text-xs text-teal-700">{date}</b>
+                    <span>
+                      <b className="block text-xs">{title}</b>
+                      <small className="text-slate-500">{time}</small>
+                    </span>
+                    <button className="ml-auto rounded-lg bg-teal-50 px-3 text-xs font-semibold text-teal-700">
+                      Register
+                    </button>
+                  </div>
+                ),
+              )}
             </Card>
 
             <Card
@@ -425,20 +404,16 @@ export function NewImmigrantDashboard({ firstName }: DashboardProps) {
                 </Link>
               }
             >
-              {[
-                'Nutrition for New Immigrants',
-                'Mental Health Support in Canada',
-                'Pregnancy Care in Canada',
-              ].map((item) => (
+              {dashboard.savedResources.map((item) => (
                 <Link
-                  href="/resources"
-                  key={item}
+                  href={item.href}
+                  key={item.label}
                   className="flex items-center gap-3 border-b border-slate-100 py-2 last:border-0"
                 >
                   <span className="h-10 w-12 rounded-lg bg-gradient-to-br from-amber-100 to-teal-100" />
                   <span>
-                    <b className="block text-xs">{item}</b>
-                    <small className="text-slate-500">Article</small>
+                    <b className="block text-xs">{item.label}</b>
+                    <small className="text-slate-500">{item.detail}</small>
                   </span>
                 </Link>
               ))}

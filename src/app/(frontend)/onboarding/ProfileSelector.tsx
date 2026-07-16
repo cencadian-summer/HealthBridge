@@ -14,6 +14,8 @@ import {
 } from 'lucide-react'
 import { useState } from 'react'
 
+import { createClient } from '@/lib/supabase/client'
+
 const profiles = [
   {
     value: 'new-immigrant',
@@ -87,14 +89,12 @@ type ProfileSelectorProps = {
   buttonLabel?: string
   initialAudiences: string[]
   redirectTo?: string
-  userId: string
 }
 
 export function ProfileSelector({
   buttonLabel = 'Continue',
   initialAudiences,
   redirectTo = '/',
-  userId,
 }: ProfileSelectorProps) {
   const allowed = new Set(profiles.map((profile) => profile.value))
   const [selected, setSelected] = useState<Audience[]>(
@@ -120,17 +120,12 @@ export function ProfileSelector({
     setError('')
 
     try {
-      const response = await fetch(`/api/users/${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ audiences: selected, onboardingComplete: true }),
+      const supabase = createClient()
+      const { error: updateError } = await supabase.auth.updateUser({
+        data: { audiences: selected, onboardingComplete: true },
       })
 
-      if (response.status === 401 || response.status === 403) {
-        window.location.assign('/login')
-        return
-      }
-      if (!response.ok) throw new Error('We could not save your profiles. Please try again.')
+      if (updateError) throw updateError
 
       const destination =
         redirectTo === '/' && selected.includes('new-immigrant') ? '/dashboard' : redirectTo
