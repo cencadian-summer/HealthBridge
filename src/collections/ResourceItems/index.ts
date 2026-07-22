@@ -111,7 +111,8 @@ export const ResourceItems: CollectionConfig = {
           name: 'videoUrl',
           type: 'text',
           admin: {
-            description: 'Optional URL opened from the Watch Overview Video card.',
+            description:
+              'Embedded on the resource page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).',
           },
         },
         {

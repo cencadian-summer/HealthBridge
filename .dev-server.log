@@ -1,0 +1,11 @@
+
+> health-bridge@1.0.0 dev C:\Users\Owner\Desktop\healthBridge\HealthBridge
+> cross-env NODE_OPTIONS=--no-deprecation next dev
+
+▲ Next.js 16.2.6 (Turbopack)
+- Local:         http://localhost:3001
+- Network:       http://10.0.0.245:3001
+- Environments: .env
+✓ Ready in 1442ms
+[?25h
+ ELIFECYCLE  Command failed with exit code 1.

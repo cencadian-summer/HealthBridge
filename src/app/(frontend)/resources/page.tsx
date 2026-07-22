@@ -22,6 +22,7 @@ import { fetchResourceItems } from '../_utils/fetchResourceItems'
 import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
 import { localizePath } from '@/i18n/routing'
 import { MultilingualSupportMenu } from './_components/MultilingualSupportMenu'
+import { BMICalculator } from './_components/BMICalculator'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Hospital,
@@ -251,6 +252,8 @@ export default async function ResourcesPage() {
           </div>
         </div>
       </section>
+
+      <BMICalculator />
 
       <section className="resources-section">
         <div className="resources-container resources-container--section">

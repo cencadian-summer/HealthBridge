@@ -19,6 +19,7 @@ import {
 } from 'lucide-react'
 
 import Link from 'next/link'
+import { VideoEmbed } from '@/components/VideoEmbed'
 import { PayloadRedirects } from '@/components/PayloadRedirects'
 import RichText from '@/components/RichText'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
@@ -255,19 +256,21 @@ export default async function ResourceDetailPage({ params: paramsPromise }: Args
                   {resource.detailIntro || resource.description}
                 </p>
               </div>
-
-              {resource.videoUrl ? (
-                <Link
-                  href={resource.videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="rounded-2xl border border-blue-100 bg-blue-50/70 px-5 py-4 text-sm font-semibold text-blue-700 transition-opacity hover:opacity-90 dark:border-blue-900/40 dark:bg-blue-900/20 dark:text-blue-300"
-                >
-                  <div className="flex items-center gap-2">Watch Overview Video</div>
-                  <div className="pl-1 text-sm font-bold">{resource.videoDuration || '3 min'}</div>
-                </Link>
-              ) : null}
             </div>
+
+            {resource.videoUrl ? (
+              <div className="mb-8">
+                <div className="mb-3 flex items-center justify-between gap-3">
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                    Watch Overview Video
+                  </h2>
+                  <span className="text-sm font-semibold text-blue-700 dark:text-blue-300">
+                    {resource.videoDuration || '3 min'}
+                  </span>
+                </div>
+                <VideoEmbed url={resource.videoUrl} title={`${resource.title} overview video`} />
+              </div>
+            ) : null}
 
             <div className="space-y-2.5">
               {sectionItems.map((section, index) => (

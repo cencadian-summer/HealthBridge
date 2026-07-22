@@ -178,7 +178,8 @@ export const HealthTopics: CollectionConfig = {
           name: 'videoUrl',
           type: 'text',
           admin: {
-            description: 'Optional YouTube video link used by the Watch Overview Video badge.',
+            description:
+              'Embedded on the topic page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).',
           },
         },
         {

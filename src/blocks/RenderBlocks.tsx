@@ -11,6 +11,7 @@ import { ConceptExplainerBlock } from '@/blocks/ConceptExplainer/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { VideoBlock } from '@/blocks/VideoBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -74,6 +75,18 @@ export const RenderBlocks = async ({
                 className="max-w-5xl mx-auto"
                 imgClassName="object-cover"
               />
+            </div>
+          )
+        }
+
+        if (blockType === 'videoBlock') {
+          const resolvedThumbnail = await resolveBlockMedia(
+            (block as { thumbnail?: unknown }).thumbnail,
+          )
+
+          return (
+            <div className={blockSpacing} key={index}>
+              <VideoBlock {...block} thumbnail={resolvedThumbnail as never} />
             </div>
           )
         }

@@ -230,7 +230,15 @@ export interface Page {
    * Alt text for the hero image (important for accessibility and SEO).
    */
   heroAlt?: string | null;
-  layout: (CallToActionBlock | ConceptExplainerBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ConceptExplainerBlock
+    | ContentBlock
+    | MediaBlock
+    | VideoBlock
+    | ArchiveBlock
+    | FormBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -579,7 +587,7 @@ export interface HealthTopic {
    */
   videoDuration?: string | null;
   /**
-   * Optional YouTube video link used by the Watch Overview Video badge.
+   * Embedded on the topic page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).
    */
   videoUrl?: string | null;
   /**
@@ -799,6 +807,39 @@ export interface MediaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock".
+ */
+export interface VideoBlock {
+  /**
+   * Heading displayed above the video.
+   */
+  title: string;
+  /**
+   * YouTube, Vimeo, or direct HTTPS video file URL (for example MP4 or WebM).
+   */
+  videoUrl: string;
+  /**
+   * Optional duration displayed beside the title, for example 3 min.
+   */
+  duration?: string | null;
+  /**
+   * Optional preview image. When omitted, YouTube and Vimeo display their own player preview.
+   */
+  thumbnail?: (string | null) | Media;
+  /**
+   * Accessible description for the custom thumbnail.
+   */
+  thumbnailAlt?: string | null;
+  /**
+   * Optional supporting text displayed below the player.
+   */
+  caption?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'videoBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1075,7 +1116,7 @@ export interface ResourceItem {
    */
   videoDuration?: string | null;
   /**
-   * Optional URL opened from the Watch Overview Video card.
+   * Embedded on the resource page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).
    */
   videoUrl?: string | null;
   /**
@@ -1515,6 +1556,7 @@ export interface PagesSelect<T extends boolean = true> {
         conceptExplainer?: T | ConceptExplainerBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
+        videoBlock?: T | VideoBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
       };
@@ -1611,6 +1653,20 @@ export interface MediaBlockSelect<T extends boolean = true> {
   mediaPosition?: T;
   media?: T;
   writeUp?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock_select".
+ */
+export interface VideoBlockSelect<T extends boolean = true> {
+  title?: T;
+  videoUrl?: T;
+  duration?: T;
+  thumbnail?: T;
+  thumbnailAlt?: T;
+  caption?: T;
   id?: T;
   blockName?: T;
 }

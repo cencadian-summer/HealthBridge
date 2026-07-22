@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { VideoEmbed } from '@/components/VideoEmbed'
 import {
   Ambulance,
   BookOpen,
@@ -236,24 +237,7 @@ export function TopicDetailTemplate({
                 </div>
               </div>
 
-              {videoUrl ? (
-                <Link
-                  href={videoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`mt-4 inline-flex rounded-2xl border px-4 py-3 text-sm font-semibold transition-opacity hover:opacity-90 ${topicAccent.panel} border-transparent`}
-                >
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <PlayBadgeIcon />
-                      Watch Overview Video
-                    </div>
-                    <div className={`pl-6 text-sm font-bold ${topicAccent.arrow} dark:text-white`}>
-                      {videoDuration}
-                    </div>
-                  </div>
-                </Link>
-              ) : (
+              {!videoUrl ? (
                 <div
                   className={`mt-4 inline-flex rounded-2xl border px-4 py-3 text-sm font-semibold ${topicAccent.panel} border-transparent`}
                 >
@@ -267,7 +251,7 @@ export function TopicDetailTemplate({
                     </div>
                   </div>
                 </div>
-              )}
+              ) : null}
             </div>
 
             {detailImageUrl ? (
@@ -288,6 +272,20 @@ export function TopicDetailTemplate({
             ) : null}
           </div>
         </div>
+
+        {videoUrl ? (
+          <div className="mb-8">
+            <div className="mb-3 flex items-center justify-between gap-3">
+              <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                Watch Overview Video
+              </h2>
+              <span className={`text-sm font-semibold ${topicAccent.arrow} dark:text-white`}>
+                {videoDuration}
+              </span>
+            </div>
+            <VideoEmbed url={videoUrl} title={`${title} overview video`} />
+          </div>
+        ) : null}
 
         <div className="space-y-2.5">
           <TopicReadingProgress
