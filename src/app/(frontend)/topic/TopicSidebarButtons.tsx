@@ -1,6 +1,9 @@
 'use client'
 
+import { LogOut } from 'lucide-react'
 import { useState } from 'react'
+
+import { createClient } from '@/lib/supabase/client'
 
 type TopicSidebarButtonsProps = {
   items: string[]
@@ -24,6 +27,23 @@ export function TopicSidebarButtons({
   sectionAnchors,
 }: TopicSidebarButtonsProps) {
   const [activeItem, setActiveItem] = useState(initialActive)
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [logoutError, setLogoutError] = useState('')
+
+  const handleLogout = async () => {
+    setIsLoggingOut(true)
+    setLogoutError('')
+
+    try {
+      const supabase = createClient()
+      const { error } = await supabase.auth.signOut()
+      if (error) throw error
+      window.location.assign('/login')
+    } catch (error) {
+      setLogoutError(error instanceof Error ? error.message : 'Unable to log out.')
+      setIsLoggingOut(false)
+    }
+  }
 
   const scrollToMatchingSection = (itemLabel: string) => {
     const normalizedItem = normalize(itemLabel)
@@ -67,6 +87,18 @@ export function TopicSidebarButtons({
           </button>
         )
       })}
+      <div className="mt-5 border-t border-slate-200 pt-5">
+        <button
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-50 px-3 py-2.5 text-sm font-semibold text-red-700 hover:bg-red-100 disabled:opacity-60"
+          disabled={isLoggingOut}
+          onClick={handleLogout}
+          type="button"
+        >
+          <LogOut aria-hidden="true" className="h-4 w-4" />
+          {isLoggingOut ? 'Logging out?' : 'Log out'}
+        </button>
+        {logoutError ? <p role="alert">{logoutError}</p> : null}
+      </div>
     </div>
   )
 }

@@ -8,6 +8,7 @@ import { ConceptExplainer } from '../../blocks/ConceptExplainer/config'
 import { Content } from '../../blocks/Content/config'
 import { FormBlock } from '../../blocks/Form/config'
 import { MediaBlock } from '../../blocks/MediaBlock/config'
+import { VideoBlock } from '../../blocks/VideoBlock/config'
 import { hero } from '@/heros/config'
 import { logCollectionAfterChange, logCollectionAfterDelete } from '@/hooks/adminActivity'
 import { slugField } from 'payload'
@@ -92,7 +93,15 @@ export const Pages: CollectionConfig<'pages'> = {
             {
               name: 'layout',
               type: 'blocks',
-              blocks: [CallToAction, ConceptExplainer, Content, MediaBlock, Archive, FormBlock],
+              blocks: [
+                CallToAction,
+                ConceptExplainer,
+                Content,
+                MediaBlock,
+                VideoBlock,
+                Archive,
+                FormBlock,
+              ],
               localized: true,
               required: true,
               admin: {

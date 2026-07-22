@@ -230,7 +230,15 @@ export interface Page {
    * Alt text for the hero image (important for accessibility and SEO).
    */
   heroAlt?: string | null;
-  layout: (CallToActionBlock | ConceptExplainerBlock | ContentBlock | MediaBlock | ArchiveBlock | FormBlock)[];
+  layout: (
+    | CallToActionBlock
+    | ConceptExplainerBlock
+    | ContentBlock
+    | MediaBlock
+    | VideoBlock
+    | ArchiveBlock
+    | FormBlock
+  )[];
   meta?: {
     title?: string | null;
     /**
@@ -449,6 +457,35 @@ export interface Category {
 export interface User {
   id: string;
   name?: string | null;
+  dateOfBirth?: string | null;
+  gender?: ('woman' | 'man' | 'non-binary' | 'prefer-not-to-say' | 'self-described') | null;
+  phone?: string | null;
+  role?: ('member' | 'editor' | 'admin') | null;
+  audiences?:
+    | (
+        | 'new-immigrant'
+        | 'international-student'
+        | 'parent'
+        | 'youth'
+        | 'refugee'
+        | 'healthcare-provider'
+        | 'settlement-worker'
+        | 'other'
+      )[]
+    | null;
+  professionalStatus?: ('not-applicable' | 'pending' | 'verified' | 'rejected') | null;
+  onboardingComplete?: boolean | null;
+  /**
+   * Reading progress saved automatically from health topic pages.
+   */
+  topicProgress?:
+    | {
+        topicSlug: string;
+        completedSectionIds?: string[] | null;
+        lastReadAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -456,6 +493,8 @@ export interface User {
   resetPasswordExpiration?: string | null;
   salt?: string | null;
   hash?: string | null;
+  _verified?: boolean | null;
+  _verificationToken?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
@@ -511,6 +550,10 @@ export interface HealthTopic {
    */
   iconImage?: (string | null) | Media;
   /**
+   * Optional image for the small circular badge on the topic card. If empty, the selected icon is used.
+   */
+  badgeImage?: (string | null) | Media;
+  /**
    * Number of lessons to display on the card badge.
    */
   lessonsCount?: number | null;
@@ -544,7 +587,7 @@ export interface HealthTopic {
    */
   videoDuration?: string | null;
   /**
-   * Optional YouTube video link used by the Watch Overview Video badge.
+   * Embedded on the topic page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).
    */
   videoUrl?: string | null;
   /**
@@ -572,6 +615,10 @@ export interface HealthTopic {
          * One-to-two sentence description of this section.
          */
         description: string;
+        /**
+         * Optional image shown on this section card. If empty, the card uses an automatic icon.
+         */
+        image?: (string | null) | Media;
         /**
          * Create a page in the Pages collection using the standard page template, then link it here.
          */
@@ -760,6 +807,39 @@ export interface MediaBlock {
   id?: string | null;
   blockName?: string | null;
   blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock".
+ */
+export interface VideoBlock {
+  /**
+   * Heading displayed above the video.
+   */
+  title: string;
+  /**
+   * YouTube, Vimeo, or direct HTTPS video file URL (for example MP4 or WebM).
+   */
+  videoUrl: string;
+  /**
+   * Optional duration displayed beside the title, for example 3 min.
+   */
+  duration?: string | null;
+  /**
+   * Optional preview image. When omitted, YouTube and Vimeo display their own player preview.
+   */
+  thumbnail?: (string | null) | Media;
+  /**
+   * Accessible description for the custom thumbnail.
+   */
+  thumbnailAlt?: string | null;
+  /**
+   * Optional supporting text displayed below the player.
+   */
+  caption?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'videoBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1020,6 +1100,14 @@ export interface ResourceItem {
    */
   description: string;
   /**
+   * Small category label shown above the card title on the Resources page.
+   */
+  categoryLabel?: string | null;
+  /**
+   * Short reading-time label shown below the card title, e.g. "5 min read".
+   */
+  readTime?: string | null;
+  /**
    * Short intro paragraph shown near the top of the detail page.
    */
   detailIntro: string;
@@ -1028,7 +1116,7 @@ export interface ResourceItem {
    */
   videoDuration?: string | null;
   /**
-   * Optional URL opened from the Watch Overview Video card.
+   * Embedded on the resource page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).
    */
   videoUrl?: string | null;
   /**
@@ -1468,6 +1556,7 @@ export interface PagesSelect<T extends boolean = true> {
         conceptExplainer?: T | ConceptExplainerBlockSelect<T>;
         content?: T | ContentBlockSelect<T>;
         mediaBlock?: T | MediaBlockSelect<T>;
+        videoBlock?: T | VideoBlockSelect<T>;
         archive?: T | ArchiveBlockSelect<T>;
         formBlock?: T | FormBlockSelect<T>;
       };
@@ -1564,6 +1653,20 @@ export interface MediaBlockSelect<T extends boolean = true> {
   mediaPosition?: T;
   media?: T;
   writeUp?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "VideoBlock_select".
+ */
+export interface VideoBlockSelect<T extends boolean = true> {
+  title?: T;
+  videoUrl?: T;
+  duration?: T;
+  thumbnail?: T;
+  thumbnailAlt?: T;
+  caption?: T;
   id?: T;
   blockName?: T;
 }
@@ -1743,6 +1846,21 @@ export interface CategoriesSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  dateOfBirth?: T;
+  gender?: T;
+  phone?: T;
+  role?: T;
+  audiences?: T;
+  professionalStatus?: T;
+  onboardingComplete?: T;
+  topicProgress?:
+    | T
+    | {
+        topicSlug?: T;
+        completedSectionIds?: T;
+        lastReadAt?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -1750,6 +1868,8 @@ export interface UsersSelect<T extends boolean = true> {
   resetPasswordExpiration?: T;
   salt?: T;
   hash?: T;
+  _verified?: T;
+  _verificationToken?: T;
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
@@ -1770,6 +1890,7 @@ export interface HealthTopicsSelect<T extends boolean = true> {
   description?: T;
   icon?: T;
   iconImage?: T;
+  badgeImage?: T;
   lessonsCount?: T;
   order?: T;
   subtitle?: T;
@@ -1791,6 +1912,7 @@ export interface HealthTopicsSelect<T extends boolean = true> {
     | {
         title?: T;
         description?: T;
+        image?: T;
         detailPage?: T;
         keyPoints?:
           | T
@@ -1812,6 +1934,8 @@ export interface ResourceItemsSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   description?: T;
+  categoryLabel?: T;
+  readTime?: T;
   detailIntro?: T;
   videoDuration?: T;
   videoUrl?: T;

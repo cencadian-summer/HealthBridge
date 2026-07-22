@@ -11,6 +11,7 @@ import { ConceptExplainerBlock } from '@/blocks/ConceptExplainer/Component'
 import { ContentBlock } from '@/blocks/Content/Component'
 import { FormBlock } from '@/blocks/Form/Component'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
+import { VideoBlock } from '@/blocks/VideoBlock/Component'
 
 const blockComponents = {
   archive: ArchiveBlock,
@@ -59,12 +60,13 @@ export const RenderBlocks = async ({
     const renderedBlocks = await Promise.all(
       blocks.map(async (block, index) => {
         const { blockType } = block
+        const blockSpacing = index === 0 ? 'mb-16' : 'my-16'
 
         if (blockType === 'mediaBlock') {
           const resolvedMedia = await resolveBlockMedia((block as { media?: unknown }).media)
 
           return (
-            <div className="my-16" key={index}>
+            <div className={blockSpacing} key={index}>
               <MediaBlock
                 {...block}
                 media={resolvedMedia as never}
@@ -77,11 +79,23 @@ export const RenderBlocks = async ({
           )
         }
 
+        if (blockType === 'videoBlock') {
+          const resolvedThumbnail = await resolveBlockMedia(
+            (block as { thumbnail?: unknown }).thumbnail,
+          )
+
+          return (
+            <div className={blockSpacing} key={index}>
+              <VideoBlock {...block} thumbnail={resolvedThumbnail as never} />
+            </div>
+          )
+        }
+
         if (blockType === 'conceptExplainer') {
           const resolvedGraphic = await resolveBlockMedia((block as { graphic?: unknown }).graphic)
 
           return (
-            <div className="my-16" key={index}>
+            <div className={blockSpacing} key={index}>
               <ConceptExplainerBlock {...block} graphic={resolvedGraphic as never} />
             </div>
           )
@@ -92,7 +106,7 @@ export const RenderBlocks = async ({
 
           if (Block) {
             return (
-              <div className="my-16" key={index}>
+              <div className={blockSpacing} key={index}>
                 {/* @ts-expect-error there may be some mismatch between the expected types here */}
                 <Block {...block} disableInnerContainer locale={locale} />
               </div>

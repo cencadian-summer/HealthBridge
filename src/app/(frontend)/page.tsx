@@ -21,7 +21,7 @@ const DEFAULTS = {
   primaryCTAUrl: '/topic',
   secondaryCTALabel: 'Browse Resources',
   secondaryCTAUrl: '/resources',
-  footerNote: 'Free · Multilingual · Trusted by immigrants, students & newcomers',
+  footerNote: 'Free · Multilingual · Trusted by newcomers',
   canadianBadgeText: '🍁 Canada-focused health guidance',
 }
 
@@ -34,6 +34,8 @@ const TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Stethoscope',
     iconImageUrl: null,
     iconImageAlt: 'Healthcare',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Healthcare',
   },
   {
     id: 'mental-health',
@@ -43,6 +45,8 @@ const TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Brain',
     iconImageUrl: null,
     iconImageAlt: 'Mental Health',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Mental Health',
   },
   {
     id: 'nutrition',
@@ -52,6 +56,8 @@ const TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'HeartPulse',
     iconImageUrl: null,
     iconImageAlt: 'Nutrition',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Nutrition',
   },
   {
     id: 'youth-health',
@@ -61,6 +67,8 @@ const TOPIC_FALLBACKS: HomeTopic[] = [
     icon: 'Users',
     iconImageUrl: null,
     iconImageAlt: 'Youth Health',
+    badgeImageUrl: null,
+    badgeImageAlt: 'Youth Health',
   },
 ]
 
@@ -177,6 +185,10 @@ export default async function HomePage() {
             topic.iconImage && typeof topic.iconImage === 'object'
               ? (topic.iconImage as MediaFromPayload)
               : null
+          const badgeMedia =
+            topic.badgeImage && typeof topic.badgeImage === 'object'
+              ? (topic.badgeImage as MediaFromPayload)
+              : null
 
           return {
             id: topic.id,
@@ -186,6 +198,8 @@ export default async function HomePage() {
             icon: topic.icon ?? null,
             iconImageUrl: getMediaUrl(media?.url) || null,
             iconImageAlt: media?.alt ?? topic.title,
+            badgeImageUrl: getMediaUrl(badgeMedia?.url) || null,
+            badgeImageAlt: badgeMedia?.alt ?? topic.title,
           }
         })
       : TOPIC_FALLBACKS
@@ -250,7 +264,9 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">{d.footerNote}</p>
+            <p className="mt-6 text-xs font-semibold text-slate-800 dark:text-slate-200">
+              {d.footerNote}
+            </p>
           </div>
         </div>
 

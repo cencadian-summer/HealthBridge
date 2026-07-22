@@ -97,6 +97,15 @@ export const HealthTopics: CollectionConfig = {
       },
     },
     {
+      name: 'badgeImage',
+      type: 'upload',
+      relationTo: 'media',
+      admin: {
+        description:
+          'Optional image for the small circular badge on the topic card. If empty, the selected icon is used.',
+      },
+    },
+    {
       name: 'lessonsCount',
       type: 'number',
       defaultValue: 10,
@@ -169,7 +178,8 @@ export const HealthTopics: CollectionConfig = {
           name: 'videoUrl',
           type: 'text',
           admin: {
-            description: 'Optional YouTube video link used by the Watch Overview Video badge.',
+            description:
+              'Embedded on the topic page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).',
           },
         },
         {
@@ -219,6 +229,15 @@ export const HealthTopics: CollectionConfig = {
               localized: true,
               required: true,
               admin: { description: 'One-to-two sentence description of this section.' },
+            },
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description:
+                  'Optional image shown on this section card. If empty, the card uses an automatic icon.',
+              },
             },
             {
               name: 'detailPage',

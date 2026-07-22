@@ -13,6 +13,7 @@ export type TopicSectionFromPayload = {
   id?: string
   title: string
   description: string
+  image?: MediaFromPayload | string | null
   detailPage?:
     | {
         id: string
@@ -37,6 +38,7 @@ export type TopicFromPayload = {
   description?: string
   icon?: string
   iconImage?: MediaFromPayload | string | null
+  badgeImage?: MediaFromPayload | string | null
   lessonsCount?: number
   order?: number
   subtitle?: string
@@ -228,6 +230,15 @@ export function toTemplateProps(topic: TopicFromPayload, activeSidebarLabel?: st
     supportPhone: topic.supportPhone ?? '1-888-315-9257',
     sections:
       topic.sections?.map((s) => ({
+        id: s.id,
+        imageUrl:
+          s.image && typeof s.image === 'object'
+            ? getMediaUrl((s.image as MediaFromPayload).url)
+            : '',
+        imageAlt:
+          s.image && typeof s.image === 'object'
+            ? ((s.image as MediaFromPayload).alt ?? s.title)
+            : s.title,
         title: s.title,
         description: s.description,
         detailPageSlug:

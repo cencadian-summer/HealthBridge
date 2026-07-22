@@ -63,6 +63,24 @@ export const ResourceItems: CollectionConfig = {
       admin: { description: 'Short description shown on the card.' },
     },
     {
+      name: 'categoryLabel',
+      type: 'text',
+      localized: true,
+      defaultValue: 'Community',
+      admin: {
+        description: 'Small category label shown above the card title on the Resources page.',
+      },
+    },
+    {
+      name: 'readTime',
+      type: 'text',
+      localized: true,
+      defaultValue: '3 min read',
+      admin: {
+        description: 'Short reading-time label shown below the card title, e.g. "5 min read".',
+      },
+    },
+    {
       type: 'collapsible',
       label: 'Detail Page Content',
       admin: {
@@ -93,7 +111,8 @@ export const ResourceItems: CollectionConfig = {
           name: 'videoUrl',
           type: 'text',
           admin: {
-            description: 'Optional URL opened from the Watch Overview Video card.',
+            description:
+              'Embedded on the resource page. Supports YouTube, Vimeo, or a direct HTTPS video file URL (for example MP4 or WebM).',
           },
         },
         {

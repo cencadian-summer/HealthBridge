@@ -11,6 +11,8 @@ export type ResourceItem = {
   icon: string
   imageUrl: string | null
   imageAlt: string
+  categoryLabel: string
+  readTime: string
   order?: number | null
 }
 
@@ -31,6 +33,8 @@ const fetchResourceItemsRaw = async (): Promise<ResourceItem[]> => {
     slug: typeof doc.slug === 'string' ? doc.slug : '',
     description: typeof doc.description === 'string' ? doc.description : '',
     icon: typeof doc.icon === 'string' ? doc.icon : 'Hospital',
+    categoryLabel: typeof doc.categoryLabel === 'string' ? doc.categoryLabel : 'Community',
+    readTime: typeof doc.readTime === 'string' ? doc.readTime : '3 min read',
     imageUrl:
       doc.heroImage && typeof doc.heroImage === 'object' && typeof doc.heroImage.url === 'string'
         ? getMediaUrl(doc.heroImage.url)
