@@ -9,6 +9,9 @@ import {
   hasCompletedOnboarding,
 } from '@/lib/supabase/userProfile'
 import { PersonalizedDashboard } from './NewImmigrantDashboard'
+import { InternationalStudentDashboard } from './InternationalStudentDashboard'
+import { ParentFamilyDashboard } from './ParentFamilyDashboard'
+import { YouthTeenDashboard } from './YouthTeenDashboard'
 
 export const metadata: Metadata = {
   title: 'Dashboard | HealthBridge',
@@ -25,12 +28,21 @@ export default async function DashboardPage() {
   if (!hasCompletedOnboarding(user)) redirect('/onboarding')
 
   const firstName = getUserName(user).trim().split(/\s+/)[0] || 'there'
+  const audiences = getUserAudiences(user)
+
+  if (audiences[0] === 'international-student') {
+    return <InternationalStudentDashboard firstName={firstName} />
+  }
+
+  if (audiences[0] === 'parent') {
+    return <ParentFamilyDashboard firstName={firstName} />
+  }
+
+  if (audiences[0] === 'youth') {
+    return <YouthTeenDashboard firstName={firstName} />
+  }
 
   return (
-    <PersonalizedDashboard
-      audiences={getUserAudiences(user)}
-      firstName={firstName}
-      role={getUserRole(user)}
-    />
+    <PersonalizedDashboard audiences={audiences} firstName={firstName} role={getUserRole(user)} />
   )
 }

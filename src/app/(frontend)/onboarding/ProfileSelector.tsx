@@ -127,8 +127,7 @@ export function ProfileSelector({
 
       if (updateError) throw updateError
 
-      const destination =
-        redirectTo === '/' && selected.includes('new-immigrant') ? '/dashboard' : redirectTo
+      const destination = redirectTo === '/' ? '/dashboard' : redirectTo
       window.location.assign(destination)
     } catch (saveError) {
       setError(saveError instanceof Error ? saveError.message : 'We could not save your profiles.')
