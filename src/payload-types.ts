@@ -74,6 +74,7 @@ export interface Config {
     users: User;
     'health-topics': HealthTopic;
     'resource-items': ResourceItem;
+    'dashboard-profiles': DashboardProfile;
     'admin-activities': AdminActivity;
     redirects: Redirect;
     forms: Form;
@@ -99,6 +100,7 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     'health-topics': HealthTopicsSelect<false> | HealthTopicsSelect<true>;
     'resource-items': ResourceItemsSelect<false> | ResourceItemsSelect<true>;
+    'dashboard-profiles': DashboardProfilesSelect<false> | DashboardProfilesSelect<true>;
     'admin-activities': AdminActivitiesSelect<false> | AdminActivitiesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
@@ -789,6 +791,10 @@ export interface MediaBlock {
    */
   mediaPosition?: ('left' | 'right') | null;
   media?: (string | null) | Media;
+  /**
+   * Choose how the image fills the block. Natural dimensions preserves the uploaded aspect ratio.
+   */
+  imageFit?: ('natural' | 'contain' | 'cover') | null;
   writeUp?: {
     root: {
       type: string;
@@ -1218,6 +1224,230 @@ export interface ResourceItem {
   createdAt: string;
 }
 /**
+ * Manage personalized dashboard copy, quick actions, learning content, recommendations, and services.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dashboard-profiles".
+ */
+export interface DashboardProfile {
+  id: string;
+  /**
+   * Internal title shown in Payload.
+   */
+  title: string;
+  profile:
+    | 'new-immigrant'
+    | 'international-student'
+    | 'parent'
+    | 'youth'
+    | 'refugee'
+    | 'healthcare-provider'
+    | 'settlement-worker'
+    | 'other';
+  dashboardLabel: string;
+  introduction: string;
+  searchPlaceholder?: string | null;
+  eventTitle?: string | null;
+  quickActions?:
+    | {
+        label: string;
+        icon?:
+          | (
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CreditCard'
+              | 'GraduationCap'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'MapPin'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  journey?:
+    | {
+        label: string;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        status?: ('completed' | 'next') | null;
+        id?: string | null;
+      }[]
+    | null;
+  continueLearning: {
+    label: string;
+    /**
+     * Select CMS content to generate the link automatically.
+     */
+    destination?:
+      | ({
+          relationTo: 'pages';
+          value: string | Page;
+        } | null)
+      | ({
+          relationTo: 'health-topics';
+          value: string | HealthTopic;
+        } | null)
+      | ({
+          relationTo: 'resource-items';
+          value: string | ResourceItem;
+        } | null);
+    /**
+     * Optional fallback or external URL. A selected destination takes priority.
+     */
+    customUrl?: string | null;
+    /**
+     * Fallback percentage until saved user progress is available.
+     */
+    initialProgress?: number | null;
+  };
+  recommendations?:
+    | {
+        label: string;
+        detail?: string | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  savedResources?:
+    | {
+        label: string;
+        detail?: string | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  services?:
+    | {
+        label: string;
+        detail?: string | null;
+        icon?:
+          | (
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CreditCard'
+              | 'GraduationCap'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'MapPin'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "admin-activities".
  */
@@ -1454,6 +1684,10 @@ export interface PayloadLockedDocument {
         value: string | ResourceItem;
       } | null)
     | ({
+        relationTo: 'dashboard-profiles';
+        value: string | DashboardProfile;
+      } | null)
+    | ({
         relationTo: 'admin-activities';
         value: string | AdminActivity;
       } | null)
@@ -1652,6 +1886,7 @@ export interface ContentBlockSelect<T extends boolean = true> {
 export interface MediaBlockSelect<T extends boolean = true> {
   mediaPosition?: T;
   media?: T;
+  imageFit?: T;
   writeUp?: T;
   id?: T;
   blockName?: T;
@@ -1980,6 +2215,75 @@ export interface ResourceItemsSelect<T extends boolean = true> {
   order?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dashboard-profiles_select".
+ */
+export interface DashboardProfilesSelect<T extends boolean = true> {
+  title?: T;
+  profile?: T;
+  dashboardLabel?: T;
+  introduction?: T;
+  searchPlaceholder?: T;
+  eventTitle?: T;
+  quickActions?:
+    | T
+    | {
+        label?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  journey?:
+    | T
+    | {
+        label?: T;
+        destination?: T;
+        customUrl?: T;
+        status?: T;
+        id?: T;
+      };
+  continueLearning?:
+    | T
+    | {
+        label?: T;
+        destination?: T;
+        customUrl?: T;
+        initialProgress?: T;
+      };
+  recommendations?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  savedResources?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  services?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2781,6 +3085,10 @@ export interface TaskSchedulePublish {
       | ({
           relationTo: 'posts';
           value: string | Post;
+        } | null)
+      | ({
+          relationTo: 'dashboard-profiles';
+          value: string | DashboardProfile;
         } | null);
     global?: ('homepage' | 'resources') | null;
     user?: (string | null) | User;

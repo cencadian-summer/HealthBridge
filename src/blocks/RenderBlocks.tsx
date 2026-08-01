@@ -73,7 +73,6 @@ export const RenderBlocks = async ({
                 disableInnerContainer
                 locale={locale}
                 className="max-w-5xl mx-auto"
-                imgClassName="object-cover"
               />
             </div>
           )

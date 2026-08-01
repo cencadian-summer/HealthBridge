@@ -17,7 +17,28 @@ import {
 
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
 
-export type DashboardLink = { detail?: string; href: string; icon?: LucideIcon; label: string }
+export type DashboardIconName =
+  | 'BookOpen'
+  | 'BriefcaseMedical'
+  | 'Building2'
+  | 'CreditCard'
+  | 'GraduationCap'
+  | 'HeartHandshake'
+  | 'Hospital'
+  | 'Languages'
+  | 'MapPin'
+  | 'ShieldCheck'
+  | 'Stethoscope'
+  | 'UserRound'
+  | 'UsersRound'
+
+export type DashboardLink = {
+  detail?: string
+  href: string
+  icon?: LucideIcon
+  iconName?: DashboardIconName
+  label: string
+}
 export type DashboardProfile = {
   eventTitle: string
   intro: string
@@ -32,7 +53,7 @@ export type DashboardProfile = {
 }
 
 type ProfileSeed = {
-  actions: Array<[string, LucideIcon]>
+  actions: Array<[string, LucideIcon, string?]>
   intro: string
   journey: string[]
   label: string
@@ -42,13 +63,36 @@ type ProfileSeed = {
   services: Array<[string, LucideIcon]>
 }
 
+const dashboardIcons: Record<DashboardIconName, LucideIcon> = {
+  BookOpen,
+  BriefcaseMedical,
+  Building2,
+  CreditCard,
+  GraduationCap,
+  HeartHandshake,
+  Hospital,
+  Languages,
+  MapPin,
+  ShieldCheck,
+  Stethoscope,
+  UserRound,
+  UsersRound,
+}
+
+export const getDashboardIcon = (name?: DashboardIconName) =>
+  name ? dashboardIcons[name] : undefined
+
 const resource = (label: string): DashboardLink => ({ label, href: '/resources' })
 const makeProfile = (seed: ProfileSeed): DashboardProfile => ({
   eventTitle: `${seed.recommendations[0]} workshop`,
   label: seed.label,
   intro: seed.intro,
   searchPlaceholder: `Search ${seed.label.replace(' dashboard', '')} topics, resources, or services…`,
-  quickActions: seed.actions.map(([label, icon]) => ({ label, icon, href: '/resources' })),
+  quickActions: seed.actions.map(([label, icon, href]) => ({
+    label,
+    icon,
+    href: href || '/resources',
+  })),
   journey: seed.journey.map((label, index) => ({
     label,
     detail: index === 0 ? 'completed' : 'next',
@@ -57,7 +101,7 @@ const makeProfile = (seed: ProfileSeed): DashboardProfile => ({
   learning: {
     label: seed.learning[0],
     progress: seed.learning[1],
-    href: '/topic/healthcare-system',
+    href: '/topic',
   },
   recommendations: seed.recommendations.map(resource),
   services: seed.services.map(([label, icon]) => ({
@@ -74,10 +118,10 @@ const profiles: Record<Audience, DashboardProfile> = {
     label: 'New immigrant dashboard',
     intro: 'Continue your journey to better health and confidently navigate care in Canada.',
     actions: [
-      ['Find a Family Doctor', UserRound],
-      ['Health Card', CreditCard],
-      ['Walk-in Clinics', Hospital],
-      ['Lab Results', Stethoscope],
+      ['Find a Family Doctor', UserRound, '/family-doctor-registration'],
+      ['Mental Support', HeartHandshake, '/manitoba-mental-support'],
+      ['Walk-in Clinics', Hospital, '/walk-in-clinic'],
+      ['Lab Results', Stethoscope, '/common-lab-test'],
     ],
     journey: [
       'Apply for a Provincial Health Card',
