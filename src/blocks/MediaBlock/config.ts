@@ -28,6 +28,21 @@ export const MediaBlock: Block = {
       relationTo: 'media',
     },
     {
+      name: 'imageFit',
+      label: 'Image fit',
+      type: 'select',
+      defaultValue: 'natural',
+      options: [
+        { label: 'Natural dimensions (show full image)', value: 'natural' },
+        { label: 'Contain (show full image in a frame)', value: 'contain' },
+        { label: 'Cover (fill frame and crop)', value: 'cover' },
+      ],
+      admin: {
+        description:
+          'Choose how the image fills the block. Natural dimensions preserves the uploaded aspect ratio.',
+      },
+    },
+    {
       name: 'writeUp',
       type: 'richText',
       localized: true,

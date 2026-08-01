@@ -25,6 +25,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
     className,
     enableGutter = true,
     imgClassName,
+    imageFit = 'natural',
     media,
     mediaPosition,
     staticImage,
@@ -48,6 +49,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
     : media
 
   const isMediaLeft = mediaPosition === 'left'
+  const usesFramedImage = imageFit === 'contain' || imageFit === 'cover'
   const hasRenderableMedia = Boolean(staticImage || resolvedMediaUrl)
   const hasWriteUp = Boolean(writeUp)
 
@@ -64,17 +66,34 @@ export const MediaBlock: React.FC<Props> = (props) => {
       >
         <div className="flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(320px,440px)] lg:items-center lg:gap-6">
           <div className={cn('min-w-0', isMediaLeft ? 'lg:order-1' : 'lg:order-2')}>
-            <div className="relative aspect-[16/10] overflow-hidden rounded-[0.8rem] border border-border bg-white shadow-sm dark:bg-slate-900 lg:aspect-[4/3]">
+            {usesFramedImage ? (
+              <div className="relative aspect-[16/10] overflow-hidden rounded-[0.8rem] border border-border bg-white shadow-sm dark:bg-slate-900 lg:aspect-[4/3]">
+                <Media
+                  htmlElement={null}
+                  fill
+                  pictureClassName="relative block h-full w-full"
+                  imgClassName={cn(
+                    imageFit === 'cover' ? 'object-cover' : 'object-contain',
+                    imgClassName,
+                  )}
+                  loading="eager"
+                  resource={resolvedMediaResource}
+                  src={staticImage}
+                />
+              </div>
+            ) : (
               <Media
                 htmlElement={null}
-                fill
-                pictureClassName="relative block h-full w-full"
-                imgClassName={cn('object-cover', imgClassName)}
+                pictureClassName="block w-full"
+                imgClassName={cn(
+                  'h-auto w-full rounded-[0.8rem] border border-border shadow-sm',
+                  imgClassName,
+                )}
                 loading="eager"
                 resource={resolvedMediaResource}
                 src={staticImage}
               />
-            </div>
+            )}
           </div>
 
           <div className={cn('min-w-0', isMediaLeft ? 'lg:order-2' : 'lg:order-1')}>
@@ -115,17 +134,30 @@ export const MediaBlock: React.FC<Props> = (props) => {
         className,
       )}
     >
-      {hasRenderableMedia && (
-        <Media
-          imgClassName={cn(
-            'h-auto w-full max-h-[380px] border border-border rounded-[0.8rem]',
-            imgClassName,
-          )}
-          loading="eager"
-          resource={resolvedMediaResource}
-          src={staticImage}
-        />
-      )}
+      {hasRenderableMedia &&
+        (usesFramedImage ? (
+          <div className="relative aspect-[16/10] overflow-hidden rounded-[0.8rem] border border-border bg-white shadow-sm dark:bg-slate-900 lg:aspect-[4/3]">
+            <Media
+              htmlElement={null}
+              fill
+              pictureClassName="relative block h-full w-full"
+              imgClassName={cn(
+                imageFit === 'cover' ? 'object-cover' : 'object-contain',
+                imgClassName,
+              )}
+              loading="eager"
+              resource={resolvedMediaResource}
+              src={staticImage}
+            />
+          </div>
+        ) : (
+          <Media
+            imgClassName={cn('h-auto w-full rounded-[0.8rem] border border-border', imgClassName)}
+            loading="eager"
+            resource={resolvedMediaResource}
+            src={staticImage}
+          />
+        ))}
       {caption && (
         <div
           className={cn(

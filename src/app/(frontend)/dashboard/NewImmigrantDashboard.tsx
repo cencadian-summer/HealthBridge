@@ -7,6 +7,7 @@ import {
   Bookmark,
   CalendarDays,
   Check,
+  ChevronDown,
   ChevronRight,
   CircleHelp,
   ClipboardCheck,
@@ -25,19 +26,36 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { createClient } from '@/lib/supabase/client'
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
-import { getDashboardProfile, getRoleLabel } from './dashboardProfiles'
+import {
+  getDashboardIcon,
+  getDashboardProfile,
+  getRoleLabel,
+  type DashboardProfile,
+} from './dashboardProfiles'
 
-type DashboardProps = { audiences: Audience[]; firstName: string; role: UserRole }
+export type DashboardTopicSuggestion = {
+  description: string
+  href: string
+  keywords: string
+  label: string
+}
+
+type DashboardProps = {
+  audiences: Audience[]
+  dashboardProfile?: DashboardProfile
+  firstName: string
+  role: UserRole
+  topicSuggestions?: DashboardTopicSuggestion[]
+}
 type NavItem = { label: string; icon: LucideIcon; href: string; badge?: string }
 
 const navigation: NavItem[] = [
   { label: 'Dashboard', icon: Home, href: '/dashboard' },
   { label: 'My Learning', icon: BookOpen, href: '/topic' },
-  { label: 'Health Journey', icon: HeartHandshake, href: '/topic/healthcare-system' },
   { label: 'Resources', icon: ClipboardCheck, href: '/resources' },
   { label: 'Find Services', icon: MapPin, href: '/resources' },
   { label: 'Community Events', icon: CalendarDays, href: '#events' },
@@ -87,11 +105,37 @@ function Card({
   )
 }
 
-export function PersonalizedDashboard({ audiences, firstName, role }: DashboardProps) {
+export function PersonalizedDashboard({
+  audiences,
+  dashboardProfile,
+  firstName,
+  role,
+  topicSuggestions = [],
+}: DashboardProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [profileOpen, setProfileOpen] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
-  const dashboard = getDashboardProfile(audiences)
+  const [searchOpen, setSearchOpen] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
+  const dashboard = dashboardProfile || getDashboardProfile(audiences)
   const roleLabel = getRoleLabel(role)
+
+  const matchingTopics = useMemo(() => {
+    const terms = searchQuery.trim().toLowerCase().split(/\s+/).filter(Boolean)
+    if (terms.length === 0) return []
+
+    return topicSuggestions
+      .filter((topic) => {
+        const searchable = `${topic.label} ${topic.description} ${topic.keywords}`.toLowerCase()
+        return terms.every((term) => searchable.includes(term))
+      })
+      .slice(0, 6)
+  }, [searchQuery, topicSuggestions])
+
+  const submitTopicSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (matchingTopics[0]) window.location.assign(matchingTopics[0].href)
+  }
 
   const logout = async () => {
     setIsLoggingOut(true)
@@ -205,10 +249,61 @@ export function PersonalizedDashboard({ audiences, firstName, role }: DashboardP
                 3
               </b>
             </span>
-            <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 font-bold text-white">
-              {firstName.charAt(0).toUpperCase()}
-            </span>
-            <span className="hidden font-semibold sm:inline">Welcome, {firstName} 👋</span>
+            <div className="relative">
+              <button
+                type="button"
+                aria-expanded={profileOpen}
+                aria-haspopup="menu"
+                onClick={() => setProfileOpen((open) => !open)}
+                className="flex items-center gap-3 rounded-xl px-1 py-1 text-left transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500"
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-teal-500 to-cyan-600 font-bold text-white">
+                  {firstName.charAt(0).toUpperCase()}
+                </span>
+                <span className="hidden font-semibold sm:inline">Welcome, {firstName} 👋</span>
+                <ChevronDown
+                  className={`hidden h-4 w-4 text-slate-500 transition sm:block ${profileOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+
+              {profileOpen ? (
+                <div
+                  role="menu"
+                  className="absolute right-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
+                >
+                  <div className="border-b border-slate-100 px-3 py-2">
+                    <p className="text-sm font-bold text-slate-900">{firstName}</p>
+                    <p className="text-xs text-slate-500">{dashboard.label}</p>
+                  </div>
+                  <Link
+                    href="/account"
+                    role="menuitem"
+                    onClick={() => setProfileOpen(false)}
+                    className="mt-1 flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 hover:text-teal-700"
+                  >
+                    <UserRound className="h-4 w-4" /> My Profile
+                  </Link>
+                  <Link
+                    href="/account"
+                    role="menuitem"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 hover:bg-teal-50 hover:text-teal-700"
+                  >
+                    <SlidersHorizontal className="h-4 w-4" /> Switch Profile Role
+                  </Link>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={logout}
+                    disabled={isLoggingOut}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:opacity-60"
+                  >
+                    <LogOut className="h-4 w-4" />
+                    {isLoggingOut ? 'Logging out…' : 'Log Out'}
+                  </button>
+                </div>
+              ) : null}
+            </div>
           </div>
         </header>
 
@@ -233,23 +328,83 @@ export function PersonalizedDashboard({ audiences, firstName, role }: DashboardP
           <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <h2 className="font-bold text-slate-900">What would you like help with today?</h2>
             <div className="mt-3 flex flex-col gap-3 xl:flex-row">
-              <label className="flex min-w-0 flex-1 items-center rounded-xl border border-slate-200 px-4 py-3">
-                <input
-                  className="w-full bg-transparent text-sm outline-none"
-                  placeholder={dashboard.searchPlaceholder}
-                />
-                <Search className="h-5 w-5 text-slate-500" />
-              </label>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {dashboard.quickActions.map(({ label, href, icon: Icon }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold hover:border-teal-300 hover:bg-teal-50"
+              <div className="relative min-w-0 flex-1">
+                <form
+                  role="search"
+                  onSubmit={submitTopicSearch}
+                  className="flex items-center rounded-xl border border-slate-200 px-4 py-3 focus-within:border-teal-400 focus-within:ring-2 focus-within:ring-teal-100"
+                >
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(event) => {
+                      setSearchQuery(event.target.value)
+                      setSearchOpen(true)
+                    }}
+                    onFocus={() => setSearchOpen(true)}
+                    className="w-full bg-transparent text-sm outline-none"
+                    placeholder={dashboard.searchPlaceholder}
+                    aria-label="Search health topics"
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-controls="dashboard-topic-suggestions"
+                    aria-expanded={searchOpen && searchQuery.trim().length > 0}
+                  />
+                  <button type="submit" aria-label="Open first matching health topic">
+                    <Search className="h-5 w-5 text-slate-500" />
+                  </button>
+                </form>
+
+                {searchOpen && searchQuery.trim() ? (
+                  <div
+                    id="dashboard-topic-suggestions"
+                    role="listbox"
+                    className="absolute inset-x-0 top-full z-40 mt-2 overflow-hidden rounded-xl border border-slate-200 bg-white p-2 shadow-xl"
                   >
-                    {Icon ? <Icon className="h-6 w-6 text-teal-600" /> : null} {label}
-                  </Link>
-                ))}
+                    {matchingTopics.length > 0 ? (
+                      matchingTopics.map((topic) => (
+                        <Link
+                          key={topic.href}
+                          href={topic.href}
+                          role="option"
+                          aria-selected="false"
+                          onClick={() => setSearchOpen(false)}
+                          className="flex items-start gap-3 rounded-lg px-3 py-2.5 hover:bg-teal-50"
+                        >
+                          <Search className="mt-0.5 h-4 w-4 shrink-0 text-teal-600" />
+                          <span>
+                            <span className="block text-sm font-semibold text-slate-900">
+                              {topic.label}
+                            </span>
+                            {topic.description ? (
+                              <span className="mt-0.5 line-clamp-1 block text-xs text-slate-500">
+                                {topic.description}
+                              </span>
+                            ) : null}
+                          </span>
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="px-3 py-4 text-center text-sm text-slate-500">
+                        No matching health topics found.
+                      </div>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+                {dashboard.quickActions.map(({ label, href, icon, iconName }) => {
+                  const Icon = icon || getDashboardIcon(iconName)
+                  return (
+                    <Link
+                      key={label}
+                      href={href}
+                      className="flex items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold hover:border-teal-300 hover:bg-teal-50"
+                    >
+                      {Icon ? <Icon className="h-6 w-6 text-teal-600" /> : null} {label}
+                    </Link>
+                  )
+                })}
               </div>
             </div>
           </section>
@@ -348,18 +503,21 @@ export function PersonalizedDashboard({ audiences, firstName, role }: DashboardP
               }
             >
               <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-                {dashboard.services.map(({ label, detail, href, icon: Icon }) => (
-                  <Link key={label} href={href} className="flex items-center gap-3 px-3 py-3">
-                    <span className="rounded-lg bg-teal-50 p-2 text-teal-700">
-                      {Icon ? <Icon className="h-5 w-5" /> : null}
-                    </span>
-                    <span>
-                      <b className="block text-xs">{label}</b>
-                      <small className="text-slate-500">{detail}</small>
-                    </span>
-                    <ChevronRight className="ml-auto h-4 w-4" />
-                  </Link>
-                ))}
+                {dashboard.services.map(({ label, detail, href, icon, iconName }) => {
+                  const Icon = icon || getDashboardIcon(iconName)
+                  return (
+                    <Link key={label} href={href} className="flex items-center gap-3 px-3 py-3">
+                      <span className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                        {Icon ? <Icon className="h-5 w-5" /> : null}
+                      </span>
+                      <span>
+                        <b className="block text-xs">{label}</b>
+                        <small className="text-slate-500">{detail}</small>
+                      </span>
+                      <ChevronRight className="ml-auto h-4 w-4" />
+                    </Link>
+                  )
+                })}
               </div>
             </Card>
 
