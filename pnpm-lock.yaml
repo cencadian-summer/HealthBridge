@@ -12,8 +12,8 @@ importers:
         specifier: 3.84.1
         version: 3.84.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@payloadcms/db-mongodb':
-        specifier: 3.84.1
-        version: 3.84.1(payload@3.84.1(graphql@16.14.0)(typescript@5.7.3))
+        specifier: 3.85.1
+        version: 3.85.1(payload@3.84.1(graphql@16.14.0)(typescript@5.7.3))
       '@payloadcms/live-preview-react':
         specifier: 3.84.1
         version: 3.84.1(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -140,7 +140,7 @@ importers:
         version: 6.0.2(vite@8.1.4(@types/node@22.19.9)(esbuild@0.27.7)(jiti@2.7.0)(sass@1.77.4)(tsx@4.21.0)(yaml@2.9.0))
       autoprefixer:
         specifier: ^10.4.19
-        version: 10.5.0(postcss@8.5.14)
+        version: 10.5.0(postcss@8.5.25)
       eslint:
         specifier: ^9.16.0
         version: 9.39.4(jiti@2.7.0)
@@ -157,8 +157,8 @@ importers:
         specifier: ^17.0.2
         version: 17.0.4
       postcss:
-        specifier: ^8.4.38
-        version: 8.5.14
+        specifier: ^8.5.18
+        version: 8.5.25
       prettier:
         specifier: ^3.4.2
         version: 3.8.3
@@ -1068,17 +1068,18 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
-  '@mongodb-js/saslprep@1.4.11':
-    resolution: {integrity: sha512-o9rAHc0IpIjuPSxRutWpE1F62x7n+4mVS4rCNHkzhIUMQcc18bb6xEq5wd2NdN0WjepIyXIppRshYI2kQDOZVA==}
+  '@mongodb-js/saslprep@1.4.13':
+    resolution: {integrity: sha512-E3Sv4eCYAlKYUTx8S3ioQcDUscOif+8zZ5OnW1IzJ+Tt+EO+ke8mn+Y3FX6N1H79picwbdOavVOb1jPi2EOyrg==}
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
 
-  '@napi-rs/wasm-runtime@1.1.6':
-    resolution: {integrity: sha512-ZLv/JdUfkvOy9eCnnBaGfiO+XimbjebAeO+MRQqD/B+FR1tnRN0tpKSJHRbE8sFfS6aqsXZ67TQjfwfsxULVbg==}
+  '@napi-rs/wasm-runtime@1.2.2':
+    resolution: {integrity: sha512-JfB4kuJQjaoHuCTseIINHtHWeJnvgEcxjwA5t/Y00ZgaOO1Crz3fjT/p8kT28zA/Caz7oiUMn3d6H2yOVCVwuw==}
+    engines: {node: ^20.19.0 || ^22.13.0 || >=23.5.0}
     peerDependencies:
-      '@emnapi/core': ^1.7.1
-      '@emnapi/runtime': ^1.7.1
+      '@emnapi/core': ^1.7.1 || ^2.0.0-alpha.3
+      '@emnapi/runtime': ^1.7.1 || ^2.0.0-alpha.3
 
   '@next/env@13.5.11':
     resolution: {integrity: sha512-fbb2C7HChgM7CemdCY+y3N1n8pcTKdqtQLbC7/EQtPdLvlMUT9JX/dBYl8MMZAtYG4uVMyPFHXckb68q/NRwqg==}
@@ -1169,10 +1170,10 @@ packages:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.1 || ^19.1.2 || ^19.2.1
       react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.1 || ^19.1.2 || ^19.2.1
 
-  '@payloadcms/db-mongodb@3.84.1':
-    resolution: {integrity: sha512-HTP/Z6iQHFyHhuMImAC/GH0xGhjuvuHZHdB7crJUkXAyD677tp6C3mS8YB04s28bCteDqcXBYjHODZr5xDHBcw==}
+  '@payloadcms/db-mongodb@3.85.1':
+    resolution: {integrity: sha512-gQfQqOBb+HkyAbAW/ZNtYdxJASsMQJDb46aEodQMcL6Z1lSoQ5Gg8vi6IpIgBeJiAbmoe9A+xdZR/F1Xoj12kQ==}
     peerDependencies:
-      payload: 3.84.1
+      payload: 3.85.1
 
   '@payloadcms/graphql@3.84.1':
     resolution: {integrity: sha512-pVJdgihEEexpK+kANSozAMf3PQfd6p51/G3cK+rkPzSjghf7X+cQQ8NFOmAMDTpijM5YaowQYTuEje3KaLVXuQ==}
@@ -3656,8 +3657,8 @@ packages:
   mongodb-connection-string-url@3.0.2:
     resolution: {integrity: sha512-rMO7CGo/9BFwyZABcKAWL8UJwH/Kc2x0g72uhDWzG48URRax5TCIcJ7Rc3RZqffZzO/Gwff/jyKwCU9TN8gehA==}
 
-  mongodb@6.16.0:
-    resolution: {integrity: sha512-D1PNcdT0y4Grhou5Zi/qgipZOYeWrhLEpk33n3nm6LGtz61jvO88WlrWCK/bigMjpnOdAUKKQwsGIl0NtWMyYw==}
+  mongodb@6.20.0:
+    resolution: {integrity: sha512-Tl6MEIU3K4Rq3TSHd+sZQqRBoGlFsOgNrH5ltAcFBV62Re3Fd+FcaVf8uSEQFOJ51SDowDVttBTONMfoYWrWlQ==}
     engines: {node: '>=16.20.1'}
     peerDependencies:
       '@aws-sdk/credential-providers': ^3.188.0
@@ -3665,7 +3666,7 @@ packages:
       gcp-metadata: ^5.2.0
       kerberos: ^2.0.1
       mongodb-client-encryption: '>=6.0.0 <7'
-      snappy: ^7.2.2
+      snappy: ^7.3.2
       socks: ^2.7.1
     peerDependenciesMeta:
       '@aws-sdk/credential-providers':
@@ -3693,8 +3694,8 @@ packages:
     resolution: {integrity: sha512-0LOsVEQmjrbJKVDi/IvFEhIezmuRjUE4loGgslv57j9nK/NMC+mbKT0QnaPSPpib4lByKVBcy3VbDa1TvlHZjA==}
     engines: {node: '>=4.0.0'}
 
-  mongoose@8.15.1:
-    resolution: {integrity: sha512-RhQ4DzmBi5BNGcS0w4u1vdMRIKcteXTCNzDt1j7XRcdWYBz1MjMjulBhPaeC5jBCHOD1yinuOFTTSOWLLGexWw==}
+  mongoose@8.22.1:
+    resolution: {integrity: sha512-c0bzt7ElI1CwWiyFSgg9bfhlFcblAoPwr+gmDcLCryClyKaeixWhP9KDGnr13kRPE8KPAuUN3ZZ3jSDxSPvoTg==}
     engines: {node: '>=16.20.1'}
 
   mpath@0.8.4:
@@ -3711,11 +3712,6 @@ packages:
 
   ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-
-  nanoid@3.3.12:
-    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
 
   nanoid@3.3.16:
     resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
@@ -3934,12 +3930,8 @@ packages:
     resolution: {integrity: sha512-PS08Iboia9mts/2ygV3eLpY5ghnUcfLV/EXTOW1E2qYxJKGGBUtNjN76FYHnMs36RmARn41bC0AZmn+rR0OVpQ==}
     engines: {node: ^10 || ^12 || >=14}
 
-  postcss@8.5.14:
-    resolution: {integrity: sha512-SoSL4+OSEtR99LHFZQiJLkT59C5B1amGO1NzTwj7TT1qCUgUO6hxOvzkOYxD+vMrXBM3XJIKzokoERdqQq/Zmg==}
-    engines: {node: ^10 || ^12 || >=14}
-
-  postcss@8.5.22:
-    resolution: {integrity: sha512-KBDEIpLrvpv16pp3K0Fw+UCoZfopFjjgeB+0tA/aaThfEE74kKDLrgg603YvOWJyg3+WYtyq3xYsQWsIyZlPqQ==}
+  postcss@8.5.25:
+    resolution: {integrity: sha512-DTPx3RWSSnWyzLxQnlH0rJP+EW5ekl16ZU4/psbIhA0e53kJfdgaN5vKM+xP7yJtXVu+nfdVFmlgFDEKAe4Pyw==}
     engines: {node: ^10 || ^12 || >=14}
 
   prelude-ls@1.2.1:
@@ -4606,6 +4598,10 @@ packages:
 
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
+    hasBin: true
+
+  uuid@13.0.2:
+    resolution: {integrity: sha512-vzi9uRZ926x4XV73S/4qQaTwPXM2JBj6/6lI/byHH1jOpCzb0zDbfytgA9LcN/hzb2l7WQSQnxITOVx5un/wGw==}
     hasBin: true
 
   vfile-message@4.0.3:
@@ -5681,7 +5677,7 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@mongodb-js/saslprep@1.4.11':
+  '@mongodb-js/saslprep@1.4.13':
     dependencies:
       sparse-bitfield: 3.0.3
 
@@ -5692,7 +5688,7 @@ snapshots:
       '@tybys/wasm-util': 0.10.2
     optional: true
 
-  '@napi-rs/wasm-runtime@1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
+  '@napi-rs/wasm-runtime@1.2.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)':
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
@@ -5754,13 +5750,13 @@ snapshots:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
 
-  '@payloadcms/db-mongodb@3.84.1(payload@3.84.1(graphql@16.14.0)(typescript@5.7.3))':
+  '@payloadcms/db-mongodb@3.85.1(payload@3.84.1(graphql@16.14.0)(typescript@5.7.3))':
     dependencies:
-      mongoose: 8.15.1
-      mongoose-paginate-v2: 1.9.4(mongoose@8.15.1)
+      mongoose: 8.22.1
+      mongoose-paginate-v2: 1.9.4(mongoose@8.22.1)
       payload: 3.84.1(graphql@16.14.0)(typescript@5.7.3)
       prompts: 2.4.2
-      uuid: 11.1.0
+      uuid: 13.0.2
     transitivePeerDependencies:
       - '@aws-sdk/credential-providers'
       - '@mongodb-js/zstd'
@@ -6272,7 +6268,7 @@ snapshots:
     dependencies:
       '@emnapi/core': 1.11.1
       '@emnapi/runtime': 1.11.1
-      '@napi-rs/wasm-runtime': 1.1.6(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
+      '@napi-rs/wasm-runtime': 1.2.2(@emnapi/core@1.11.1)(@emnapi/runtime@1.11.1)
     optional: true
 
   '@rolldown/binding-win32-arm64-msvc@1.1.5':
@@ -6394,7 +6390,7 @@ snapshots:
       '@alloc/quick-lru': 5.2.0
       '@tailwindcss/node': 4.3.0
       '@tailwindcss/oxide': 4.3.0
-      postcss: 8.5.14
+      postcss: 8.5.25
       tailwindcss: 4.3.0
 
   '@tailwindcss/typography@0.5.19(tailwindcss@4.3.0)':
@@ -6852,13 +6848,13 @@ snapshots:
 
   atomic-sleep@1.0.0: {}
 
-  autoprefixer@10.5.0(postcss@8.5.14):
+  autoprefixer@10.5.0(postcss@8.5.25):
     dependencies:
       browserslist: 4.28.2
       caniuse-lite: 1.0.30001792
       fraction.js: 5.3.4
       picocolors: 1.1.1
-      postcss: 8.5.14
+      postcss: 8.5.25
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
@@ -8503,28 +8499,28 @@ snapshots:
       '@types/whatwg-url': 11.0.5
       whatwg-url: 14.2.0
 
-  mongodb@6.16.0:
+  mongodb@6.20.0:
     dependencies:
-      '@mongodb-js/saslprep': 1.4.11
+      '@mongodb-js/saslprep': 1.4.13
       bson: 6.10.4
       mongodb-connection-string-url: 3.0.2
 
-  mongoose-lean-virtuals@1.1.1(mongoose@8.15.1):
+  mongoose-lean-virtuals@1.1.1(mongoose@8.22.1):
     dependencies:
-      mongoose: 8.15.1
+      mongoose: 8.22.1
       mpath: 0.8.4
 
-  mongoose-paginate-v2@1.9.4(mongoose@8.15.1):
+  mongoose-paginate-v2@1.9.4(mongoose@8.22.1):
     dependencies:
-      mongoose-lean-virtuals: 1.1.1(mongoose@8.15.1)
+      mongoose-lean-virtuals: 1.1.1(mongoose@8.22.1)
     transitivePeerDependencies:
       - mongoose
 
-  mongoose@8.15.1:
+  mongoose@8.22.1:
     dependencies:
       bson: 6.10.4
       kareem: 2.6.3
-      mongodb: 6.16.0
+      mongodb: 6.20.0
       mpath: 0.9.0
       mquery: 5.0.0
       ms: 2.1.3
@@ -8550,8 +8546,6 @@ snapshots:
       - supports-color
 
   ms@2.1.3: {}
-
-  nanoid@3.3.12: {}
 
   nanoid@3.3.16: {}
 
@@ -8825,17 +8819,11 @@ snapshots:
 
   postcss@8.4.31:
     dependencies:
-      nanoid: 3.3.12
+      nanoid: 3.3.16
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postcss@8.5.14:
-    dependencies:
-      nanoid: 3.3.12
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
-
-  postcss@8.5.22:
+  postcss@8.5.25:
     dependencies:
       nanoid: 3.3.16
       picocolors: 1.1.1
@@ -9620,6 +9608,8 @@ snapshots:
 
   uuid@11.1.0: {}
 
+  uuid@13.0.2: {}
+
   vfile-message@4.0.3:
     dependencies:
       '@types/unist': 3.0.3
@@ -9639,7 +9629,7 @@ snapshots:
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.5
-      postcss: 8.5.22
+      postcss: 8.5.25
       rolldown: 1.1.5
       tinyglobby: 0.2.17
     optionalDependencies:
