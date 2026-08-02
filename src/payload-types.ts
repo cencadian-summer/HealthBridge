@@ -76,6 +76,8 @@ export interface Config {
     'resource-items': ResourceItem;
     'dashboard-profiles': DashboardProfile;
     'admin-activities': AdminActivity;
+    'chat-conversations': ChatConversation;
+    'chat-messages': ChatMessage;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -102,6 +104,8 @@ export interface Config {
     'resource-items': ResourceItemsSelect<false> | ResourceItemsSelect<true>;
     'dashboard-profiles': DashboardProfilesSelect<false> | DashboardProfilesSelect<true>;
     'admin-activities': AdminActivitiesSelect<false> | AdminActivitiesSelect<true>;
+    'chat-conversations': ChatConversationsSelect<false> | ChatConversationsSelect<true>;
+    'chat-messages': ChatMessagesSelect<false> | ChatMessagesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1458,6 +1462,45 @@ export interface AdminActivity {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-conversations".
+ */
+export interface ChatConversation {
+  id: string;
+  ownerId: string;
+  title: string;
+  status: 'active' | 'archived';
+  messageCount: number;
+  lastMessageAt?: string | null;
+  lastMessagePreview?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-messages".
+ */
+export interface ChatMessage {
+  id: string;
+  conversation: string | ChatConversation;
+  ownerId: string;
+  role: 'user' | 'assistant';
+  content: string;
+  state: 'pending' | 'completed' | 'interrupted' | 'error';
+  providerResponseId?: string | null;
+  providerMetadata?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
 export interface Redirect {
@@ -1681,6 +1724,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'admin-activities';
         value: string | AdminActivity;
+      } | null)
+    | ({
+        relationTo: 'chat-conversations';
+        value: string | ChatConversation;
+      } | null)
+    | ({
+        relationTo: 'chat-messages';
+        value: string | ChatMessage;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2290,6 +2341,35 @@ export interface AdminActivitiesSelect<T extends boolean = true> {
   actor?: T;
   actorName?: T;
   locale?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-conversations_select".
+ */
+export interface ChatConversationsSelect<T extends boolean = true> {
+  ownerId?: T;
+  title?: T;
+  status?: T;
+  messageCount?: T;
+  lastMessageAt?: T;
+  lastMessagePreview?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "chat-messages_select".
+ */
+export interface ChatMessagesSelect<T extends boolean = true> {
+  conversation?: T;
+  ownerId?: T;
+  role?: T;
+  content?: T;
+  state?: T;
+  providerResponseId?: T;
+  providerMetadata?: T;
   updatedAt?: T;
   createdAt?: T;
 }

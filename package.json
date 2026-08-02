@@ -31,6 +31,8 @@
     "*.{json,css,md,mdx}": "prettier --write"
   },
   "dependencies": {
+    "@ai-sdk/openai": "4.0.27",
+    "@ai-sdk/react": "4.0.51",
     "@payloadcms/admin-bar": "3.87.0",
     "@payloadcms/db-mongodb": "3.87.0",
     "@payloadcms/live-preview-react": "3.87.0",
@@ -48,6 +50,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@supabase/ssr": "^0.12.2",
     "@supabase/supabase-js": "^2.110.5",
+    "ai": "7.0.48",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",

@@ -34,6 +34,7 @@ type Props = { firstName: string; variant?: 'parent' | 'youth' }
 type Item = readonly [string, LucideIcon, string]
 const nav: Item[] = [
   ['Dashboard', Home, '/dashboard'],
+  ['My Chats', MessageCircle, '/dashboard/chats'],
   ['My Learning', BookOpen, '/topic'],
   ['My Resources', FileText, '/resources'],
   ['Appointments', CalendarDays, '/resources/healthcare-services'],

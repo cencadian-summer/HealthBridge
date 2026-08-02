@@ -4,6 +4,8 @@ declare global {
       PAYLOAD_SECRET: string
       DATABASE_URL: string
       REMOTE_DATABASE_URL: string
+      OPENAI_API_KEY?: string
+      OPENAI_MODEL?: string
       NEXT_PUBLIC_SERVER_URL: string
       VERCEL_PROJECT_PRODUCTION_URL: string
     }

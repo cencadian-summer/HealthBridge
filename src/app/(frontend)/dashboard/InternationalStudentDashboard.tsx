@@ -52,6 +52,7 @@ type TopicGroup = {
 
 const navigation: NavItem[] = [
   { label: 'Dashboard', icon: Home, href: '/dashboard' },
+  { label: 'My Chats', icon: MessageCircle, href: '/dashboard/chats' },
   { label: 'My Learning', icon: BookOpen, href: '/topic' },
   { label: 'My Resources', icon: FileText, href: '/resources' },
   { label: 'Appointments', icon: CalendarDays, href: '/resources/healthcare-services' },

@@ -113,6 +113,7 @@ function Sidebar({ profile }: { profile: Profile }) {
   const people = profile === 'healthcare-provider' ? 'Patients' : 'Clients'
   const navigation = [
     ['Dashboard', LayoutDashboard, '/dashboard'],
+    ['My Chats', MessageCircleQuestion, '/dashboard/chats'],
     [people, UsersRound, '#clients'],
     ['Resource Library', FolderOpen, '/resources'],
     ['Health Topics', BriefcaseMedical, '/topic'],

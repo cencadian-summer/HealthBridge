@@ -18,6 +18,7 @@ import {
   LogOut,
   MapPin,
   Menu,
+  MessageCircle,
   Search,
   Settings,
   SlidersHorizontal,
@@ -55,6 +56,7 @@ type NavItem = { label: string; icon: LucideIcon; href: string; badge?: string }
 
 const navigation: NavItem[] = [
   { label: 'Dashboard', icon: Home, href: '/dashboard' },
+  { label: 'My Chats', icon: MessageCircle, href: '/dashboard/chats' },
   { label: 'My Learning', icon: BookOpen, href: '/topic' },
   { label: 'Resources', icon: ClipboardCheck, href: '/resources' },
   { label: 'Find Services', icon: MapPin, href: '/resources' },
