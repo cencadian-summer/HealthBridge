@@ -18,6 +18,8 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { getMessageText, MAX_CONTEXT_MESSAGES, MAX_USER_MESSAGE_LENGTH } from '@/lib/chat/messages'
 import type { HealthBridgeChatMessage } from '@/lib/chat/types'
 
+import { AssistantMessage } from './AssistantMessage'
+
 type Props = {
   firstName?: string
   initialConversationId?: string
@@ -195,12 +197,17 @@ export function ChatClient({
                         )}
                       </span>
                       <div
-                        className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-3 text-sm leading-6 ${assistant ? 'rounded-tl-sm bg-slate-100 text-slate-800' : 'rounded-tr-sm bg-teal-600 text-white'}`}
+                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-6 ${assistant ? 'rounded-tl-sm bg-slate-100 text-slate-800' : 'whitespace-pre-wrap rounded-tr-sm bg-teal-600 text-white'}`}
                       >
-                        {text ||
-                          (assistant && busy ? (
-                            <LoaderCircle className="h-4 w-4 animate-spin" />
-                          ) : null)}
+                        {text ? (
+                          assistant ? (
+                            <AssistantMessage>{text}</AssistantMessage>
+                          ) : (
+                            text
+                          )
+                        ) : assistant && busy ? (
+                          <LoaderCircle className="h-4 w-4 animate-spin" />
+                        ) : null}
                       </div>
                     </article>
                   )

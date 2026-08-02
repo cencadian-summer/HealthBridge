@@ -2,7 +2,7 @@
 
 ## Purpose and scope
 
-The HealthBridge chatbot helps users navigate the Canadian healthcare system and provides general educational information. It is not a diagnostic tool and does not have access to HealthBridge content, private health records, live service directories, web search, RAG, files, images, voice, or external tools.
+The HealthBridge chatbot helps users navigate the Canadian healthcare system and provides general educational information. It uses a local, pre-embedded HealthBridge PDF as a retrieval-augmented generation (RAG) source. It is not a diagnostic tool and does not have access to private health records, live service directories, web search, user-uploaded files, images, voice, or external tools.
 
 The feature supports two modes:
 
@@ -52,6 +52,7 @@ The AI SDK packages are pinned to exact versions. Upgrade `ai`, `@ai-sdk/react`,
 | [`src/app/api/chat/route.ts`](../src/app/api/chat/route.ts) | Main validation, authentication, persistence, OpenAI, and streaming route. |
 | [`src/app/api/chat/conversations/[id]/route.ts`](../src/app/api/chat/conversations/%5Bid%5D/route.ts) | Rename and hard-delete handlers. |
 | [`src/lib/chat/messages.ts`](../src/lib/chat/messages.ts) | Message limits, client-message validation, text extraction, and UI-message conversion. |
+| [`src/lib/chat/rag.ts`](../src/lib/chat/rag.ts) | Loads the local RAG index, embeds queries, ranks chunks, and formats page-labelled excerpts. |
 | [`src/lib/chat/store.ts`](../src/lib/chat/store.ts) | All trusted Payload Local API operations for chat data. |
 | [`src/lib/chat/types.ts`](../src/lib/chat/types.ts) | Shared UI-message metadata, request, and history types. |
 | [`src/collections/ChatConversations.ts`](../src/collections/ChatConversations.ts) | Conversation collection schema and cascading-delete hook. |
@@ -144,7 +145,17 @@ Important provider settings:
 - `store: false` prevents OpenAI response storage for this request.
 - `safetyIdentifier` is a SHA-256 hash derived from `PAYLOAD_SECRET` and the authenticated user or guest session. Raw user IDs are not sent as the safety identifier.
 - Output is limited to 1,200 tokens.
-- No tools, RAG, web search, or resumable streams are enabled.
+- No tools, web search, or resumable streams are enabled.
+
+Before generation, the route builds a retrieval query from the latest two sanitized user turns. It
+embeds that query using the same model recorded in the generated RAG file, compares the query
+vector with the local chunk vectors, and injects up to four chunks scoring at least `0.25`. Retrieved
+content is delimited as untrusted reference data and includes exact page labels for citations.
+
+If retrieval fails, generation continues under an explicit instruction that the HealthBridge source
+is unavailable. The server logs only the error type, not the user's query. For authenticated chats,
+the selected chunk IDs, page ranges, scores, source hash, model, and retrieval status are stored in
+the assistant message's hidden provider metadata.
 
 The system prompt tells the model to respond in the user's language, focus on Canadian health-system navigation, avoid diagnosis or prescriptions, disclose relevant limitations, direct emergencies to 911, and avoid implying access to HealthBridge or live service data.
 
@@ -226,6 +237,24 @@ PAYLOAD_SECRET=
 
 The existing Payload MongoDB and Supabase variables must also be configured for authenticated persistence. `OPENAI_MODEL` is optional at runtime because the route defaults to `gpt-5.6-luna`.
 
+### Preparing the HealthBridge RAG source
+
+Generate retrieval-ready chunks and embeddings from the HealthBridge PDF with:
+
+```bash
+pnpm rag:chunk
+```
+
+The command reads `src/healthbridge content.pdf` and writes
+`src/data/rag/healthbridge-content.chunks.json`. It defaults to 800-token chunks with 120-token
+overlap and `text-embedding-3-small`. Set `OPENAI_EMBEDDING_MODEL` to use another embedding
+model, or run `pnpm rag:chunk -- --skip-embeddings` when only local text chunks are needed.
+
+The generated file is loaded and cached by the server-side chat route. Rerun the command whenever
+the PDF changes so both chunks and embeddings remain synchronized with the source. Restart the
+local application after regeneration so a running server does not continue using its cached index;
+production deployments load the new index when the application starts.
+
 Keep API keys server-side. Never prefix `OPENAI_API_KEY` with `NEXT_PUBLIC_` or send it to the browser.
 
 ChatGPT subscriptions and OpenAI API billing are separate. The API project associated with `OPENAI_API_KEY` must have available credits and access to the configured model.
@@ -276,8 +305,7 @@ Before merging a chatbot change, verify:
 
 Do not assume these capabilities exist:
 
-- RAG or access to HealthBridge content;
-- citations or web search;
+- web search or citations for anything outside the retrieved HealthBridge content;
 - agent tools or external actions;
 - file, image, or voice input;
 - guest persistence or guest-to-account migration;
