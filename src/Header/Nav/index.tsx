@@ -6,8 +6,10 @@ import { usePathname } from 'next/navigation'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 import { localizePath, stripLocaleFromPathname } from '@/i18n/routing'
 import type { Locale } from '@/i18n/config'
+import { getAccountNavigation } from './accountNavigation'
 
 type HeaderNavProps = {
+  isSignedIn: boolean
   locale: Locale
   topicMenuItems: Array<{
     slug: string
@@ -20,6 +22,7 @@ type HeaderNavProps = {
 }
 
 export const HeaderNav: React.FC<HeaderNavProps> = ({
+  isSignedIn,
   locale,
   topicMenuItems,
   resourceMenuItems,
@@ -73,7 +76,12 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
   const isHomeActive = activePathname === '/'
   const isAboutActive = activePathname.startsWith('/about')
   const isContactActive = activePathname.startsWith('/contact')
-  const isSignupActive = activePathname.startsWith('/signup')
+  const {
+    href: accountHref,
+    label: accountLabel,
+    path: accountPath,
+  } = getAccountNavigation(isSignedIn, locale)
+  const isAccountActive = activePathname.startsWith(accountPath)
 
   return (
     <nav className="relative flex flex-1 justify-end" ref={navRef}>
@@ -214,14 +222,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
         </Link>
 
         <Link
-          href={localizePath('/signup', locale)}
+          href={accountHref}
           className={`border-b-2 pb-0.5 font-medium transition-colors ${
-            isSignupActive
+            isAccountActive
               ? 'border-blue-600 text-blue-600 dark:border-blue-400 dark:text-blue-400'
               : 'border-transparent text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400'
           }`}
         >
-          Sign Up
+          {accountLabel}
         </Link>
 
         <div className="absolute right-0">
@@ -372,14 +380,14 @@ export const HeaderNav: React.FC<HeaderNavProps> = ({
             </Link>
 
             <Link
-              href={localizePath('/signup', locale)}
+              href={accountHref}
               className={`rounded-lg px-3 py-2 font-medium hover:bg-slate-50 dark:hover:bg-slate-700/50 ${
-                isSignupActive
+                isAccountActive
                   ? 'text-blue-600 underline decoration-blue-600 underline-offset-4 dark:text-blue-400'
                   : 'text-slate-700 dark:text-slate-300'
               }`}
             >
-              Sign Up
+              {accountLabel}
             </Link>
 
             <div className="mt-2 border-t border-slate-200 pt-3 dark:border-slate-700">

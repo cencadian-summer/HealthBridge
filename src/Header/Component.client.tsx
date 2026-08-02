@@ -10,6 +10,7 @@ import { Logo } from '@/components/Logo/Logo'
 import { HeaderNav } from './Nav'
 
 type HeaderClientProps = {
+  isSignedIn: boolean
   locale: Locale
   topicMenuItems: Array<{
     slug: string
@@ -22,6 +23,7 @@ type HeaderClientProps = {
 }
 
 export const HeaderClient: React.FC<HeaderClientProps> = ({
+  isSignedIn,
   locale,
   topicMenuItems,
   resourceMenuItems,
@@ -52,6 +54,7 @@ export const HeaderClient: React.FC<HeaderClientProps> = ({
             <Logo loading="eager" priority="high" />
           </Link>
           <HeaderNav
+            isSignedIn={isSignedIn}
             locale={locale}
             topicMenuItems={topicMenuItems}
             resourceMenuItems={resourceMenuItems}
