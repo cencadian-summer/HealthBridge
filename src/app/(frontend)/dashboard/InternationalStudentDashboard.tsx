@@ -38,8 +38,12 @@ import { useState } from 'react'
 
 import { Logo } from '@/components/Logo/Logo'
 import { createClient } from '@/lib/supabase/client'
+import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
 
-type DashboardProps = { firstName: string }
+type DashboardProps = {
+  dashboardProfile?: CmsDashboardProfile | null
+  firstName: string
+}
 type NavItem = { href: string; icon: LucideIcon; label: string }
 type TopicGroup = {
   accent: string
@@ -248,7 +252,7 @@ function TopicCard({ group }: { group: TopicGroup }) {
   )
 }
 
-export function InternationalStudentDashboard({ firstName }: DashboardProps) {
+export function InternationalStudentDashboard({ dashboardProfile, firstName }: DashboardProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
 
@@ -323,14 +327,15 @@ export function InternationalStudentDashboard({ firstName }: DashboardProps) {
               <section className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-cyan-50 to-teal-50 px-5 py-7 sm:px-7">
                 <div className="relative z-10 max-w-xl">
                   <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
-                    <GraduationCap className="h-4 w-4" /> International Student
+                    <GraduationCap className="h-4 w-4" />
+                    {dashboardProfile?.roleLabel || 'International Student'}
                   </span>
                   <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-blue-950 sm:text-3xl">
-                    Welcome back, {firstName}! 👋
+                    {personalizeDashboardHeading(dashboardProfile?.heroHeading, firstName)}
                   </h1>
                   <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-                    Your personalized dashboard for living healthy, studying confidently, and
-                    navigating healthcare in Canada.
+                    {dashboardProfile?.introduction ||
+                      'Your personalized dashboard for living healthy, studying confidently, and navigating healthcare in Canada.'}
                   </p>
                 </div>
                 <Image

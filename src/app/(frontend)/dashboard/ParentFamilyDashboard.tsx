@@ -29,8 +29,13 @@ import {
 import { useState } from 'react'
 import { Logo } from '@/components/Logo/Logo'
 import { createClient } from '@/lib/supabase/client'
+import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
 
-type Props = { firstName: string; variant?: 'parent' | 'youth' }
+type Props = {
+  dashboardProfile?: CmsDashboardProfile | null
+  firstName: string
+  variant?: 'parent' | 'youth'
+}
 type Item = readonly [string, LucideIcon, string]
 const nav: Item[] = [
   ['Dashboard', Home, '/dashboard'],
@@ -142,7 +147,7 @@ function Sidebar({ logout, youth }: { logout: () => void; youth: boolean }) {
   )
 }
 
-export function ParentFamilyDashboard({ firstName, variant = 'parent' }: Props) {
+export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = 'parent' }: Props) {
   const [open, setOpen] = useState(false)
   const youth = variant === 'youth'
   const activeActions = youth ? youthActions : actions
@@ -209,15 +214,16 @@ export function ParentFamilyDashboard({ firstName, variant = 'parent' }: Props) 
                 <div className="relative z-10 max-w-lg">
                   <span className="inline-flex gap-2 rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-800">
                     <UsersRound className="h-4 w-4" />
-                    {youth ? 'Youth / Teen' : 'Parent / Family'}
+                    {dashboardProfile?.roleLabel || (youth ? 'Youth / Teen' : 'Parent / Family')}
                   </span>
                   <h1 className="mt-3 text-3xl font-extrabold text-blue-950">
-                    Welcome back, {firstName}! 👋
+                    {personalizeDashboardHeading(dashboardProfile?.heroHeading, firstName)}
                   </h1>
                   <p className="mt-2 max-w-md text-sm text-slate-600">
-                    {youth
-                      ? 'Your personalized dashboard for your health, safety, and wellbeing as a teen in Canada.'
-                      : 'Your personalized dashboard for your family’s health and wellbeing in Canada.'}
+                    {dashboardProfile?.introduction ||
+                      (youth
+                        ? 'Your personalized dashboard for your health, safety, and wellbeing as a teen in Canada.'
+                        : 'Your personalized dashboard for your family’s health and wellbeing in Canada.')}
                   </p>
                 </div>
                 <Image
