@@ -1239,8 +1239,20 @@ export interface DashboardProfile {
     | 'healthcare-provider'
     | 'settlement-worker'
     | 'other';
+  /**
+   * Controls the overall frontend dashboard structure. Content is managed in the fields below.
+   */
+  layoutVariant: 'general' | 'student' | 'family' | 'professional';
   dashboardLabel: string;
-  introduction: string;
+  /**
+   * Use {firstName} where the signed-in user’s first name should appear.
+   */
+  heroHeading: string;
+  introduction?: string | null;
+  /**
+   * For example: International Student, Parent / Family, or Settlement Worker.
+   */
+  roleLabel?: string | null;
   searchPlaceholder?: string | null;
   eventTitle?: string | null;
   quickActions?:
@@ -2265,8 +2277,11 @@ export interface ResourceItemsSelect<T extends boolean = true> {
 export interface DashboardProfilesSelect<T extends boolean = true> {
   title?: T;
   profile?: T;
+  layoutVariant?: T;
   dashboardLabel?: T;
+  heroHeading?: T;
   introduction?: T;
+  roleLabel?: T;
   searchPlaceholder?: T;
   eventTitle?: T;
   quickActions?:

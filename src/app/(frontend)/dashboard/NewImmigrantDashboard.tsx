@@ -31,6 +31,7 @@ import { useMemo, useState } from 'react'
 
 import { createClient } from '@/lib/supabase/client'
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
+import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
 import {
   getDashboardIcon,
   getDashboardProfile,
@@ -47,6 +48,7 @@ export type DashboardTopicSuggestion = {
 
 type DashboardProps = {
   audiences: Audience[]
+  cmsDashboardProfile?: CmsDashboardProfile | null
   dashboardProfile?: DashboardProfile
   firstName: string
   role: UserRole
@@ -109,6 +111,7 @@ function Card({
 
 export function PersonalizedDashboard({
   audiences,
+  cmsDashboardProfile,
   dashboardProfile,
   firstName,
   role,
@@ -315,15 +318,17 @@ export function PersonalizedDashboard({
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/10" />
             <div className="relative">
               <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-700">
-                {dashboard.label}
+                {cmsDashboardProfile?.dashboardLabel || dashboard.label}
               </span>
               <small className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">
-                {roleLabel}
+                {cmsDashboardProfile?.roleLabel || roleLabel}
               </small>
               <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-                Welcome back, {firstName}! 👋
+                {personalizeDashboardHeading(cmsDashboardProfile?.heroHeading, firstName)}
               </h1>
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">{dashboard.intro}</p>
+              <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
+                {cmsDashboardProfile?.introduction || dashboard.intro}
+              </p>
             </div>
           </section>
 

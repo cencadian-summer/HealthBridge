@@ -1,5 +1,18 @@
+import type { CmsDashboardProfile } from './dashboardCms'
 import { ProfessionalDashboard } from './ProfessionalDashboard'
 
-export function HealthcareProviderDashboard({ firstName }: { firstName: string }) {
-  return <ProfessionalDashboard firstName={firstName} profile="healthcare-provider" />
+export function HealthcareProviderDashboard({
+  dashboardProfile,
+  firstName,
+}: {
+  dashboardProfile?: CmsDashboardProfile | null
+  firstName: string
+}) {
+  return (
+    <ProfessionalDashboard
+      dashboardProfile={dashboardProfile}
+      firstName={firstName}
+      profile="healthcare-provider"
+    />
+  )
 }

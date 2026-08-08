@@ -17,6 +17,7 @@ import { ParentFamilyDashboard } from './ParentFamilyDashboard'
 import { YouthTeenDashboard } from './YouthTeenDashboard'
 import { HealthcareProviderDashboard } from './HealthcareProviderDashboard'
 import { SettlementWorkerDashboard } from './SettlementWorkerDashboard'
+import { fetchDashboardProfile } from './fetchDashboardProfile'
 
 export const metadata: Metadata = {
   title: 'Dashboard | HealthBridge',
@@ -34,28 +35,41 @@ export default async function DashboardPage() {
 
   const firstName = getUserName(user).trim().split(/\s+/)[0] || 'there'
   const audiences = getUserAudiences(user)
-
-  if (audiences[0] === 'international-student') {
-    return <InternationalStudentDashboard firstName={firstName} />
-  }
-
-  if (audiences[0] === 'parent') {
-    return <ParentFamilyDashboard firstName={firstName} />
-  }
-
-  if (audiences[0] === 'youth') {
-    return <YouthTeenDashboard firstName={firstName} />
-  }
-
-  if (audiences[0] === 'healthcare-provider') {
-    return <HealthcareProviderDashboard firstName={firstName} />
-  }
-
-  if (audiences[0] === 'settlement-worker') {
-    return <SettlementWorkerDashboard firstName={firstName} />
-  }
-
+  const selectedAudience = audiences[0] ?? 'other'
   const locale = await getRequestLocale()
+  const dashboardProfile = await fetchDashboardProfile(selectedAudience, locale)
+  const layoutVariant = dashboardProfile?.layoutVariant
+
+  if (
+    selectedAudience === 'international-student' &&
+    (!layoutVariant || layoutVariant === 'student')
+  ) {
+    return (
+      <InternationalStudentDashboard dashboardProfile={dashboardProfile} firstName={firstName} />
+    )
+  }
+
+  if (selectedAudience === 'parent' && (!layoutVariant || layoutVariant === 'family')) {
+    return <ParentFamilyDashboard dashboardProfile={dashboardProfile} firstName={firstName} />
+  }
+
+  if (selectedAudience === 'youth' && (!layoutVariant || layoutVariant === 'family')) {
+    return <YouthTeenDashboard dashboardProfile={dashboardProfile} firstName={firstName} />
+  }
+
+  if (
+    selectedAudience === 'healthcare-provider' &&
+    (!layoutVariant || layoutVariant === 'professional')
+  ) {
+    return <HealthcareProviderDashboard dashboardProfile={dashboardProfile} firstName={firstName} />
+  }
+
+  if (
+    selectedAudience === 'settlement-worker' &&
+    (!layoutVariant || layoutVariant === 'professional')
+  ) {
+    return <SettlementWorkerDashboard dashboardProfile={dashboardProfile} firstName={firstName} />
+  }
   const language = await getRequestLanguage()
   const topics = await fetchAllTopics(locale, language)
   const topicSuggestions: DashboardTopicSuggestion[] = topics
@@ -82,6 +96,7 @@ export default async function DashboardPage() {
   return (
     <PersonalizedDashboard
       audiences={audiences}
+      cmsDashboardProfile={dashboardProfile}
       firstName={firstName}
       role={getUserRole(user)}
       topicSuggestions={topicSuggestions}

@@ -104,15 +104,86 @@ export const DashboardProfiles: CollectionConfig<'dashboard-profiles'> = {
       ],
     },
     {
+      name: 'layoutVariant',
+      label: 'Dashboard Layout',
+      type: 'select',
+      required: true,
+      defaultValue: 'general',
+      options: [
+        {
+          label: 'General / Community',
+          value: 'general',
+        },
+        {
+          label: 'International Student',
+          value: 'student',
+        },
+        {
+          label: 'Parent / Youth',
+          value: 'family',
+        },
+        {
+          label: 'Healthcare Professional',
+          value: 'professional',
+        },
+      ],
+      admin: {
+        description:
+          'Controls the overall frontend dashboard structure. Content is managed in the fields below.',
+      },
+    },
+    {
       type: 'tabs',
       tabs: [
         {
           label: 'Welcome',
           fields: [
-            { name: 'dashboardLabel', type: 'text', localized: true, required: true },
-            { name: 'introduction', type: 'textarea', localized: true, required: true },
-            { name: 'searchPlaceholder', type: 'text', localized: true },
-            { name: 'eventTitle', type: 'text', localized: true },
+            {
+              name: 'dashboardLabel',
+              label: 'Dashboard Label',
+              type: 'text',
+              localized: true,
+              required: true,
+            },
+            {
+              name: 'heroHeading',
+              label: 'Hero Heading',
+              type: 'text',
+              localized: true,
+              required: true,
+              defaultValue: 'Welcome back, {firstName}!',
+              admin: {
+                description: 'Use {firstName} where the signed-in user’s first name should appear.',
+              },
+            },
+            {
+              name: 'introduction',
+              label: 'Hero Introduction',
+              type: 'textarea',
+              localized: true,
+              required: false,
+            },
+            {
+              name: 'roleLabel',
+              label: 'Role Label',
+              type: 'text',
+              localized: true,
+              required: false,
+              admin: {
+                description:
+                  'For example: International Student, Parent / Family, or Settlement Worker.',
+              },
+            },
+            {
+              name: 'searchPlaceholder',
+              type: 'text',
+              localized: true,
+            },
+            {
+              name: 'eventTitle',
+              type: 'text',
+              localized: true,
+            },
           ],
         },
         {
