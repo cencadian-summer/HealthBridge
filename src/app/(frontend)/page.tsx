@@ -7,6 +7,7 @@ import { fetchResourceItems } from './_utils/fetchResourceItems'
 import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
 import { localizePath } from '@/i18n/routing'
 import { getMediaUrl } from '@/utilities/getMediaUrl'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import { toKebabCase } from '@/utilities/toKebabCase'
 
 // Static fallbacks — used when the admin has not yet populated the Homepage global
@@ -209,7 +210,11 @@ export default async function HomePage() {
       {/* Hero */}
       <section className="relative isolate w-full overflow-hidden">
         {/* Background image */}
-        <div className="hero-bg-image absolute inset-0 -z-20" aria-hidden="true" />
+        <div
+          className="hero-bg-image absolute inset-0 -z-20"
+          style={{ backgroundImage: `url('${getStaticMediaURL('homehero.png')}')` }}
+          aria-hidden="true"
+        />
 
         {/* Keep the copy readable on the left while revealing the photo on the right. */}
         <div

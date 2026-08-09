@@ -1003,7 +1003,6 @@
   }
 
   .hero-bg-image {
-    background-image: url('/homehero.png');
     background-position: 90% center;
     background-size: cover;
     background-repeat: no-repeat;

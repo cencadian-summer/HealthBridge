@@ -15,6 +15,7 @@ import {
 } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -67,7 +68,7 @@ export default async function ContactPage() {
           fill
           priority
           sizes="100vw"
-          src="/contact-hero.png"
+          src={getStaticMediaURL('contact-hero.png')}
         />
         <div
           aria-hidden="true"

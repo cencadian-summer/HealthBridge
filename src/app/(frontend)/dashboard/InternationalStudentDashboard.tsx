@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import {
   AlertTriangle,
   Apple,
@@ -339,7 +340,7 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                   </p>
                 </div>
                 <Image
-                  src="/student.png"
+                  src={getStaticMediaURL('student.png')}
                   alt=""
                   width={220}
                   height={220}

@@ -7,6 +7,7 @@ import React from 'react'
 import { ThemeSelector } from '@/providers/Theme/ThemeSelector'
 import { CMSLink } from '@/components/Link'
 import { Logo } from '@/components/Logo/Logo'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export async function Footer() {
   const locale = await getRequestLocale()
@@ -22,7 +23,7 @@ export async function Footer() {
       <section className="relative isolate overflow-hidden border-t border-slate-200 dark:border-slate-800">
         <div
           className="absolute inset-0 -z-20 bg-cover bg-top"
-          style={{ backgroundImage: "url('/media/familyDoctor-1.jpeg')" }}
+          style={{ backgroundImage: `url('${getStaticMediaURL('familyDoctor-1.jpeg', 'media')}')` }}
           aria-hidden="true"
         />
         <div

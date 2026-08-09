@@ -15,6 +15,7 @@ import './globals.css'
 import { getServerSideURL } from '@/utilities/getURL'
 import { getRequestLocale } from '@/i18n/server'
 import { SiteChrome } from './_components/SiteChrome'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const locale = await getRequestLocale()
@@ -27,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     >
       <head>
         <link href="/favicon.ico" rel="icon" sizes="32x32" />
-        <link href="/favicon.svg" rel="icon" type="image/svg+xml" />
+        <link href={getStaticMediaURL('favicon.svg')} rel="icon" type="image/svg+xml" />
       </head>
       <body>
         <InitTheme />

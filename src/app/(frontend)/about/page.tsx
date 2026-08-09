@@ -19,6 +19,7 @@ import { STATIC_ABOUT_FALLBACK } from '../_utils/staticAboutFallback'
 import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
 import { localizePath } from '@/i18n/routing'
 import { AboutRevealCard } from './_components/AboutRevealCard'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export const metadata: Metadata = {
   title: 'About Us | HealthBridge',
@@ -33,27 +34,27 @@ const VALUE_ICONS: Record<string, ElementType> = {
   'cultural responsiveness': Users,
 }
 
-const HERO_IMAGE = '/media/Section1-1-1400x747.png'
+const HERO_IMAGE = getStaticMediaURL('Section1-1-1400x747.png', 'media')
 
 const heroHighlights = [
   {
     title: 'Inclusive',
     description: 'We serve newcomers, immigrants, youth, and communities.',
-    imageSrc: '/community.png',
+    imageSrc: getStaticMediaURL('community.png'),
     imageAlt: 'Community members',
     className: 'bg-blue-100 text-blue-700',
   },
   {
     title: 'Culturally Responsive',
     description: 'Our resources are multilingual and culturally relevant.',
-    imageSrc: '/stethoscope.png',
+    imageSrc: getStaticMediaURL('stethoscope.png'),
     imageAlt: 'Healthcare support',
     className: 'bg-emerald-100 text-emerald-700',
   },
   {
     title: 'Reliable',
     description: 'Evidence-based information you can trust.',
-    imageSrc: '/shield.png',
+    imageSrc: getStaticMediaURL('shield.png'),
     imageAlt: 'Reliable protection',
     className: 'bg-violet-100 text-violet-700',
   },
@@ -64,7 +65,7 @@ const impactStats = [
     value: '25,000+',
     label: 'Learners',
     description: 'Empowered with health knowledge',
-    imageSrc: '/student.png',
+    imageSrc: getStaticMediaURL('student.png'),
     imageAlt: 'Student learner',
     className: 'bg-blue-100 text-blue-700',
   },
@@ -72,7 +73,7 @@ const impactStats = [
     value: '12+',
     label: 'Languages',
     description: 'Resources available in multiple languages',
-    imageSrc: '/earth.png',
+    imageSrc: getStaticMediaURL('earth.png'),
     imageAlt: 'Global languages',
     className: 'bg-emerald-100 text-emerald-700',
   },
@@ -80,7 +81,7 @@ const impactStats = [
     value: '150+',
     label: 'Community Partners',
     description: 'Working together across Canada',
-    imageSrc: '/team.png',
+    imageSrc: getStaticMediaURL('team.png'),
     imageAlt: 'Community partners',
     className: 'bg-orange-100 text-orange-600',
   },
@@ -88,7 +89,7 @@ const impactStats = [
     value: '500+',
     label: 'Resources & Guides',
     description: 'Reliable, easy-to-understand information',
-    imageSrc: '/learner.png',
+    imageSrc: getStaticMediaURL('learner.png'),
     imageAlt: 'Learning resources',
     className: 'bg-cyan-100 text-cyan-700',
   },
@@ -191,7 +192,7 @@ export default async function AboutPage() {
             <div className="flex gap-5">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-300">
                 <Image
-                  src="/target.png"
+                  src={getStaticMediaURL('target.png')}
                   alt="Mission"
                   width={48}
                   height={48}
@@ -216,7 +217,7 @@ export default async function AboutPage() {
             <div className="flex gap-5">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 dark:bg-emerald-900/60 dark:text-emerald-300">
                 <Image
-                  src="/opportunity.png"
+                  src={getStaticMediaURL('opportunity.png')}
                   alt="Vision"
                   width={48}
                   height={48}
@@ -241,7 +242,7 @@ export default async function AboutPage() {
             <div className="flex gap-5">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-violet-100 text-violet-700 dark:bg-violet-900/60 dark:text-violet-300">
                 <Image
-                  src="/value.png"
+                  src={getStaticMediaURL('value.png')}
                   alt="Values"
                   width={48}
                   height={48}

@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import {
   Apple,
   Bell,
@@ -227,7 +228,7 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
                   </p>
                 </div>
                 <Image
-                  src={youth ? '/learner.png' : '/community.png'}
+                  src={getStaticMediaURL(youth ? 'learner.png' : 'community.png')}
                   alt=""
                   width={300}
                   height={220}

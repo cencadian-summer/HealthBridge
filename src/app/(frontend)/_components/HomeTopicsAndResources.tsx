@@ -28,6 +28,7 @@ import { localizePath } from '@/i18n/routing'
 import type { Locale } from '@/i18n/config'
 import { getTopicAccent } from '../topic/_utils/topicVisuals'
 import { PopularResourcesSection, type PopularResourceItem } from './PopularResourcesSection'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export type HomeTopic = {
   id: string
@@ -291,7 +292,7 @@ export function HomeTopicsAndResources({
           <article className="px-2 text-center">
             <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
               <Image
-                src="/media/ChatGPT Image Jun 16, 2026, 09_46_27 AM.png"
+                src={getStaticMediaURL('ChatGPT Image Jun 16, 2026, 09_46_27 AM.png')}
                 alt="Healthcare services"
                 width={112}
                 height={112}
@@ -310,7 +311,7 @@ export function HomeTopicsAndResources({
           <article className="px-2 text-center">
             <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
               <Image
-                src="/media/walk-in.png"
+                src={getStaticMediaURL('walk-in.png', 'media')}
                 alt="People accessing health information"
                 width={112}
                 height={112}
@@ -329,7 +330,10 @@ export function HomeTopicsAndResources({
           <article className="px-2 text-center">
             <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
               <Image
-                src="/media/medical-practitioner-answering-phone-calls-900x600.jpg"
+                src={getStaticMediaURL(
+                  'medical-practitioner-answering-phone-calls-900x600.jpg',
+                  'media',
+                )}
                 alt="Healthcare support by phone"
                 width={112}
                 height={112}
@@ -391,7 +395,7 @@ export function HomeTopicsAndResources({
               >
                 {canRenderImage ? (
                   <Image
-                    src={topic.iconImageUrl}
+                    src={topic.iconImageUrl!}
                     alt={topic.iconImageAlt}
                     fill
                     sizes="(min-width: 1280px) 280px, (min-width: 640px) 50vw, 100vw"

@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { LoginForm } from './LoginForm'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export const metadata: Metadata = {
   title: 'Log in | HealthBridge',
@@ -16,7 +17,8 @@ export default function LoginPage() {
         <div className="relative hidden min-h-[46rem] overflow-hidden bg-cyan-50 lg:block">
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-[url('/homehero.png')] bg-cover bg-center"
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url('${getStaticMediaURL('homehero.png')}')` }}
           />
           <div
             aria-hidden="true"

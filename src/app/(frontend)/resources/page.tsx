@@ -23,6 +23,7 @@ import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
 import { localizePath } from '@/i18n/routing'
 import { MultilingualSupportMenu } from './_components/MultilingualSupportMenu'
 import { BMICalculator } from './_components/BMICalculator'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 const ICON_MAP: Record<string, LucideIcon> = {
   Hospital,
@@ -241,7 +242,7 @@ export default async function ResourcesPage() {
 
             <div className="resources-hero-image-wrap" aria-hidden="true">
               <Image
-                src="/hero.jpg"
+                src={getStaticMediaURL('hero.jpg')}
                 alt=""
                 width={900}
                 height={600}

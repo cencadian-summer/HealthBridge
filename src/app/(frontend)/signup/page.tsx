@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { SignupForm } from './SignupForm'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export const metadata: Metadata = {
   title: 'Create account | HealthBridge',
@@ -57,7 +58,8 @@ export default function SignupPage() {
           </div>
           <div
             aria-hidden="true"
-            className="absolute inset-x-0 bottom-0 hidden h-80 bg-[url('/homehero.png')] bg-cover bg-center lg:block"
+            className="absolute inset-x-0 bottom-0 hidden h-80 bg-cover bg-center lg:block"
+            style={{ backgroundImage: `url('${getStaticMediaURL('homehero.png')}')` }}
           />
         </aside>
 

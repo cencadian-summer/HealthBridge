@@ -160,7 +160,7 @@ export function TopicSearchFilter({ locale, topics }: Props) {
               >
                 {canRenderImage ? (
                   <Image
-                    src={t.iconImageUrl}
+                    src={t.iconImageUrl!}
                     alt={t.iconImageAlt}
                     fill
                     sizes="(min-width: 1280px) 280px, (min-width: 640px) 50vw, 100vw"

@@ -31,6 +31,7 @@ import { useMemo, useState } from 'react'
 
 import { createClient } from '@/lib/supabase/client'
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
+import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
 import {
   getDashboardIcon,
@@ -314,7 +315,10 @@ export function PersonalizedDashboard({
 
         <main className="mx-auto max-w-[1440px] space-y-4 p-4 sm:p-6">
           <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white px-5 py-7 shadow-sm sm:px-7">
-            <div className="absolute inset-y-0 right-0 hidden w-1/2 bg-[url('/homehero.png')] bg-cover bg-center opacity-80 md:block" />
+            <div
+              className="absolute inset-y-0 right-0 hidden w-1/2 bg-cover bg-center opacity-80 md:block"
+              style={{ backgroundImage: `url('${getStaticMediaURL('homehero.png')}')` }}
+            />
             <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/10" />
             <div className="relative">
               <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-700">

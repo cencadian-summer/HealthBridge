@@ -1,47 +1,33 @@
-/**
- * Processes media resource URL to ensure proper formatting
- * @param url The original URL from the resource
- * @param cacheTag Optional cache tag to append to the URL
- * @returns Properly formatted URL with cache tag if provided
- *
- * Local paths (e.g. `/api/media/file/image.webp`) are kept relative so
- * Next.js image optimization treats them as local rather than fetching
- * through `remotePatterns`, which blocks private IPs since Next.js 16.
- */
+import { buildSpacesMediaURL } from './spacesMedia'
+
 export const getMediaUrl = (url: string | null | undefined, cacheTag?: string | null): string => {
   if (!url) return ''
 
-  const toRelativeMediaPath = (value: string): string => {
-    const normalizeMediaPathname = (pathname: string): string => {
-      if (pathname.startsWith('/api/media/file/')) {
-        return pathname.replace('/api/media/file/', '/media/')
-      }
+  let normalizedUrl = url
 
-      return pathname
+  const normalizePayloadPath = (pathname: string, search = ''): string | null => {
+    if (!pathname.startsWith('/api/media/file/') && !pathname.startsWith('/media/')) {
+      return null
     }
 
-    try {
-      const parsed = new URL(value)
-      if (parsed.pathname.startsWith('/api/media/file/') || parsed.pathname.startsWith('/media/')) {
-        return `${normalizeMediaPathname(parsed.pathname)}${parsed.search}`
-      }
-      return value
-    } catch {
-      if (value.startsWith('/api/media/file/') || value.startsWith('/media/')) {
-        const [pathname, search = ''] = value.split('?', 2)
-        const normalizedPathname = normalizeMediaPathname(pathname)
-        return search ? `${normalizedPathname}?${search}` : normalizedPathname
-      }
-
-      return value
-    }
+    const filename = pathname.replace(/^\/api\/media\/file\//, '').replace(/^\/media\//, '')
+    const cdnURL = buildSpacesMediaURL(filename)
+    return search ? `${cdnURL}${search.startsWith('?') ? search : `?${search}`}` : cdnURL
   }
 
-  const normalizedUrl = toRelativeMediaPath(url)
+  try {
+    const parsed = new URL(url)
+    normalizedUrl = normalizePayloadPath(parsed.pathname, parsed.search) || url
+  } catch {
+    const [pathname, search = ''] = url.split('?', 2)
+    normalizedUrl = normalizePayloadPath(pathname, search) || url
+  }
 
   if (cacheTag && cacheTag !== '') {
     cacheTag = encodeURIComponent(cacheTag)
   }
 
-  return cacheTag ? `${normalizedUrl}?${cacheTag}` : normalizedUrl
+  if (!cacheTag) return normalizedUrl
+
+  return `${normalizedUrl}${normalizedUrl.includes('?') ? '&' : '?'}${cacheTag}`
 }

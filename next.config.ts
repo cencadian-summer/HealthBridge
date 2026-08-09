@@ -10,6 +10,7 @@ import { redirects } from './redirects'
 const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
   : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+const SPACES_CDN_URL = process.env.NEXT_PUBLIC_DO_SPACES_CDN_URL || process.env.DO_SPACES_CDN_URL
 
 const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
@@ -31,14 +32,16 @@ const nextConfig: NextConfig = {
     ],
     qualities: [100],
     remotePatterns: [
-      ...[NEXT_PUBLIC_SERVER_URL /* 'https://example.com' */].map((item) => {
-        const url = new URL(item)
+      ...[NEXT_PUBLIC_SERVER_URL, SPACES_CDN_URL]
+        .filter((item): item is string => Boolean(item))
+        .map((item) => {
+          const url = new URL(item)
 
-        return {
-          hostname: url.hostname,
-          protocol: url.protocol.replace(':', '') as 'http' | 'https',
-        }
-      }),
+          return {
+            hostname: url.hostname,
+            protocol: url.protocol.replace(':', '') as 'http' | 'https',
+          }
+        }),
     ],
   },
   webpack: (webpackConfig) => {
