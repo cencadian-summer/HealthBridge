@@ -1,8 +1,6 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { getStaticMediaURL } from '@/utilities/spacesMedia'
 import {
   AlertTriangle,
   Apple,
@@ -39,7 +37,8 @@ import { useState } from 'react'
 
 import { Logo } from '@/components/Logo/Logo'
 import { createClient } from '@/lib/supabase/client'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { RenderDashboardHero } from '@/blocks/DashboardHero/RenderDashboardHero'
+import type { CmsDashboardProfile } from './dashboardCms'
 
 type DashboardProps = {
   dashboardProfile?: CmsDashboardProfile | null
@@ -325,28 +324,18 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
         <main className="mx-auto max-w-[1500px] p-4 sm:p-6">
           <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_280px]">
             <div className="min-w-0 space-y-5">
-              <section className="relative overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-r from-blue-50 via-cyan-50 to-teal-50 px-5 py-7 sm:px-7">
-                <div className="relative z-10 max-w-xl">
-                  <span className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-800">
-                    <GraduationCap className="h-4 w-4" />
-                    {dashboardProfile?.roleLabel || 'International Student'}
-                  </span>
-                  <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-blue-950 sm:text-3xl">
-                    {personalizeDashboardHeading(dashboardProfile?.heroHeading, firstName)}
-                  </h1>
-                  <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-                    {dashboardProfile?.introduction ||
-                      'Your personalized dashboard for living healthy, studying confidently, and navigating healthcare in Canada.'}
-                  </p>
-                </div>
-                <Image
-                  src={getStaticMediaURL('student.png')}
-                  alt=""
-                  width={220}
-                  height={220}
-                  className="absolute right-5 bottom-0 hidden h-[90%] w-auto object-contain opacity-90 md:block"
-                />
-              </section>
+              <RenderDashboardHero
+                dashboardProfile={dashboardProfile}
+                fallback={{
+                  dashboardLabel: 'International student dashboard',
+                  introduction:
+                    'Your personalized dashboard for living healthy, studying confidently, and navigating healthcare in Canada.',
+                  roleLabel: 'International Student',
+                }}
+                firstName={firstName}
+                layoutVariant={dashboardProfile?.layoutVariant || 'student'}
+                profile="international-student"
+              />
 
               <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">

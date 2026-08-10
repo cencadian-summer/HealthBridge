@@ -31,7 +31,8 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '@/components/Logo/Logo'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { RenderDashboardHero } from '@/blocks/DashboardHero/RenderDashboardHero'
+import type { CmsDashboardProfile } from './dashboardCms'
 
 type Profile = 'healthcare-provider' | 'settlement-worker'
 type Props = {
@@ -255,14 +256,17 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
           </div>
         </header>
         <main className="mx-auto max-w-[1450px] p-5 lg:p-9">
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            {personalizeDashboardHeading(dashboardProfile?.heroHeading, firstName)}
-          </h1>
-          <p className="mt-1 max-w-2xl text-sm text-slate-500">
-            {dashboardProfile?.introduction ||
-              'Access tools and resources to support the people you serve.'}
-          </p>
-          <p className="mt-2 text-sm font-bold text-teal-700">{role}</p>
+          <RenderDashboardHero
+            dashboardProfile={dashboardProfile}
+            fallback={{
+              dashboardLabel: `${role} dashboard`,
+              introduction: 'Access tools and resources to support the people you serve.',
+              roleLabel: role,
+            }}
+            firstName={firstName}
+            layoutVariant={dashboardProfile?.layoutVariant || 'professional'}
+            profile={profile}
+          />
           <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
             <div className="space-y-5">
               <section id="clients" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">

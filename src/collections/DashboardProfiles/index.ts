@@ -2,6 +2,7 @@ import type { CollectionConfig, Field } from 'payload'
 
 import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
+import { DashboardHero } from '@/blocks/DashboardHero/config'
 
 const iconOptions = [
   'BookOpen',
@@ -135,6 +136,31 @@ export const DashboardProfiles: CollectionConfig<'dashboard-profiles'> = {
     {
       type: 'tabs',
       tabs: [
+        {
+          label: 'Dashboard Sections',
+          fields: [
+            {
+              name: 'layout',
+              label: 'Dashboard Sections',
+              type: 'blocks',
+              blocks: [DashboardHero],
+              validate: (value) => {
+                if (!Array.isArray(value)) return true
+
+                const heroCount = value.filter(
+                  (block) => block?.blockType === 'dashboardHero',
+                ).length
+
+                return heroCount <= 1 || 'Only one Dashboard Hero block can be added.'
+              },
+              admin: {
+                initCollapsed: true,
+                description:
+                  'Add dashboard sections here. Existing fields remain as fallbacks during migration.',
+              },
+            },
+          ],
+        },
         {
           label: 'Welcome',
           fields: [

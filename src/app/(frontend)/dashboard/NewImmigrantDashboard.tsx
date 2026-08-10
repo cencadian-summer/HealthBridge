@@ -31,8 +31,8 @@ import { useMemo, useState } from 'react'
 
 import { createClient } from '@/lib/supabase/client'
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
-import { getStaticMediaURL } from '@/utilities/spacesMedia'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { RenderDashboardHero } from '@/blocks/DashboardHero/RenderDashboardHero'
+import type { CmsDashboardProfile } from './dashboardCms'
 import {
   getDashboardIcon,
   getDashboardProfile,
@@ -314,27 +314,17 @@ export function PersonalizedDashboard({
         </header>
 
         <main className="mx-auto max-w-[1440px] space-y-4 p-4 sm:p-6">
-          <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white px-5 py-7 shadow-sm sm:px-7">
-            <div
-              className="absolute inset-y-0 right-0 hidden w-1/2 bg-cover bg-center opacity-80 md:block"
-              style={{ backgroundImage: `url('${getStaticMediaURL('homehero.png')}')` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 to-white/10" />
-            <div className="relative">
-              <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-bold uppercase tracking-wider text-teal-700">
-                {cmsDashboardProfile?.dashboardLabel || dashboard.label}
-              </span>
-              <small className="ml-2 rounded-full bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-600">
-                {cmsDashboardProfile?.roleLabel || roleLabel}
-              </small>
-              <h1 className="mt-3 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl">
-                {personalizeDashboardHeading(cmsDashboardProfile?.heroHeading, firstName)}
-              </h1>
-              <p className="mt-2 max-w-md text-sm leading-6 text-slate-600">
-                {cmsDashboardProfile?.introduction || dashboard.intro}
-              </p>
-            </div>
-          </section>
+          <RenderDashboardHero
+            dashboardProfile={cmsDashboardProfile}
+            fallback={{
+              dashboardLabel: dashboard.label,
+              introduction: dashboard.intro,
+              roleLabel,
+            }}
+            firstName={firstName}
+            layoutVariant={cmsDashboardProfile?.layoutVariant || 'general'}
+            profile={cmsDashboardProfile?.profile || audiences[0] || 'other'}
+          />
 
           <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
             <h2 className="font-bold text-slate-900">What would you like help with today?</h2>

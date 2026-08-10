@@ -1244,6 +1244,10 @@ export interface DashboardProfile {
    * Controls the overall frontend dashboard structure. Content is managed in the fields below.
    */
   layoutVariant: 'general' | 'student' | 'family' | 'professional';
+  /**
+   * Add dashboard sections here. Existing fields remain as fallbacks during migration.
+   */
+  layout?: DashboardHeroBlock[] | null;
   dashboardLabel: string;
   /**
    * Use {firstName} where the signed-in user’s first name should appear.
@@ -1454,6 +1458,22 @@ export interface DashboardProfile {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DashboardHeroBlock".
+ */
+export interface DashboardHeroBlock {
+  dashboardLabel: string;
+  /**
+   * Use {firstName} where the signed-in user’s first name should appear.
+   */
+  heading: string;
+  introduction?: string | null;
+  roleLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'dashboardHero';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -2280,6 +2300,11 @@ export interface DashboardProfilesSelect<T extends boolean = true> {
   title?: T;
   profile?: T;
   layoutVariant?: T;
+  layout?:
+    | T
+    | {
+        dashboardHero?: T | DashboardHeroBlockSelect<T>;
+      };
   dashboardLabel?: T;
   heroHeading?: T;
   introduction?: T;
@@ -2343,6 +2368,18 @@ export interface DashboardProfilesSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DashboardHeroBlock_select".
+ */
+export interface DashboardHeroBlockSelect<T extends boolean = true> {
+  dashboardLabel?: T;
+  heading?: T;
+  introduction?: T;
+  roleLabel?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
