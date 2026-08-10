@@ -3,6 +3,7 @@ import 'dotenv/config'
 import {
   DeleteObjectCommand,
   HeadObjectCommand,
+  PutObjectAclCommand,
   PutObjectCommand,
   S3Client,
 } from '@aws-sdk/client-s3'
@@ -203,10 +204,13 @@ const snapshotMedia = async (): Promise<string> => {
   }
 }
 
-const uploadIfMissing = async (client: S3Client, filename: string, filePath: string) => {
+const uploadIfMissing = async (client: S3Client, filename: string, contents: Buffer) => {
   const key = `${MEDIA_PREFIX}/${filename}`
   try {
     await client.send(new HeadObjectCommand({ Bucket: spaces.bucket, Key: key }))
+    await client.send(
+      new PutObjectAclCommand({ Bucket: spaces.bucket, Key: key, ACL: 'public-read' }),
+    )
     return false
   } catch (error) {
     const status = (error as { $metadata?: { httpStatusCode?: number } }).$metadata?.httpStatusCode
@@ -217,7 +221,7 @@ const uploadIfMissing = async (client: S3Client, filename: string, filePath: str
     new PutObjectCommand({
       Bucket: spaces.bucket,
       Key: key,
-      Body: await readFile(filePath),
+      Body: contents,
       ContentType: getContentType(filename),
       ACL: 'public-read',
       CacheControl: 'public, max-age=31536000, immutable',
@@ -254,14 +258,27 @@ const main = async (): Promise<void> => {
     const filesByName = new Map<string, string>()
     for (const filePath of allImagePaths) {
       const filename = path.basename(filePath)
-      if (filesByName.has(filename)) {
-        throw new Error(`Duplicate filesystem image filename: ${filename}`)
+      const existingPath = filesByName.get(filename)
+      if (existingPath) {
+        const mediaDirectory = path.join(PUBLIC_DIRECTORY, MEDIA_PREFIX)
+        const existingIsMedia = path.dirname(existingPath) === mediaDirectory
+        const currentIsMedia = path.dirname(filePath) === mediaDirectory
+
+        if (!existingIsMedia && currentIsMedia) filesByName.set(filename, filePath)
+        continue
       }
       filesByName.set(filename, filePath)
     }
 
+    const isGeneratedVariant = (filename: string): boolean => {
+      if (generatedFilenames.has(filename)) return true
+
+      const match = filename.match(/^(.*)-\d+x\d+(\.[^.]+)$/)
+      return Boolean(match && byFilename.has(`${match[1]}${match[2]}`))
+    }
+
     const originalFiles = [...filesByName.entries()].filter(
-      ([filename]) => !generatedFilenames.has(filename),
+      ([filename]) => !isGeneratedVariant(filename),
     )
     const matchingRecords = originalFiles.filter(([filename]) => byFilename.has(filename))
     const newRecords = originalFiles.filter(([filename]) => !byFilename.has(filename))
@@ -298,6 +315,7 @@ const main = async (): Promise<void> => {
           ? await payload.update({
               collection: 'media',
               id: existing.id,
+              context: { disableRevalidate: true },
               data: {},
               filePath,
               overwriteExistingFiles: true,
@@ -305,6 +323,7 @@ const main = async (): Promise<void> => {
             })
           : await payload.create({
               collection: 'media',
+              context: { disableRevalidate: true },
               data: { alt: humanizeFilename(filename) },
               filePath,
               overwriteExistingFiles: true,
@@ -331,9 +350,16 @@ const main = async (): Promise<void> => {
     }
 
     let reconciledUploads = 0
-    for (const [filename, filePath] of filesByName) {
-      if (await uploadIfMissing(s3, filename, filePath)) reconciledUploads += 1
-      await verifyPublicObject(getCDNURL(`${MEDIA_PREFIX}/${filename}`))
+    const fileEntries = [...filesByName]
+    for (let index = 0; index < fileEntries.length; index += 10) {
+      await Promise.all(
+        fileEntries.slice(index, index + 10).map(async ([filename, filePath]) => {
+          const contents = localFileBackup.get(filePath)
+          if (!contents) throw new Error(`Missing local media backup: ${filePath}`)
+          if (await uploadIfMissing(s3, filename, contents)) reconciledUploads += 1
+          await verifyPublicObject(getCDNURL(`${MEDIA_PREFIX}/${filename}`))
+        }),
+      )
     }
 
     const report = {

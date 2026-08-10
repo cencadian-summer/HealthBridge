@@ -19,12 +19,16 @@ const invalidateMediaDependentCaches = (): void => {
   revalidatePath('/', 'layout')
 }
 
-export const revalidateMediaAfterChange: CollectionAfterChangeHook = ({ doc }) => {
+export const revalidateMediaAfterChange: CollectionAfterChangeHook = ({ context, doc }) => {
+  if (context.disableRevalidate) return doc
+
   invalidateMediaDependentCaches()
   return doc
 }
 
-export const revalidateMediaAfterDelete: CollectionAfterDeleteHook = ({ doc }) => {
+export const revalidateMediaAfterDelete: CollectionAfterDeleteHook = ({ context, doc }) => {
+  if (context.disableRevalidate) return doc
+
   invalidateMediaDependentCaches()
   return doc
 }
