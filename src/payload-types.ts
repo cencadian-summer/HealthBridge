@@ -78,6 +78,7 @@ export interface Config {
     'admin-activities': AdminActivity;
     'chat-conversations': ChatConversation;
     'chat-messages': ChatMessage;
+    'contact-inquiries': ContactInquiry;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -106,6 +107,7 @@ export interface Config {
     'admin-activities': AdminActivitiesSelect<false> | AdminActivitiesSelect<true>;
     'chat-conversations': ChatConversationsSelect<false> | ChatConversationsSelect<true>;
     'chat-messages': ChatMessagesSelect<false> | ChatMessagesSelect<true>;
+    'contact-inquiries': ContactInquiriesSelect<false> | ContactInquiriesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -1513,6 +1515,26 @@ export interface ChatMessage {
   createdAt: string;
 }
 /**
+ * Messages submitted through the public Contact Us form.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries".
+ */
+export interface ContactInquiry {
+  id: string;
+  name: string;
+  email: string;
+  subject: 'general' | 'resource' | 'technical' | 'partnership' | 'feedback';
+  message: string;
+  status: 'new' | 'in-progress' | 'resolved';
+  /**
+   * Private follow-up notes. These are never shown to the sender.
+   */
+  internalNotes?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -1745,6 +1767,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'chat-messages';
         value: string | ChatMessage;
+      } | null)
+    | ({
+        relationTo: 'contact-inquiries';
+        value: string | ContactInquiry;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -2392,6 +2418,20 @@ export interface ChatMessagesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-inquiries_select".
+ */
+export interface ContactInquiriesSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  subject?: T;
+  message?: T;
+  status?: T;
+  internalNotes?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects_select".
  */
 export interface RedirectsSelect<T extends boolean = true> {
@@ -2783,6 +2823,31 @@ export interface Homepage {
    * URL the secondary button links to.
    */
   secondaryCTAUrl?: string | null;
+  holisticHeading?: string | null;
+  holisticDescription?: string | null;
+  holisticLinkLabel?: string | null;
+  /**
+   * Internal or external URL used by the section link.
+   */
+  holisticLinkUrl?: string | null;
+  /**
+   * Exactly three cards displayed across the holistic approach section.
+   */
+  holisticCards?:
+    | {
+        title: string;
+        description: string;
+        /**
+         * Upload or select the circular image shown above this card.
+         */
+        image?: (string | null) | Media;
+        /**
+         * Describe the image for people using screen readers.
+         */
+        imageAlt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   /**
    * Heading for the popular resources section.
    */
@@ -2939,6 +3004,23 @@ export interface Resource {
   heroSecondaryHref?: string | null;
   browseTitle?: string | null;
   browseDescription?: string | null;
+  printableTitle?: string | null;
+  printableDescription?: string | null;
+  /**
+   * Add downloadable PDF or PNG guides. Drag rows to control their display order.
+   */
+  printableResources?:
+    | {
+        title: string;
+        description?: string | null;
+        /**
+         * Select or upload a PDF or PNG file from the Media library.
+         */
+        file: string | Media;
+        downloadLabel?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   featuredLinks?:
     | {
         title: string;
@@ -3038,6 +3120,19 @@ export interface HomepageSelect<T extends boolean = true> {
   primaryCTAUrl?: T;
   secondaryCTALabel?: T;
   secondaryCTAUrl?: T;
+  holisticHeading?: T;
+  holisticDescription?: T;
+  holisticLinkLabel?: T;
+  holisticLinkUrl?: T;
+  holisticCards?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+        imageAlt?: T;
+        id?: T;
+      };
   popularResourcesHeading?: T;
   popularResourcesDescription?: T;
   popularResourcesViewAllLabel?: T;
@@ -3109,6 +3204,17 @@ export interface ResourcesSelect<T extends boolean = true> {
   heroSecondaryHref?: T;
   browseTitle?: T;
   browseDescription?: T;
+  printableTitle?: T;
+  printableDescription?: T;
+  printableResources?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        file?: T;
+        downloadLabel?: T;
+        id?: T;
+      };
   featuredLinks?:
     | T
     | {

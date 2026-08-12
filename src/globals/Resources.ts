@@ -86,6 +86,72 @@ export const Resources: GlobalConfig = {
     },
     {
       type: 'collapsible',
+      label: 'Printable Resources Section',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          name: 'printableTitle',
+          type: 'text',
+          localized: true,
+          defaultValue: 'Printable Resources',
+        },
+        {
+          name: 'printableDescription',
+          type: 'textarea',
+          localized: true,
+          defaultValue:
+            'Download practical health guides, checklists, and information sheets to keep or share.',
+        },
+        {
+          name: 'printableResources',
+          type: 'array',
+          labels: {
+            singular: 'Printable resource',
+            plural: 'Printable resources',
+          },
+          admin: {
+            description:
+              'Add downloadable PDF or PNG guides. Drag rows to control their display order.',
+            initCollapsed: true,
+          },
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              localized: true,
+              required: true,
+            },
+            {
+              name: 'description',
+              type: 'textarea',
+              localized: true,
+            },
+            {
+              name: 'file',
+              type: 'upload',
+              relationTo: 'media',
+              required: true,
+              filterOptions: {
+                mimeType: {
+                  in: ['application/pdf', 'image/png'],
+                },
+              },
+              admin: {
+                description: 'Select or upload a PDF or PNG file from the Media library.',
+              },
+            },
+            {
+              name: 'downloadLabel',
+              type: 'text',
+              localized: true,
+              defaultValue: 'Download guide',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'collapsible',
       label: 'Featured Links',
       admin: { initCollapsed: true, hidden: true },
       fields: [

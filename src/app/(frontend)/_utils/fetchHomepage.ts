@@ -16,6 +16,23 @@ export type HomepageData = {
   primaryCTAUrl?: string
   secondaryCTALabel?: string
   secondaryCTAUrl?: string
+  holisticHeading?: string
+  holisticDescription?: string
+  holisticLinkLabel?: string
+  holisticLinkUrl?: string
+  holisticCards?: Array<{
+    id?: string | null
+    title: string
+    description: string
+    imageAlt?: string | null
+    image?:
+      | string
+      | {
+          url?: string | null
+          alt?: string | null
+        }
+      | null
+  }>
   popularResourcesHeading?: string
   popularResourcesDescription?: string
   popularResourcesViewAllLabel?: string

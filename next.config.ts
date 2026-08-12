@@ -32,6 +32,11 @@ const nextConfig: NextConfig = {
     ],
     qualities: [100],
     remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'healthbridge.tor1.cdn.digitaloceanspaces.com',
+        pathname: '/media/**',
+      },
       ...[NEXT_PUBLIC_SERVER_URL, SPACES_CDN_URL]
         .filter((item): item is string => Boolean(item))
         .map((item) => {

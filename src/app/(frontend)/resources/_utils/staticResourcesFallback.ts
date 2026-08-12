@@ -10,6 +10,10 @@ export const STATIC_RESOURCES_FALLBACK = {
   browseTitle: 'Browse Resources',
   browseDescription:
     'Find reliable healthcare guidance, educational content, community services, emergency contacts, and multilingual support tailored to newcomers and diverse communities.',
+  printableTitle: 'Printable Resources',
+  printableDescription:
+    'Download practical health guides, checklists, and information sheets to keep or share.',
+  printableResources: [],
   emergencyTitle: 'Need Immediate Help?',
   emergencyDescription:
     'If this is a medical emergency or someone is in danger, call emergency services immediately. For non-emergency health advice in Manitoba, contact Health Links - Info Sante.',

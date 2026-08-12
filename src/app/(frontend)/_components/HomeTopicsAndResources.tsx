@@ -28,7 +28,6 @@ import { localizePath } from '@/i18n/routing'
 import type { Locale } from '@/i18n/config'
 import { getTopicAccent } from '../topic/_utils/topicVisuals'
 import { PopularResourcesSection, type PopularResourceItem } from './PopularResourcesSection'
-import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 export type HomeTopic = {
   id: string
@@ -42,9 +41,22 @@ export type HomeTopic = {
   badgeImageAlt: string
 }
 
+export type HolisticCard = {
+  id: string
+  title: string
+  description: string
+  imageUrl: string | null
+  imageAlt: string
+}
+
 type Props = {
   locale: Locale
   topics: HomeTopic[]
+  holisticHeading: string
+  holisticDescription: string
+  holisticLinkLabel: string
+  holisticLinkUrl: string
+  holisticCards: HolisticCard[]
   popularResources: PopularResourceItem[]
   popularResourcesHeading?: string
   popularResourcesDescription?: string
@@ -137,6 +149,11 @@ type QuickAccessItem = {
 export function HomeTopicsAndResources({
   locale,
   topics,
+  holisticHeading,
+  holisticDescription,
+  holisticLinkLabel,
+  holisticLinkUrl,
+  holisticCards,
   popularResources,
   popularResourcesHeading,
   popularResourcesDescription,
@@ -275,79 +292,50 @@ export function HomeTopicsAndResources({
       <div className="mt-6 px-6 py-10 sm:px-8 sm:py-12 lg:px-10">
         <div className="mx-auto max-w-5xl">
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
-            A holistic approach to healthcare
+            {holisticHeading}
           </h2>
           <p className="mt-1 max-w-4xl text-sm leading-6 text-slate-600 dark:text-slate-400">
-            Get information, support and tools to improve health outcomes as a newcomer in Canada.{' '}
+            {holisticDescription}{' '}
             <Link
-              href={localizePath('/resources', locale)}
+              href={localizePath(holisticLinkUrl, locale)}
               className="font-semibold text-blue-700 underline decoration-blue-300 underline-offset-4 transition-colors hover:text-blue-800 dark:text-blue-400 dark:decoration-blue-700 dark:hover:text-blue-300"
             >
-              Learn about our resources
+              {holisticLinkLabel}
             </Link>
           </p>
         </div>
 
         <div className="mt-10 grid gap-8 md:grid-cols-3">
-          <article className="px-2 text-center">
-            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
-              <Image
-                src={getStaticMediaURL('ChatGPT Image Jun 16, 2026, 09_46_27 AM.png')}
-                alt="Healthcare services"
-                width={112}
-                height={112}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
-              Take control of your health
-            </p>
-            <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
-              Explore major health topics and practical resources designed for newcomers and
-              families in Canada.
-            </p>
-          </article>
+          {holisticCards.map((card, index) => {
+            const imageId = `holistic-${card.id}`
+            const canRenderImage = Boolean(card.imageUrl) && !failedImageIds.has(imageId)
+            const PlaceholderIcon = [Stethoscope, Users, PhoneCall][index] || Stethoscope
 
-          <article className="px-2 text-center">
-            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
-              <Image
-                src={getStaticMediaURL('walk-in.png', 'media')}
-                alt="People accessing health information"
-                width={112}
-                height={112}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
-              Access health topics and resources in your native language
-            </p>
-            <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
-              Find culturally responsive guidance in familiar language so healthcare navigation in
-              Canada feels clear, safe and practical.
-            </p>
-          </article>
-
-          <article className="px-2 text-center">
-            <div className="mx-auto mb-5 h-28 w-28 overflow-hidden rounded-full">
-              <Image
-                src={getStaticMediaURL(
-                  'medical-practitioner-answering-phone-calls-900x600.jpg',
-                  'media',
-                )}
-                alt="Healthcare support by phone"
-                width={112}
-                height={112}
-                className="h-full w-full object-cover"
-              />
-            </div>
-            <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
-              Get online support 24/7
-            </p>
-            <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
-              Access health learning, safety resources, and essential service navigation whenever
-              you need it.
-            </p>
-          </article>
+            return (
+              <article className="px-2 text-center" key={card.id}>
+                <div className="mx-auto mb-5 flex h-28 w-28 items-center justify-center overflow-hidden rounded-full bg-blue-50 text-blue-700 ring-1 ring-blue-100 dark:bg-blue-950 dark:text-blue-300 dark:ring-blue-900">
+                  {canRenderImage ? (
+                    <Image
+                      alt={card.imageAlt}
+                      className="h-full w-full object-cover"
+                      height={112}
+                      onError={() => markImageFailed(imageId)}
+                      src={card.imageUrl as string}
+                      width={112}
+                    />
+                  ) : (
+                    <PlaceholderIcon aria-hidden="true" className="h-10 w-10" />
+                  )}
+                </div>
+                <p className="text-lg font-semibold leading-tight text-slate-900 dark:text-white">
+                  {card.title}
+                </p>
+                <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-600 dark:text-slate-400">
+                  {card.description}
+                </p>
+              </article>
+            )
+          })}
         </div>
       </div>
 

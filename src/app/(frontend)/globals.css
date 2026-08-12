@@ -64,18 +64,22 @@
   .resources-hero {
     position: relative;
     isolation: isolate;
+    display: flex;
+    min-height: 26rem;
+    align-items: flex-start;
     overflow: hidden;
-    color: white;
     background: var(--background);
+    color: var(--foreground);
   }
 
-  .resources-hero-background {
+  .resources-hero-background-image {
     position: absolute;
     inset: 0;
     z-index: -20;
-    background:
-      radial-gradient(circle at top left, rgba(255, 255, 255, 0.18), transparent 35%),
-      linear-gradient(135deg, rgb(59, 130, 246) 0%, rgb(6, 182, 212) 100%);
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: 65% center;
   }
 
   .resources-hero-overlay {
@@ -84,10 +88,32 @@
     z-index: -10;
     background: linear-gradient(
       to right,
-      rgba(30, 41, 59, 0.85),
-      rgba(30, 41, 59, 0.75),
-      rgba(29, 78, 216, 0.7)
+      rgba(239, 246, 255, 0.96) 0%,
+      rgba(239, 246, 255, 0.72) 38%,
+      rgba(239, 246, 255, 0) 68%
     );
+  }
+
+  .resources-hero-right-overlay {
+    position: absolute;
+    inset-block: 0;
+    right: 0;
+    z-index: -10;
+    width: 35%;
+    background: linear-gradient(to left, rgba(30, 64, 175, 0.1), transparent);
+  }
+
+  .resources-hero-glow {
+    position: absolute;
+    left: -6rem;
+    top: 50%;
+    z-index: -10;
+    height: 16rem;
+    width: 16rem;
+    transform: translateY(-50%);
+    border-radius: 9999px;
+    background: rgba(191, 219, 254, 0.35);
+    filter: blur(64px);
   }
 
   .resources-container {
@@ -98,33 +124,16 @@
   }
 
   .resources-container--hero {
-    padding-block: 4rem;
+    padding-block: 3rem 4rem;
   }
 
   .resources-hero-inner {
-    display: flex;
-    align-items: center;
-    gap: 3rem;
+    width: 100%;
   }
 
   .resources-hero-copy {
     flex: 1;
     max-width: 42rem;
-  }
-
-  .resources-hero-image-wrap {
-    flex-shrink: 0;
-    width: 46%;
-    max-width: 560px;
-    display: none;
-  }
-
-  .resources-hero-img {
-    width: 100%;
-    height: auto;
-    border-radius: 1.25rem;
-    object-fit: cover;
-    box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.45);
   }
 
   /* About hero image */
@@ -144,9 +153,16 @@
   }
 
   @media (min-width: 1024px) {
-    .resources-hero-image-wrap,
     .about-hero-image-wrap {
       display: block;
+    }
+
+    .resources-hero {
+      min-height: 28.75rem;
+    }
+
+    .resources-hero-background-image {
+      object-position: 72% center;
     }
   }
 
@@ -158,11 +174,12 @@
     display: inline-flex;
     align-items: center;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.18);
+    background: rgba(239, 246, 255, 0.9);
     padding: 0.25rem 1rem;
     font-size: 0.875rem;
     font-weight: 600;
-    color: white;
+    color: rgb(29, 78, 216);
+    border: 1px solid rgba(147, 197, 253, 0.8);
     backdrop-filter: blur(12px);
   }
 
@@ -173,7 +190,7 @@
     font-weight: 800;
     line-height: 1.05;
     letter-spacing: -0.04em;
-    color: white;
+    color: var(--foreground);
   }
 
   .resources-hero-description {
@@ -181,7 +198,7 @@
     max-width: 46rem;
     font-size: 1.125rem;
     line-height: 1.75;
-    color: rgb(219, 234, 254);
+    color: color-mix(in oklab, var(--foreground) 72%, transparent);
   }
 
   .resources-actions {
@@ -211,13 +228,13 @@
   }
 
   .resources-button--solid {
-    background: white;
-    color: color-mix(in oklab, #2563eb 88%, var(--foreground));
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 8px 24px rgba(37, 99, 235, 0.24);
   }
 
   .resources-button--solid:hover {
-    background: color-mix(in oklab, white 90%, #dbeafe);
+    background: #1d4ed8;
   }
 
   .resources-button--ghost {
@@ -687,12 +704,6 @@
     background: var(--background);
   }
 
-  [data-theme='dark'] .resources-hero-background {
-    background:
-      radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 35%),
-      linear-gradient(135deg, rgb(30, 58, 138) 0%, rgb(8, 47, 73) 100%);
-  }
-
   .resource-detail-page {
     min-height: 100vh;
     background:
@@ -955,14 +966,29 @@
   [data-theme='dark'] .resources-hero-overlay {
     background: linear-gradient(
       to right,
-      rgba(2, 6, 23, 0.9),
-      rgba(15, 23, 42, 0.85),
-      rgba(15, 23, 42, 0.75)
+      rgba(2, 6, 23, 0.96) 0%,
+      rgba(15, 23, 42, 0.74) 38%,
+      rgba(15, 23, 42, 0) 68%
     );
   }
 
+  [data-theme='dark'] .resources-hero-right-overlay {
+    background: linear-gradient(to left, rgba(2, 6, 23, 0.25), transparent);
+  }
+
+  [data-theme='dark'] .resources-badge {
+    border-color: rgba(29, 78, 216, 0.7);
+    background: rgba(30, 58, 138, 0.55);
+    color: rgb(147, 197, 253);
+  }
+
   [data-theme='dark'] .resources-button--solid {
-    color: var(--background);
+    background: #3b82f6;
+    color: white;
+  }
+
+  [data-theme='dark'] .resources-button--solid:hover {
+    background: #60a5fa;
   }
 
   [data-theme='dark'] .resource-card:hover .resource-card-icon {

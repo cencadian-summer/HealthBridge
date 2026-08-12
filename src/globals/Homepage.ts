@@ -123,6 +123,104 @@ export const Homepage: GlobalConfig = {
     },
     {
       type: 'collapsible',
+      label: 'Holistic Approach Section',
+      admin: { initCollapsed: false },
+      fields: [
+        {
+          name: 'holisticHeading',
+          type: 'text',
+          localized: true,
+          defaultValue: 'A holistic approach to healthcare',
+        },
+        {
+          name: 'holisticDescription',
+          type: 'textarea',
+          localized: true,
+          defaultValue:
+            'Get information, support and tools to improve health outcomes as a newcomer in Canada.',
+        },
+        {
+          name: 'holisticLinkLabel',
+          type: 'text',
+          localized: true,
+          defaultValue: 'Learn about our resources',
+        },
+        {
+          name: 'holisticLinkUrl',
+          type: 'text',
+          defaultValue: '/resources',
+          admin: {
+            description: 'Internal or external URL used by the section link.',
+          },
+        },
+        {
+          name: 'holisticCards',
+          type: 'array',
+          minRows: 3,
+          maxRows: 3,
+          labels: {
+            singular: 'Holistic card',
+            plural: 'Holistic cards',
+          },
+          admin: {
+            description: 'Exactly three cards displayed across the holistic approach section.',
+            initCollapsed: true,
+          },
+          fields: [
+            {
+              name: 'title',
+              type: 'text',
+              localized: true,
+              required: true,
+            },
+            {
+              name: 'description',
+              type: 'textarea',
+              localized: true,
+              required: true,
+            },
+            {
+              name: 'image',
+              type: 'upload',
+              relationTo: 'media',
+              admin: {
+                description: 'Upload or select the circular image shown above this card.',
+              },
+            },
+            {
+              name: 'imageAlt',
+              type: 'text',
+              localized: true,
+              admin: {
+                description: 'Describe the image for people using screen readers.',
+              },
+            },
+          ],
+          defaultValue: [
+            {
+              title: 'Take control of your health',
+              description:
+                'Explore major health topics and practical resources designed for newcomers and families in Canada.',
+              imageAlt: 'Healthcare services',
+            },
+            {
+              title: 'Access health topics and resources in your native language',
+              description:
+                'Find culturally responsive guidance in familiar language so healthcare navigation in Canada feels clear, safe and practical.',
+              imageAlt: 'People accessing health information',
+            },
+            {
+              title: 'Get online support 24/7',
+              description:
+                'Access health learning, safety resources, and essential service navigation whenever you need it.',
+              imageAlt: 'Healthcare support by phone',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      type: 'collapsible',
       label: 'Popular Resources Section',
       admin: { initCollapsed: false },
       fields: [

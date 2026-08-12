@@ -1,7 +1,11 @@
 import Link from 'next/link'
 import { fetchHomepageGlobal } from './_utils/fetchHomepage'
 import { fetchAllTopics, type MediaFromPayload } from './topic/_utils/fetchTopicBySlug'
-import { HomeTopicsAndResources, type HomeTopic } from './_components/HomeTopicsAndResources'
+import {
+  HomeTopicsAndResources,
+  type HolisticCard,
+  type HomeTopic,
+} from './_components/HomeTopicsAndResources'
 import { DEFAULT_POPULAR_RESOURCES } from './_components/PopularResourcesSection'
 import { fetchResourceItems } from './_utils/fetchResourceItems'
 import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
@@ -25,6 +29,39 @@ const DEFAULTS = {
   footerNote: 'Free · Multilingual · Trusted by newcomers',
   canadianBadgeText: '🍁 Canada-focused health guidance',
 }
+
+const DEFAULT_HOLISTIC_HEADING = 'A holistic approach to healthcare'
+const DEFAULT_HOLISTIC_DESCRIPTION =
+  'Get information, support and tools to improve health outcomes as a newcomer in Canada.'
+const DEFAULT_HOLISTIC_LINK_LABEL = 'Learn about our resources'
+const DEFAULT_HOLISTIC_LINK_URL = '/resources'
+
+const DEFAULT_HOLISTIC_CARDS: HolisticCard[] = [
+  {
+    id: 'take-control',
+    title: 'Take control of your health',
+    description:
+      'Explore major health topics and practical resources designed for newcomers and families in Canada.',
+    imageUrl: getStaticMediaURL('ChatGPT Image Jun 16, 2026, 09_46_27 AM.png'),
+    imageAlt: 'Healthcare services',
+  },
+  {
+    id: 'native-language',
+    title: 'Access health topics and resources in your native language',
+    description:
+      'Find culturally responsive guidance in familiar language so healthcare navigation in Canada feels clear, safe and practical.',
+    imageUrl: null,
+    imageAlt: 'People accessing health information',
+  },
+  {
+    id: 'online-support',
+    title: 'Get online support 24/7',
+    description:
+      'Access health learning, safety resources, and essential service navigation whenever you need it.',
+    imageUrl: null,
+    imageAlt: 'Healthcare support by phone',
+  },
+]
 
 const TOPIC_FALLBACKS: HomeTopic[] = [
   {
@@ -146,6 +183,10 @@ export default async function HomePage() {
     secondaryCTAUrl: cms?.secondaryCTAUrl || DEFAULTS.secondaryCTAUrl,
     footerNote: cms?.footerNote || DEFAULTS.footerNote,
     canadianBadgeText: cms?.canadianBadgeText || DEFAULTS.canadianBadgeText,
+    holisticHeading: cms?.holisticHeading || DEFAULT_HOLISTIC_HEADING,
+    holisticDescription: cms?.holisticDescription || DEFAULT_HOLISTIC_DESCRIPTION,
+    holisticLinkLabel: cms?.holisticLinkLabel || DEFAULT_HOLISTIC_LINK_LABEL,
+    holisticLinkUrl: cms?.holisticLinkUrl || DEFAULT_HOLISTIC_LINK_URL,
     popularResourcesHeading: cms?.popularResourcesHeading || 'Popular Resources',
     popularResourcesDescription:
       cms?.popularResourcesDescription ||
@@ -178,6 +219,19 @@ export default async function HomePage() {
                 : resource.title,
           }))
         : DEFAULT_POPULAR_RESOURCES
+
+  const holisticCards = DEFAULT_HOLISTIC_CARDS.map((fallbackCard, index) => {
+    const card = cms?.holisticCards?.[index]
+    const media = card?.image && typeof card.image === 'object' ? card.image : null
+
+    return {
+      id: card?.id || fallbackCard.id,
+      title: card?.title || fallbackCard.title,
+      description: card?.description || fallbackCard.description,
+      imageUrl: getMediaUrl(media?.url) || fallbackCard.imageUrl,
+      imageAlt: card?.imageAlt || media?.alt || fallbackCard.imageAlt,
+    }
+  })
 
   const homeTopics =
     cmsTopics.length > 0
@@ -282,6 +336,11 @@ export default async function HomePage() {
       </section>
 
       <HomeTopicsAndResources
+        holisticCards={holisticCards}
+        holisticDescription={d.holisticDescription}
+        holisticHeading={d.holisticHeading}
+        holisticLinkLabel={d.holisticLinkLabel}
+        holisticLinkUrl={d.holisticLinkUrl}
         locale={locale}
         topics={homeTopics}
         popularResources={popularResources}

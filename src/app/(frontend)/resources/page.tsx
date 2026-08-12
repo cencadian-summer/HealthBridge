@@ -22,7 +22,8 @@ import { fetchResourceItems } from '../_utils/fetchResourceItems'
 import { getRequestLanguage, getRequestLocale } from '@/i18n/server'
 import { localizePath } from '@/i18n/routing'
 import { MultilingualSupportMenu } from './_components/MultilingualSupportMenu'
-import { BMICalculator } from './_components/BMICalculator'
+import { HealthCalculators } from './_components/HealthCalculators'
+import { PrintableResourcesSection } from './_components/PrintableResourcesSection'
 import { getStaticMediaURL } from '@/utilities/spacesMedia'
 
 const ICON_MAP: Record<string, LucideIcon> = {
@@ -205,6 +206,8 @@ export default async function ResourcesPage() {
   const globalData = (await fetchResourcesGlobal(locale, language)) || STATIC_RESOURCES_FALLBACK
   const cmsItems = await fetchResourceItems().catch(() => [])
   const resources = cmsItems.length > 0 ? cmsItems : STATIC_RESOURCES
+  const browseResources = resources.filter((resource) => resource.slug !== 'printable-resources')
+  const printableResources = globalData.printableResources || []
   const primaryCtaHref = normalizeTopicPagePath(
     globalData.ctaHref || STATIC_RESOURCES_FALLBACK.ctaHref,
   )
@@ -212,8 +215,17 @@ export default async function ResourcesPage() {
   return (
     <main className="resources-page">
       <section className="resources-hero">
-        <div className="resources-hero-background" aria-hidden="true" />
+        <Image
+          alt=""
+          className="resources-hero-background-image"
+          fill
+          priority
+          sizes="100vw"
+          src={getStaticMediaURL('hero.jpg')}
+        />
         <div className="resources-hero-overlay" aria-hidden="true" />
+        <div className="resources-hero-right-overlay" aria-hidden="true" />
+        <div className="resources-hero-glow" aria-hidden="true" />
 
         <div className="resources-container resources-container--hero">
           <div className="resources-hero-inner">
@@ -239,22 +251,11 @@ export default async function ResourcesPage() {
                 </Link>
               </div>
             </div>
-
-            <div className="resources-hero-image-wrap" aria-hidden="true">
-              <Image
-                src={getStaticMediaURL('hero.jpg')}
-                alt=""
-                width={900}
-                height={600}
-                className="resources-hero-img"
-                priority
-              />
-            </div>
           </div>
         </div>
       </section>
 
-      <BMICalculator />
+      <HealthCalculators />
 
       <section className="resources-section">
         <div className="resources-container resources-container--section">
@@ -269,7 +270,7 @@ export default async function ResourcesPage() {
           </div>
 
           <div className="resources-grid">
-            {resources.map((resource) => {
+            {browseResources.map((resource) => {
               const Icon = ICON_MAP[resource.icon] ?? Hospital
               const href = localizePath(`/resources/${resource.slug}`, locale)
               const hasCardImage = Boolean(resource.imageUrl)
@@ -311,6 +312,14 @@ export default async function ResourcesPage() {
           </div>
         </div>
       </section>
+
+      <PrintableResourcesSection
+        description={
+          globalData.printableDescription || STATIC_RESOURCES_FALLBACK.printableDescription
+        }
+        resources={printableResources}
+        title={globalData.printableTitle || STATIC_RESOURCES_FALLBACK.printableTitle}
+      />
 
       <section className="resources-emergency">
         <div className="resources-container resources-container--section">

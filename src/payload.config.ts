@@ -15,6 +15,7 @@ import { Users } from './collections/Users'
 import { DashboardProfiles } from './collections/DashboardProfiles'
 import { ChatConversations } from './collections/ChatConversations'
 import { ChatMessages } from './collections/ChatMessages'
+import { ContactInquiries } from './collections/ContactInquiries'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { Homepage } from './globals/Homepage'
@@ -94,6 +95,7 @@ export default buildConfig({
     AdminActivities,
     ChatConversations,
     ChatMessages,
+    ContactInquiries,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, Homepage, About, Resources],

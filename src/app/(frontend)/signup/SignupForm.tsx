@@ -29,6 +29,8 @@ const audienceOptions = [
 
 export function SignupForm() {
   const [showPassword, setShowPassword] = useState(false)
+  const [dateOfBirth, setDateOfBirth] = useState('')
+  const [showDateOfBirth, setShowDateOfBirth] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -225,13 +227,37 @@ export function SignupForm() {
               className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
             />
             <input
-              className={inputClass}
+              autoComplete="bday"
+              className={`${inputClass} pr-12`}
               id="signup-date"
               max={new Date().toISOString().slice(0, 10)}
               name="dateOfBirth"
-              type="date"
+              onChange={(event) => {
+                const selectedDate = event.target.value
+                setDateOfBirth(selectedDate)
+                setShowDateOfBirth(!selectedDate)
+              }}
+              type={dateOfBirth && !showDateOfBirth ? 'password' : 'date'}
+              value={dateOfBirth}
             />
+            {dateOfBirth ? (
+              <button
+                aria-label={showDateOfBirth ? 'Hide date of birth' : 'Show date of birth'}
+                className="absolute right-3 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-lg bg-white text-slate-500 hover:bg-slate-100"
+                onClick={() => setShowDateOfBirth((value) => !value)}
+                type="button"
+              >
+                {showDateOfBirth ? (
+                  <EyeOff aria-hidden="true" className="h-5 w-5" />
+                ) : (
+                  <Eye aria-hidden="true" className="h-5 w-5" />
+                )}
+              </button>
+            ) : null}
           </div>
+          <p className="mt-2 text-xs text-slate-500">
+            Hidden after selection. Use the eye button to review or change it.
+          </p>
         </div>
         <div>
           <label className={labelClass} htmlFor="signup-gender">
