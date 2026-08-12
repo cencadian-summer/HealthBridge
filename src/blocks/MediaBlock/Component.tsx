@@ -51,9 +51,7 @@ export const MediaBlock: React.FC<Props> = (props) => {
   const isMediaLeft = mediaPosition === 'left'
   const usesFramedImage = imageFit === 'contain' || imageFit === 'cover'
   const hasRenderableMedia = Boolean(staticImage || resolvedMediaUrl)
-  const hasWriteUp = Boolean(writeUp)
-
-  if (hasRenderableMedia && hasWriteUp) {
+  if (hasRenderableMedia && writeUp) {
     return (
       <div
         className={cn(

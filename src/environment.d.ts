@@ -9,6 +9,8 @@ declare global {
       OPENAI_MODEL?: string
       NEXT_PUBLIC_SERVER_URL: string
       VERCEL_PROJECT_PRODUCTION_URL: string
+      DEPLOY_PRIME_URL?: string
+      URL?: string
     }
   }
 }

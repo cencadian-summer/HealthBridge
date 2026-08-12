@@ -120,7 +120,7 @@ export default buildConfig({
         if (!secret) return false
 
         // If there is no logged in user, then check
-        // for the Vercel Cron secret to be present as an
+        // for the deployment platform's cron secret to be present as an
         // Authorization header:
         const authHeader = req.headers.get('authorization')
         return authHeader === `Bearer ${secret}`

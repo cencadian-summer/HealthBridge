@@ -7,9 +7,14 @@ const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 import { redirects } from './redirects'
 
-const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+const NEXT_PUBLIC_SERVER_URL =
+  process.env.NEXT_PUBLIC_SERVER_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : process.env.DEPLOY_PRIME_URL ||
+      process.env.URL ||
+      process.env.__NEXT_PRIVATE_ORIGIN ||
+      'http://localhost:3000')
 const SPACES_CDN_URL = process.env.NEXT_PUBLIC_DO_SPACES_CDN_URL || process.env.DO_SPACES_CDN_URL
 
 const nextConfig: NextConfig = {

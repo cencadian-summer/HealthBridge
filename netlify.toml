@@ -1,0 +1,9 @@
+[build]
+  command = "corepack pnpm build"
+  publish = ".next"
+
+[build.environment]
+  NETLIFY_NEXT_SKEW_PROTECTION = "true"
+
+[functions."run-payload-jobs"]
+  schedule = "* * * * *"

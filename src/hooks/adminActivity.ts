@@ -2,6 +2,7 @@ import type {
   CollectionAfterChangeHook,
   CollectionAfterDeleteHook,
   GlobalAfterChangeHook,
+  PayloadRequest,
 } from 'payload'
 import { revalidateTag } from 'next/cache'
 
@@ -71,18 +72,7 @@ const logActivity = async ({
   entitySlug,
   doc,
 }: {
-  req: {
-    user?: unknown
-    locale?: string
-    payload: {
-      create: (args: {
-        collection: 'admin-activities'
-        data: Record<string, unknown>
-        req: unknown
-      }) => Promise<unknown>
-      logger: { error: (message: string) => void }
-    }
-  }
+  req: PayloadRequest
   action: ActivityAction
   entityScope: ActivityScope
   entitySlug: string

@@ -71,7 +71,6 @@ export const RenderBlocks = async ({
                 {...block}
                 media={resolvedMedia as never}
                 disableInnerContainer
-                locale={locale}
                 className="max-w-5xl mx-auto"
               />
             </div>

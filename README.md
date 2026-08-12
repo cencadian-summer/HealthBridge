@@ -242,6 +242,21 @@ To run Payload in production, you need to build and start the Admin panel. To do
 1. Finally run `pnpm start` or `npm run start` to run Node in production and serve Payload from the `.build` directory.
 1. When you're ready to go live, see Deployment below for more details.
 
+### Deploying to Netlify
+
+The repository includes `netlify.toml` for the Next.js build and a scheduled Netlify Function that runs Payload's job queue every minute. Netlify's current OpenNext adapter handles the App Router, SSR, route handlers, image optimization, and cache revalidation automatically.
+
+Before the first deployment:
+
+1. Create a Netlify site from this repository. Keep the repository root as the base directory; the build and publish settings come from `netlify.toml`.
+2. Add the variables from `.env.example` in **Project configuration → Environment variables**. Production requires `DATABASE_URL` (or `REMOTE_DATABASE_URL`), `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `CRON_SECRET`, all DigitalOcean Spaces variables, both Supabase public variables, and `NEXT_PUBLIC_SERVER_URL`. Add `OPENAI_API_KEY` to enable the chatbot.
+3. Set `NEXT_PUBLIC_SERVER_URL` to the final HTTPS origin without a trailing slash, for example `https://healthbridge.example.org`. Use separate secret values for production and Deploy Previews.
+4. Allow the Netlify build and Functions scopes to access variables used by Payload. The scheduled function needs `CRON_SECRET` and `NEXT_PUBLIC_SERVER_URL` at runtime.
+5. In MongoDB Atlas, allow connections from Netlify's runtime or use an appropriate network-access configuration. Confirm the database user has access to the production database.
+6. Deploy, then use **Functions → run-payload-jobs → Run now** once to verify scheduled publishing. Confirm uploads appear in DigitalOcean Spaces rather than the function filesystem.
+
+Do not put secret values in `netlify.toml` or commit a production `.env` file. Netlify provides the Next.js serverless runtime automatically; do not add or pin the legacy Next.js Netlify plugin.
+
 ### Deploying to Vercel
 
 This template can also be deployed to Vercel for free. You can get started by choosing the Vercel DB adapter during the setup of the template or by manually installing and configuring it:

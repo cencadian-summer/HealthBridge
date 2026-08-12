@@ -337,7 +337,6 @@ export const Resources: GlobalConfig = {
       },
       schedulePublish: true,
     },
-    maxPerDoc: 50,
   },
   hooks: {
     afterChange: [revalidateResources, logGlobalAfterChange('resources')],

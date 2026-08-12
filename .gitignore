@@ -3,9 +3,11 @@ dist / media
 node_modules
 .DS_Store
 .env
+.env.working_backup
 .next
 next-env.d.ts
 .vercel
+.netlify
 .media-migration/
 
 # Payload default media upload directory

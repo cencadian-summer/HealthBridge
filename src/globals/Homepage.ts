@@ -364,7 +364,6 @@ export const Homepage: GlobalConfig = {
       },
       schedulePublish: true,
     },
-    maxPerDoc: 50,
   },
   hooks: {
     afterChange: [revalidateHomepage, logGlobalAfterChange('homepage')],

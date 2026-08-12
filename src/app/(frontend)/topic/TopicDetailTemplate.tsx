@@ -38,7 +38,7 @@ type TopicSection = {
   description: string
   imageUrl?: string
   imageAlt?: string
-  detailPageSlug: string
+  detailPageSlug?: string
   keyPoints: string[]
 }
 

@@ -3,7 +3,7 @@ import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const revalidateResourceItems: CollectionAfterChangeHook = ({ doc, req: { payload } }) => {
   payload.logger.info(`Revalidating resource items after change: ${doc.slug}`)
-  revalidateTag('resource-items')
+  revalidateTag('resource-items', 'max')
   revalidatePath('/resources')
   if (typeof doc.slug === 'string' && doc.slug.length > 0) {
     revalidatePath(`/resources/${doc.slug}`)
@@ -16,7 +16,7 @@ export const revalidateResourceItemsOnDelete: CollectionAfterDeleteHook = ({
   req: { payload },
 }) => {
   payload.logger.info(`Revalidating resource items after delete: ${doc.slug}`)
-  revalidateTag('resource-items')
+  revalidateTag('resource-items', 'max')
   revalidatePath('/resources')
   if (typeof doc.slug === 'string' && doc.slug.length > 0) {
     revalidatePath(`/resources/${doc.slug}`)

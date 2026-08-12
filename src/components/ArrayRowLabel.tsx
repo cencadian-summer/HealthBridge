@@ -1,8 +1,9 @@
 'use client'
 
-import type { RowLabelComponent } from 'payload'
+import { useRowLabel } from '@payloadcms/ui'
 
-export const ArrayRowLabel: RowLabelComponent = ({ data, index }) => {
-  const label = data?.title || data?.name || `Item ${index + 1}`
+export const ArrayRowLabel = () => {
+  const { data, rowNumber } = useRowLabel<{ name?: string; title?: string }>()
+  const label = data?.title || data?.name || `Item ${(rowNumber ?? 0) + 1}`
   return <div>{label}</div>
 }

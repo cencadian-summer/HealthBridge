@@ -1,12 +1,15 @@
 import canUseDOM from './canUseDOM'
 
+const getPlatformURL = () => {
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  }
+
+  return process.env.DEPLOY_PRIME_URL || process.env.URL
+}
+
 export const getServerSideURL = () => {
-  return (
-    process.env.NEXT_PUBLIC_SERVER_URL ||
-    (process.env.VERCEL_PROJECT_PRODUCTION_URL
-      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-      : 'http://localhost:3000')
-  )
+  return process.env.NEXT_PUBLIC_SERVER_URL || getPlatformURL() || 'http://localhost:3000'
 }
 
 export const getClientSideURL = () => {
@@ -18,9 +21,5 @@ export const getClientSideURL = () => {
     return `${protocol}//${domain}${port ? `:${port}` : ''}`
   }
 
-  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
-    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  }
-
-  return process.env.NEXT_PUBLIC_SERVER_URL || ''
+  return process.env.NEXT_PUBLIC_SERVER_URL || getPlatformURL() || ''
 }

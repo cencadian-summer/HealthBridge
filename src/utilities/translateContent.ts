@@ -62,7 +62,8 @@ async function translateText(text: string, targetLanguage: string): Promise<stri
       return payload.translatedText
     }
 
-    const nestedTranslation = payload.data?.translations?.[0]?.translatedText
+    const nestedTranslation =
+      'data' in payload ? payload.data?.translations?.[0]?.translatedText : undefined
     return nestedTranslation ?? text
   } catch {
     return text

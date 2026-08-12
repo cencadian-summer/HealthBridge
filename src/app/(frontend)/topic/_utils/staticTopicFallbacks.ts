@@ -59,6 +59,8 @@ export const STATIC_TOPIC_FALLBACKS: TopicFromPayload[] = [
     ],
   },
   {
+    id: 'fallback-mental-health',
+    title: 'Mental Health and Emotional Well-Being',
     slug: 'mental-health',
     description: 'Find support options and coping tools for emotional well-being.',
     icon: 'Brain',

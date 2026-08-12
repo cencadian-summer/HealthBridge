@@ -263,7 +263,7 @@ export const HealthTopics: CollectionConfig = {
                   localized: true,
                   required: true,
                   maxLength: MAX_KEY_POINT_LENGTH,
-                  validate: (value) => {
+                  validate: (value: string | null | undefined) => {
                     if (typeof value !== 'string') {
                       return true
                     }

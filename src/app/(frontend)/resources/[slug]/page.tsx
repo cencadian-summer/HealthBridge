@@ -537,7 +537,7 @@ const queryResourceBySlug = cache(
     if (!resource) return null
 
     const translated = await translateContentDeep(resource, targetLanguage)
-    const translatedRecord = translated as Record<string, unknown>
+    const translatedRecord = translated as unknown as Record<string, unknown>
 
     const heroImageData = translated.heroImage
     const heroImage = heroImageData
