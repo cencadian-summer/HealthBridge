@@ -1,11 +1,11 @@
-import type { CmsDashboardProfile } from './dashboardCms'
+import type { NormalizedDashboardProfile } from './dashboardCms'
 import { ProfessionalDashboard } from './ProfessionalDashboard'
 
 export function SettlementWorkerDashboard({
   dashboardProfile,
   firstName,
 }: {
-  dashboardProfile?: CmsDashboardProfile | null
+  dashboardProfile?: NormalizedDashboardProfile | null
   firstName: string
 }) {
   return (

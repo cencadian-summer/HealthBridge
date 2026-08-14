@@ -30,12 +30,19 @@ import {
 import { useState } from 'react'
 import { Logo } from '@/components/Logo/Logo'
 import { createClient } from '@/lib/supabase/client'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { personalizeDashboardHeading, type NormalizedDashboardProfile } from './dashboardCms'
+import { getDashboardIcon } from './dashboardProfiles'
+import {
+  DashboardQuickActions,
+  DashboardSidebar,
+  type DashboardTopicSuggestion,
+} from './DashboardShared'
 
 type Props = {
-  dashboardProfile?: CmsDashboardProfile | null
+  dashboardProfile?: NormalizedDashboardProfile | null
   firstName: string
   variant?: 'parent' | 'youth'
+  topicSuggestions?: DashboardTopicSuggestion[]
 }
 type Item = readonly [string, LucideIcon, string]
 const nav: Item[] = [
@@ -110,23 +117,34 @@ function Card({ children, id, title }: { children: React.ReactNode; id?: string;
     </section>
   )
 }
-function Sidebar({ logout, youth }: { logout: () => void; youth: boolean }) {
+function Sidebar({
+  dashboardProfile,
+  logout,
+  youth,
+}: {
+  dashboardProfile?: NormalizedDashboardProfile | null
+  logout: () => void
+  youth: boolean
+}) {
   return (
     <div className="flex h-full flex-col bg-white">
       <div className="border-b border-slate-200 px-5 py-5">
         <Logo />
       </div>
       <nav className="flex-1 space-y-1 overflow-auto px-3 py-5">
-        {nav.map(([label, Icon, href], i) => (
-          <Link
-            key={label}
-            href={href}
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold ${i === 0 ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}
-          >
-            <Icon className="h-4 w-4" />
-            {label}
-          </Link>
-        ))}
+        {(dashboardProfile?.primaryNavigation || []).map(({ label, iconName, href }, i) => {
+          const Icon = getDashboardIcon(iconName)
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold ${i === 0 ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50'}`}
+            >
+              {Icon ? <Icon className="h-4 w-4" /> : null}
+              {label}
+            </Link>
+          )
+        })}
       </nav>
       <div className="m-4 rounded-2xl bg-emerald-50 p-4">
         <UsersRound className="h-7 w-7 text-emerald-700" />
@@ -148,30 +166,35 @@ function Sidebar({ logout, youth }: { logout: () => void; youth: boolean }) {
   )
 }
 
-export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = 'parent' }: Props) {
+export function ParentFamilyDashboard({
+  dashboardProfile,
+  firstName,
+  variant = 'parent',
+  topicSuggestions,
+}: Props) {
   const [open, setOpen] = useState(false)
   const youth = variant === 'youth'
-  const activeActions = youth ? youthActions : actions
-  const activeSteps = youth ? youthSteps : steps
-  const activeModules = youth ? youthModules : modules
+  const activeActions = dashboardProfile?.quickActions || []
+  const activeSteps = dashboardProfile?.journey || []
+  const activeModules = dashboardProfile?.recommendations || []
   const logout = async () => {
     const { error } = await createClient().auth.signOut()
     if (!error) window.location.assign('/login')
   }
   return (
     <div className="min-h-screen bg-[#f6f9fc] text-slate-800">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-slate-200 lg:block">
-        <Sidebar logout={logout} youth={youth} />
+      <aside className="fixed bottom-0 left-0 top-[84px] z-40 hidden w-64 border-r border-slate-200 md:top-[88px] lg:block">
+        <DashboardSidebar dashboardProfile={dashboardProfile} logout={logout} />
       </aside>
       {open ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[84px] z-40 md:top-[88px] lg:hidden">
           <button
             aria-label="Close navigation"
             onClick={() => setOpen(false)}
             className="absolute inset-0 bg-slate-950/40"
           />
           <aside className="relative h-full w-72">
-            <Sidebar logout={logout} youth={youth} />
+            <DashboardSidebar dashboardProfile={dashboardProfile} logout={logout} />
           </aside>
           <button
             aria-label="Close navigation"
@@ -182,7 +205,7 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
           </button>
         </div>
       ) : null}
-      <div className="lg:pl-60">
+      <div className="lg:pl-64">
         <header className="sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/95 px-4 sm:px-6">
           <button
             aria-label="Open navigation"
@@ -191,17 +214,7 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
           >
             <Menu className="h-5 w-5" />
           </button>
-          <label className="ml-3 hidden max-w-sm flex-1 items-center rounded-xl bg-slate-100 px-3 py-2 md:flex">
-            <Search className="h-4 w-4 text-slate-400" />
-            <input
-              aria-label="Search"
-              placeholder="Search family health topics"
-              className="ml-2 w-full bg-transparent text-sm outline-none"
-            />
-          </label>
           <div className="ml-auto flex items-center gap-3">
-            <Languages className="h-4 w-4" />
-            <Bell className="h-5 w-5" />
             <span className="grid h-9 w-9 place-items-center rounded-full bg-emerald-700 font-bold text-white">
               {firstName[0]?.toUpperCase()}
             </span>
@@ -254,42 +267,30 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
                     </div>
                   </div>
                   <Link
-                    href="/topic/healthcare-system"
+                    href="/topic"
                     className="rounded-xl border border-blue-200 px-4 py-2 text-xs font-bold text-blue-700"
                   >
                     Continue learning →
                   </Link>
                 </div>
               </section>
-              <section>
-                <h2 className="text-sm font-extrabold">Quick Actions</h2>
-                <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
-                  {activeActions.map(([label, Icon, href]) => (
-                    <Link
-                      key={label}
-                      href={href}
-                      className="flex min-h-28 flex-col items-center justify-center rounded-2xl border bg-white p-3 text-center text-[11px] font-bold shadow-sm hover:bg-blue-50"
-                    >
-                      <Icon className="mb-2 h-7 w-7 text-blue-700" />
-                      {label}
-                      <ChevronRight className="mt-1 h-3 w-3" />
-                    </Link>
-                  ))}
-                </div>
-              </section>
+              <DashboardQuickActions
+                dashboardProfile={dashboardProfile}
+                topicSuggestions={topicSuggestions}
+              />
               <div className="grid gap-4 lg:grid-cols-2">
                 <Card title="Your Next Steps">
                   <div className="divide-y">
                     {activeSteps.map((step, i) => (
                       <Link
-                        href="/resources"
-                        key={step}
+                        href={step.href}
+                        key={step.id}
                         className="flex items-center gap-2 py-2 text-[11px]"
                       >
                         <span className="grid h-5 w-5 place-items-center rounded-full bg-emerald-50 text-emerald-700">
                           {i === activeSteps.length - 1 ? <Check className="h-3 w-3" /> : i + 1}
                         </span>
-                        <span className="flex-1">{step}</span>
+                        <span className="flex-1">{step.label}</span>
                         <ChevronRight className="h-3 w-3" />
                       </Link>
                     ))}
@@ -297,63 +298,46 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
                 </Card>
                 <Card title="Recommended for You">
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {activeModules.map(([label, Icon, href]) => (
-                      <Link
-                        href={href}
-                        key={label}
-                        className="rounded-xl border p-3 hover:bg-blue-50"
-                      >
-                        <Icon className="h-6 w-6 text-blue-700" />
-                        <b className="mt-2 block text-[10px]">{label}</b>
-                      </Link>
-                    ))}
+                    {activeModules.map(({ label, iconName, href }) => {
+                      const Icon = getDashboardIcon(iconName)
+                      return (
+                        <Link
+                          href={href}
+                          key={label}
+                          className="rounded-xl border p-3 hover:bg-blue-50"
+                        >
+                          {Icon ? <Icon className="h-6 w-6 text-blue-700" /> : null}
+                          <b className="mt-2 block text-[10px]">{label}</b>
+                        </Link>
+                      )
+                    })}
                   </div>
                 </Card>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
                 <Card id="support" title="Family & Community Support">
-                  {[
-                    'Child & Family Services',
-                    'Parenting Support Programs',
-                    'School Health Resources',
-                    'Language Support',
-                  ].map((x) => (
-                    <Link
-                      key={x}
-                      href="/resources/community-services"
-                      className="flex py-2 text-[11px]"
-                    >
-                      {x}
+                  {(dashboardProfile?.supportLinks || []).map((item) => (
+                    <Link key={item.id} href={item.href} className="flex py-2 text-[11px]">
+                      {item.label}
                       <ChevronRight className="ml-auto h-3 w-3" />
                     </Link>
                   ))}
                 </Card>
                 <Card title="Toolkits & Documents">
-                  {[
-                    'Family Health Checklist',
-                    'Child Immunization Record',
-                    'Doctor Visit Guide',
-                    'Emergency Contact Card',
-                  ].map((x) => (
-                    <Link
-                      key={x}
-                      href="/resources/printable-resources"
-                      className="flex py-2 text-[11px]"
-                    >
+                  {(dashboardProfile?.toolkits || []).map((item) => (
+                    <Link key={item.id} href={item.href} className="flex py-2 text-[11px]">
                       <FileText className="mr-2 h-4 w-4 text-rose-500" />
-                      {x}
+                      {item.label}
                     </Link>
                   ))}
                 </Card>
                 <Card id="alerts" title="Public Health Alerts">
-                  {['Measles Update', 'Flu Season Reminder', 'Heat Safety for Children'].map(
-                    (x) => (
-                      <Link key={x} href="/topic/public-health" className="flex py-2 text-[11px]">
-                        <Bell className="mr-2 h-4 w-4 text-orange-500" />
-                        {x}
-                      </Link>
-                    ),
-                  )}
+                  {(dashboardProfile?.alerts || []).map((item) => (
+                    <Link key={item.id} href={item.href} className="flex py-2 text-[11px]">
+                      <Bell className="mr-2 h-4 w-4 text-orange-500" />
+                      {item.label}
+                    </Link>
+                  ))}
                 </Card>
               </div>
               <section className="flex flex-wrap items-center gap-4 rounded-2xl border border-blue-100 bg-blue-50 p-5">
@@ -386,18 +370,7 @@ export function ParentFamilyDashboard({ dashboardProfile, firstName, variant = '
                   </div>
                 ))}
               </Card>
-              <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
-                <b className="flex gap-2 text-sm text-emerald-950">
-                  <Languages className="h-5 w-5" />
-                  Need help in your language?
-                </b>
-                <Link
-                  href="/resources/language-support"
-                  className="mt-3 block rounded-xl bg-emerald-700 p-2 text-center text-xs font-bold text-white"
-                >
-                  Translate this page
-                </Link>
-              </section>
+
               <section className="rounded-2xl border border-blue-100 bg-blue-50 p-4">
                 <b className="flex gap-2 text-sm text-blue-950">
                   <Phone className="h-5 w-5" />

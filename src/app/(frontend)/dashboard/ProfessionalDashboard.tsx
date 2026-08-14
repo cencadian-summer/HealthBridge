@@ -31,11 +31,14 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '@/components/Logo/Logo'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { personalizeDashboardHeading, type NormalizedDashboardProfile } from './dashboardCms'
+import { getDashboardIcon } from './dashboardProfiles'
+import { DashboardQuickActions, DashboardSidebar } from './DashboardShared'
+import { createClient } from '@/lib/supabase/client'
 
 type Profile = 'healthcare-provider' | 'settlement-worker'
 type Props = {
-  dashboardProfile?: CmsDashboardProfile | null
+  dashboardProfile?: NormalizedDashboardProfile | null
   firstName: string
   profile: Profile
 }
@@ -114,7 +117,13 @@ const tools: Item[] = [
   { label: 'Interpreter Request Guide', note: 'View guide', icon: Languages, href: '/resources' },
 ]
 
-function Sidebar({ profile }: { profile: Profile }) {
+function Sidebar({
+  dashboardProfile,
+  profile,
+}: {
+  dashboardProfile?: NormalizedDashboardProfile | null
+  profile: Profile
+}) {
   const people = profile === 'healthcare-provider' ? 'Patients' : 'Clients'
   const navigation = [
     ['Dashboard', LayoutDashboard, '/dashboard'],
@@ -137,16 +146,19 @@ function Sidebar({ profile }: { profile: Profile }) {
         <Logo />
       </div>
       <nav className="flex-1 space-y-1 overflow-auto p-4">
-        {navigation.map(([label, Icon, href], index) => (
-          <Link
-            key={label}
-            href={href}
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold ${index === 0 ? 'bg-teal-50 text-teal-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
-          >
-            <Icon className="h-5 w-5" />
-            {label}
-          </Link>
-        ))}
+        {(dashboardProfile?.primaryNavigation || []).map(({ label, iconName, href }, index) => {
+          const Icon = getDashboardIcon(iconName)
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold ${index === 0 ? 'bg-teal-50 text-teal-700' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'}`}
+            >
+              {Icon ? <Icon className="h-5 w-5" /> : null}
+              {label}
+            </Link>
+          )
+        })}
       </nav>
       <div className="m-4 rounded-2xl border border-slate-200 p-4">
         <div className="flex items-center gap-2 font-bold">
@@ -169,6 +181,10 @@ function Sidebar({ profile }: { profile: Profile }) {
 
 export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: Props) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const logout = async () => {
+    const { error } = await createClient().auth.signOut()
+    if (!error) window.location.assign('/login')
+  }
   const healthcare = profile === 'healthcare-provider'
   const role =
     dashboardProfile?.roleLabel || (healthcare ? 'Healthcare Provider' : 'Settlement Worker')
@@ -208,11 +224,11 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-950">
-      <div className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 lg:block">
-        <Sidebar profile={profile} />
+      <div className="fixed bottom-0 left-0 top-[84px] z-40 hidden w-64 border-r border-slate-200 md:top-[88px] lg:block">
+        <DashboardSidebar dashboardProfile={dashboardProfile} logout={logout} />
       </div>
       {menuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[84px] z-40 md:top-[88px] lg:hidden">
           <button
             aria-label="Close menu"
             className="absolute inset-0 bg-slate-950/35"
@@ -225,26 +241,16 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
             >
               <X />
             </button>
-            <Sidebar profile={profile} />
+            <DashboardSidebar dashboardProfile={dashboardProfile} logout={logout} />
           </div>
         </div>
       )}
-      <div className="lg:pl-72">
+      <div className="lg:pl-64">
         <header className="flex h-20 items-center border-b border-slate-200 bg-white px-5 lg:px-9">
           <button className="lg:hidden" onClick={() => setMenuOpen(true)} aria-label="Open menu">
             <Menu />
           </button>
           <div className="ml-auto flex items-center gap-5">
-            <span className="hidden rounded-xl border border-slate-200 px-4 py-2 text-sm md:flex">
-              <Globe2 className="mr-2 h-4 w-4" />
-              English
-            </span>
-            <div className="relative">
-              <Bell className="h-5 w-5" />
-              <span className="absolute -right-2 -top-2 rounded-full bg-red-500 px-1.5 text-[10px] text-white">
-                3
-              </span>
-            </div>
             <span className="grid h-10 w-10 place-items-center rounded-full bg-slate-900 text-xs font-bold text-white">
               {firstName[0]?.toUpperCase()}S
             </span>
@@ -265,28 +271,6 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
           <p className="mt-2 text-sm font-bold text-teal-700">{role}</p>
           <div className="mt-5 grid gap-6 xl:grid-cols-[minmax(0,1fr)_320px]">
             <div className="space-y-5">
-              <section id="clients" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                {metrics.map(([value, label, Icon, color]) => (
-                  <article
-                    key={label}
-                    className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <Icon className={`h-8 w-8 ${color}`} />
-                      <div>
-                        <strong className="text-2xl">{value}</strong>
-                        <p className="text-xs text-slate-500">{label}</p>
-                      </div>
-                    </div>
-                    <Link
-                      href="/resources"
-                      className="mt-4 flex items-center gap-1 text-xs font-bold text-teal-700"
-                    >
-                      View details <ChevronRight className="h-3 w-3" />
-                    </Link>
-                  </article>
-                ))}
-              </section>
               <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
                 <div className="flex justify-between gap-4">
                   <div>
@@ -301,20 +285,25 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
                   </Link>
                 </div>
                 <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  {topics.map(({ label, note, icon: Icon, href }) => (
-                    <Link
-                      key={label}
-                      href={href}
-                      className="rounded-xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md"
-                    >
-                      <Icon className="h-9 w-9 text-teal-600" />
-                      <h3 className="mt-3 text-sm font-extrabold leading-5">{label}</h3>
-                      <p className="mt-2 min-h-10 text-xs leading-5 text-slate-500">{note}</p>
-                      <span className="mt-3 flex items-center gap-1 text-xs font-bold text-teal-700">
-                        Browse Resources <ChevronRight className="h-3 w-3" />
-                      </span>
-                    </Link>
-                  ))}
+                  {(dashboardProfile?.contentAreas || []).map(
+                    ({ id, label, detail: note, iconName, href }) => {
+                      const Icon = getDashboardIcon(iconName)
+                      return (
+                        <Link
+                          key={id}
+                          href={href}
+                          className="rounded-xl border border-slate-200 p-4 transition hover:-translate-y-0.5 hover:border-teal-300 hover:shadow-md"
+                        >
+                          {Icon ? <Icon className="h-9 w-9 text-teal-600" /> : null}
+                          <h3 className="mt-3 text-sm font-extrabold leading-5">{label}</h3>
+                          <p className="mt-2 min-h-10 text-xs leading-5 text-slate-500">{note}</p>
+                          <span className="mt-3 flex items-center gap-1 text-xs font-bold text-teal-700">
+                            Browse Resources <ChevronRight className="h-3 w-3" />
+                          </span>
+                        </Link>
+                      )
+                    },
+                  )}
                 </div>
               </section>
               <section className="rounded-2xl border border-blue-100 bg-blue-50/60 p-5">
@@ -325,52 +314,41 @@ export function ProfessionalDashboard({ dashboardProfile, firstName, profile }: 
                   Practical tools to help you assist and guide {people.toLowerCase()}.
                 </p>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                  {tools.map(({ label, note, icon: Icon, href }) => (
-                    <Link
-                      key={label}
-                      href={href}
-                      className="rounded-xl border border-slate-200 bg-white p-3"
-                    >
-                      <div className="flex gap-3">
-                        <Icon className="h-6 w-6 shrink-0 text-blue-600" />
-                        <div>
-                          <h3 className="text-xs font-bold">{label}</h3>
-                          <p className="mt-2 text-[11px] text-slate-500">{note}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
+                  {(dashboardProfile?.toolkits || []).map(
+                    ({ id, label, detail: note, iconName, href }) => {
+                      const Icon = getDashboardIcon(iconName)
+                      return (
+                        <Link
+                          key={id}
+                          href={href}
+                          className="rounded-xl border border-slate-200 bg-white p-3"
+                        >
+                          <div className="flex gap-3">
+                            {Icon ? <Icon className="h-6 w-6 shrink-0 text-blue-600" /> : null}
+                            <div>
+                              <h3 className="text-xs font-bold">{label}</h3>
+                              <p className="mt-2 text-[11px] text-slate-500">{note}</p>
+                            </div>
+                          </div>
+                        </Link>
+                      )
+                    },
+                  )}
                 </div>
               </section>
             </div>
             <aside className="space-y-5">
-              <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-                <h2 className="font-extrabold">Quick Actions</h2>
-                <div className="mt-5 space-y-5">
-                  {actions.map(({ label, note, icon: Icon, href }) => (
-                    <Link key={label} href={href} className="flex gap-4">
-                      <Icon className="h-5 w-5 shrink-0 text-blue-600" />
-                      <div>
-                        <p className="text-sm font-bold">{label}</p>
-                        <p className="text-xs text-slate-500">{note}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </section>
+              <DashboardQuickActions dashboardProfile={dashboardProfile} />
               <section
                 id="updates"
                 className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm"
               >
                 <h2 className="font-extrabold">Community & System Updates</h2>
-                <Update
-                  title="Flu Season Reminder"
-                  text={`Flu vaccines are available across Manitoba. Share booking information with your ${people.toLowerCase()}.`}
-                />
-                <Update
-                  title="Heat Warning Resources"
-                  text="Guidelines for staying safe during extreme heat."
-                />
+                {(dashboardProfile?.alerts || []).map((alert) => (
+                  <Link href={alert.href} key={alert.id} className="block">
+                    <Update title={alert.label} text={alert.detail || ''} />
+                  </Link>
+                ))}
                 <Link
                   href="/topic/public-health"
                   className="mt-5 block text-xs font-bold text-blue-700"

@@ -4,17 +4,36 @@ import { authenticated } from '@/access/authenticated'
 import { authenticatedOrPublished } from '@/access/authenticatedOrPublished'
 
 const iconOptions = [
+  'AlertTriangle',
+  'Apple',
+  'Bell',
   'BookOpen',
   'BriefcaseMedical',
   'Building2',
+  'CalendarDays',
+  'ClipboardList',
+  'CloudSun',
   'CreditCard',
+  'FileText',
+  'FolderOpen',
   'GraduationCap',
+  'Globe2',
   'HeartHandshake',
   'Hospital',
   'Languages',
+  'LayoutDashboard',
   'MapPin',
+  'MessageCircle',
+  'MessageCircleQuestion',
+  'Microscope',
+  'Phone',
+  'Search',
+  'Settings',
+  'Share2',
   'ShieldCheck',
   'Stethoscope',
+  'Syringe',
+  'UserPlus',
   'UserRound',
   'UsersRound',
 ].map((value) => ({ label: value.replace(/([a-z])([A-Z])/g, '$1 $2'), value }))
@@ -187,6 +206,27 @@ export const DashboardProfiles: CollectionConfig<'dashboard-profiles'> = {
           ],
         },
         {
+          label: 'Navigation',
+          fields: [
+            {
+              name: 'primaryNavigation',
+              type: 'array',
+              fields: linkFields({ icon: true }),
+              admin: { initCollapsed: true },
+            },
+            {
+              name: 'accountNavigation',
+              type: 'array',
+              fields: linkFields({ icon: true }),
+              admin: {
+                initCollapsed: true,
+                description:
+                  'Profile, personalization, settings, and support links. Logout remains application-controlled.',
+              },
+            },
+          ],
+        },
+        {
           label: 'Quick Actions',
           fields: [
             {
@@ -259,6 +299,42 @@ export const DashboardProfiles: CollectionConfig<'dashboard-profiles'> = {
           fields: [
             {
               name: 'services',
+              type: 'array',
+              fields: linkFields({ detail: true, icon: true }),
+              admin: { initCollapsed: true },
+            },
+          ],
+        },
+        {
+          label: 'Additional Sections',
+          fields: [
+            {
+              name: 'contentAreas',
+              type: 'array',
+              fields: [
+                ...linkFields({ detail: true, icon: true }),
+                {
+                  name: 'highlights',
+                  type: 'array',
+                  fields: [{ name: 'text', type: 'text', localized: true, required: true }],
+                },
+              ],
+              admin: { initCollapsed: true },
+            },
+            {
+              name: 'supportLinks',
+              type: 'array',
+              fields: linkFields({ detail: true, icon: true }),
+              admin: { initCollapsed: true },
+            },
+            {
+              name: 'toolkits',
+              type: 'array',
+              fields: linkFields({ detail: true, icon: true }),
+              admin: { initCollapsed: true },
+            },
+            {
+              name: 'alerts',
               type: 'array',
               fields: linkFields({ detail: true, icon: true }),
               admin: { initCollapsed: true },

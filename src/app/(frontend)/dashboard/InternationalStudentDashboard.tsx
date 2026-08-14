@@ -39,11 +39,18 @@ import { useState } from 'react'
 
 import { Logo } from '@/components/Logo/Logo'
 import { createClient } from '@/lib/supabase/client'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { personalizeDashboardHeading, type NormalizedDashboardProfile } from './dashboardCms'
+import { getDashboardIcon } from './dashboardProfiles'
+import {
+  DashboardQuickActions,
+  DashboardSidebar,
+  type DashboardTopicSuggestion,
+} from './DashboardShared'
 
 type DashboardProps = {
-  dashboardProfile?: CmsDashboardProfile | null
+  dashboardProfile?: NormalizedDashboardProfile | null
   firstName: string
+  topicSuggestions?: DashboardTopicSuggestion[]
 }
 type NavItem = { href: string; icon: LucideIcon; label: string }
 type TopicGroup = {
@@ -70,7 +77,7 @@ const topicGroups: TopicGroup[] = [
   {
     title: 'Canadian Health Care System',
     description: 'Know where to go and how to access care in Canada.',
-    href: '/topic/healthcare-system',
+    href: '/topic/understanding-canadian-healthcare-system',
     icon: Hospital,
     accent: 'bg-blue-50 text-blue-700 border-blue-100',
     topics: [
@@ -84,7 +91,7 @@ const topicGroups: TopicGroup[] = [
   {
     title: 'Lab Tests',
     description: 'Prepare for testing and understand what happens next.',
-    href: '/topic/lab-tests',
+    href: '/topic/lab-test-medical-report-meaning',
     icon: FlaskConical,
     accent: 'bg-cyan-50 text-cyan-700 border-cyan-100',
     topics: [
@@ -97,7 +104,7 @@ const topicGroups: TopicGroup[] = [
   {
     title: 'Nutrition & Healthy Living',
     description: 'Eat well while balancing school and a student budget.',
-    href: '/topic/nutrition',
+    href: '/topic/nutrition-healthy',
     icon: Apple,
     accent: 'bg-amber-50 text-amber-700 border-amber-100',
     topics: [
@@ -126,7 +133,7 @@ const topicGroups: TopicGroup[] = [
   {
     title: 'Sexual Health',
     description: 'Inclusive, private information for safer decisions.',
-    href: '/topic/youth-health',
+    href: '/topic/sexual-health-youth-education',
     icon: ShieldCheck,
     accent: 'bg-rose-50 text-rose-700 border-rose-100',
     topics: [
@@ -152,20 +159,6 @@ const topicGroups: TopicGroup[] = [
       'Communicable diseases',
     ],
   },
-  {
-    title: 'Settlement & Safety',
-    description: 'Coverage, pharmacy access, safety notices, and alerts.',
-    href: '/topic/safety-info',
-    icon: LifeBuoy,
-    accent: 'bg-indigo-50 text-indigo-700 border-indigo-100',
-    topics: [
-      'Student health insurance',
-      'Dental and vision coverage',
-      'Pharmacy services',
-      'Public safety notices',
-      'Emergency alerts',
-    ],
-  },
 ]
 
 const quickActions = [
@@ -176,7 +169,11 @@ const quickActions = [
   ['Mental Health & Stress Support', HeartHandshake, '/topic/mental-health'],
 ] as const
 
-function Sidebar({ logout, loggingOut }: { logout: () => void; loggingOut: boolean }) {
+function Sidebar({
+  dashboardProfile,
+  logout,
+  loggingOut,
+}: DashboardProps & { logout: () => void; loggingOut: boolean }) {
   return (
     <div className="flex h-full flex-col bg-white">
       <div className="border-b border-slate-200 px-5 py-5">
@@ -184,20 +181,23 @@ function Sidebar({ logout, loggingOut }: { logout: () => void; loggingOut: boole
         <p className="ml-10 mt-1 text-[10px] text-slate-500">Your bridge to better health</p>
       </div>
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-5">
-        {navigation.map(({ href, icon: Icon, label }, index) => (
-          <Link
-            key={label}
-            href={href}
-            className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-              index === 0
-                ? 'bg-blue-50 text-blue-700'
-                : 'text-slate-600 hover:bg-slate-50 hover:text-blue-700'
-            }`}
-          >
-            <Icon className="h-4 w-4" aria-hidden="true" />
-            {label}
-          </Link>
-        ))}
+        {(dashboardProfile?.primaryNavigation || []).map(({ href, iconName, label }, index) => {
+          const Icon = getDashboardIcon(iconName)
+          return (
+            <Link
+              key={label}
+              href={href}
+              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+                index === 0
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-600 hover:bg-slate-50 hover:text-blue-700'
+              }`}
+            >
+              {Icon ? <Icon className="h-4 w-4" aria-hidden="true" /> : null}
+              {label}
+            </Link>
+          )
+        })}
       </nav>
       <div className="m-4 rounded-2xl border border-blue-100 bg-blue-50 p-4">
         <GraduationCap className="h-7 w-7 text-blue-700" />
@@ -253,7 +253,11 @@ function TopicCard({ group }: { group: TopicGroup }) {
   )
 }
 
-export function InternationalStudentDashboard({ dashboardProfile, firstName }: DashboardProps) {
+export function InternationalStudentDashboard({
+  dashboardProfile,
+  firstName,
+  topicSuggestions,
+}: DashboardProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
 
@@ -266,19 +270,27 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
 
   return (
     <div className="min-h-screen bg-[#f6f9fc] text-slate-800">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-60 border-r border-slate-200 lg:block">
-        <Sidebar logout={logout} loggingOut={loggingOut} />
+      <aside className="fixed bottom-0 left-0 top-[84px] z-40 hidden w-64 border-r border-slate-200 md:top-[88px] lg:block">
+        <DashboardSidebar
+          dashboardProfile={dashboardProfile}
+          logout={logout}
+          isLoggingOut={loggingOut}
+        />
       </aside>
 
       {mobileOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[84px] z-40 md:top-[88px] lg:hidden">
           <button
             aria-label="Close navigation"
             onClick={() => setMobileOpen(false)}
             className="absolute inset-0 bg-slate-950/40"
           />
           <aside className="relative h-full w-72 shadow-2xl">
-            <Sidebar logout={logout} loggingOut={loggingOut} />
+            <DashboardSidebar
+              dashboardProfile={dashboardProfile}
+              logout={logout}
+              isLoggingOut={loggingOut}
+            />
           </aside>
           <button
             aria-label="Close navigation"
@@ -290,7 +302,7 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
         </div>
       ) : null}
 
-      <div className="lg:pl-60">
+      <div className="lg:pl-64">
         <header className="sticky top-0 z-30 flex h-16 items-center border-b border-slate-200 bg-white/95 px-4 backdrop-blur sm:px-6">
           <button
             aria-label="Open navigation"
@@ -299,22 +311,7 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
           >
             <Menu className="h-5 w-5" />
           </button>
-          <label className="ml-3 hidden max-w-sm flex-1 items-center rounded-xl bg-slate-100 px-3 py-2 md:flex">
-            <Search className="h-4 w-4 text-slate-400" />
-            <input
-              aria-label="Search dashboard"
-              className="ml-2 w-full bg-transparent text-sm outline-none"
-              placeholder="Search health topics and services"
-            />
-          </label>
           <div className="ml-auto flex items-center gap-3">
-            <Languages className="h-4 w-4 text-slate-500" />
-            <button aria-label="Notifications" className="relative rounded-full p-2">
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-0 right-0 rounded-full bg-red-500 px-1 text-[9px] text-white">
-                3
-              </span>
-            </button>
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-700 font-bold text-white">
               {firstName.charAt(0).toUpperCase()}
             </span>
@@ -363,7 +360,7 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                     </div>
                   </div>
                   <Link
-                    href="/topic/healthcare-system"
+                    href="/topic"
                     className="rounded-xl border border-blue-200 px-4 py-2 text-center text-xs font-bold text-blue-700 hover:bg-blue-50"
                   >
                     Continue learning →
@@ -371,22 +368,10 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                 </div>
               </section>
 
-              <section>
-                <h2 className="text-sm font-extrabold text-slate-950">Quick Actions</h2>
-                <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
-                  {quickActions.map(([label, Icon, href]) => (
-                    <Link
-                      key={label}
-                      href={href}
-                      className="flex min-h-28 flex-col items-center justify-center rounded-2xl border border-slate-200 bg-white p-3 text-center text-[11px] font-bold leading-4 shadow-sm transition hover:border-blue-300 hover:bg-blue-50"
-                    >
-                      <Icon className="mb-2 h-7 w-7 text-blue-700" />
-                      {label}
-                      <ChevronRight className="mt-1 h-3 w-3 text-blue-500" />
-                    </Link>
-                  ))}
-                </div>
-              </section>
+              <DashboardQuickActions
+                dashboardProfile={dashboardProfile}
+                topicSuggestions={topicSuggestions}
+              />
 
               <section>
                 <div className="flex items-end justify-between gap-3">
@@ -403,8 +388,18 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                   </Link>
                 </div>
                 <div className="mt-4 grid gap-4 md:grid-cols-2">
-                  {topicGroups.map((group) => (
-                    <TopicCard key={group.title} group={group} />
+                  {(dashboardProfile?.contentAreas || []).map((item) => (
+                    <TopicCard
+                      key={item.id}
+                      group={{
+                        title: item.label,
+                        description: item.detail || '',
+                        href: item.href,
+                        icon: getDashboardIcon(item.iconName) || BookOpen,
+                        accent: 'border-blue-100 bg-blue-50 text-blue-700',
+                        topics: item.highlights,
+                      }}
+                    />
                   ))}
                 </div>
               </section>
@@ -415,21 +410,14 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                     <UsersRound className="h-5 w-5 text-blue-700" /> Campus & Community Support
                   </h2>
                   <div className="mt-4 grid gap-2 text-xs sm:grid-cols-2">
-                    {[
-                      'Campus health services',
-                      'Language support',
-                      'Counselling & wellness',
-                      'Sexual health clinic',
-                      'International student office',
-                      'Community health centres',
-                    ].map((item) => (
+                    {(dashboardProfile?.supportLinks || []).map((item) => (
                       <Link
-                        href="/resources"
-                        key={item}
+                        href={item.href}
+                        key={item.id}
                         className="flex items-center gap-2 rounded-lg p-2 hover:bg-blue-50"
                       >
                         <ChevronRight className="h-3 w-3 text-blue-600" />
-                        {item}
+                        {item.label}
                       </Link>
                     ))}
                   </div>
@@ -439,20 +427,14 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                     <ClipboardList className="h-5 w-5 text-rose-600" /> Toolkits & Documents
                   </h2>
                   <div className="mt-4 space-y-2">
-                    {[
-                      'Student Health Checklist',
-                      'Doctor Visit Preparation Guide',
-                      'Health History Toolkit',
-                      'Insurance Terms Guide',
-                      'Emergency Contact Card',
-                    ].map((item) => (
+                    {(dashboardProfile?.toolkits || []).map((item) => (
                       <Link
-                        href="/resources/printable-resources"
-                        key={item}
+                        href={item.href}
+                        key={item.id}
                         className="flex items-center rounded-lg px-2 py-1.5 text-xs hover:bg-slate-50"
                       >
                         <FileText className="mr-2 h-4 w-4 text-rose-500" />
-                        {item}
+                        {item.label}
                         <span className="ml-auto text-blue-600">↓</span>
                       </Link>
                     ))}
@@ -517,21 +499,6 @@ export function InternationalStudentDashboard({ dashboardProfile, firstName }: D
                     )
                   })}
                 </div>
-              </section>
-
-              <section className="rounded-2xl border border-emerald-100 bg-emerald-50 p-4">
-                <h2 className="flex items-center gap-2 text-sm font-extrabold text-emerald-950">
-                  <Languages className="h-5 w-5" /> Need help in your language?
-                </h2>
-                <p className="mt-2 text-xs leading-5 text-emerald-800">
-                  Get information and support in multiple languages.
-                </p>
-                <Link
-                  href="/resources/language-support"
-                  className="mt-3 block rounded-xl bg-emerald-700 px-3 py-2 text-center text-xs font-bold text-white"
-                >
-                  Translate this page
-                </Link>
               </section>
 
               <section className="rounded-2xl border border-blue-100 bg-blue-50 p-4">

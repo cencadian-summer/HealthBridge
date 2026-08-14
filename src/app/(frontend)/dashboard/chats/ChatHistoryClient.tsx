@@ -6,11 +6,14 @@ import { useState } from 'react'
 
 import type { ChatHistoryItem } from '@/lib/chat/types'
 
+const chatDateFormatter = new Intl.DateTimeFormat('en-CA', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+  timeZone: 'America/Winnipeg',
+})
+
 function formatDate(value: string) {
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: 'medium',
-    timeStyle: 'short',
-  }).format(new Date(value))
+  return chatDateFormatter.format(new Date(value))
 }
 
 export function ChatHistoryClient({ initialChats }: { initialChats: ChatHistoryItem[] }) {

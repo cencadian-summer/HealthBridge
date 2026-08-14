@@ -1258,22 +1258,168 @@ export interface DashboardProfile {
   roleLabel?: string | null;
   searchPlaceholder?: string | null;
   eventTitle?: string | null;
+  primaryNavigation?:
+    | {
+        label: string;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Profile, personalization, settings, and support links. Logout remains application-controlled.
+   */
+  accountNavigation?:
+    | {
+        label: string;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   quickActions?:
     | {
         label: string;
         icon?:
           | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
               | 'BookOpen'
               | 'BriefcaseMedical'
               | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
               | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
               | 'GraduationCap'
+              | 'Globe2'
               | 'HeartHandshake'
               | 'Hospital'
               | 'Languages'
+              | 'LayoutDashboard'
               | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
               | 'ShieldCheck'
               | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
               | 'UserRound'
               | 'UsersRound'
             )
@@ -1415,17 +1561,294 @@ export interface DashboardProfile {
         detail?: string | null;
         icon?:
           | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
               | 'BookOpen'
               | 'BriefcaseMedical'
               | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
               | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
               | 'GraduationCap'
+              | 'Globe2'
               | 'HeartHandshake'
               | 'Hospital'
               | 'Languages'
+              | 'LayoutDashboard'
               | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
               | 'ShieldCheck'
               | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  contentAreas?:
+    | {
+        label: string;
+        detail?: string | null;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        highlights?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  supportLinks?:
+    | {
+        label: string;
+        detail?: string | null;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  toolkits?:
+    | {
+        label: string;
+        detail?: string | null;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
+              | 'UserRound'
+              | 'UsersRound'
+            )
+          | null;
+        /**
+         * Select CMS content to generate the link automatically.
+         */
+        destination?:
+          | ({
+              relationTo: 'pages';
+              value: string | Page;
+            } | null)
+          | ({
+              relationTo: 'health-topics';
+              value: string | HealthTopic;
+            } | null)
+          | ({
+              relationTo: 'resource-items';
+              value: string | ResourceItem;
+            } | null);
+        /**
+         * Optional fallback or external URL. A selected destination takes priority.
+         */
+        customUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  alerts?:
+    | {
+        label: string;
+        detail?: string | null;
+        icon?:
+          | (
+              | 'AlertTriangle'
+              | 'Apple'
+              | 'Bell'
+              | 'BookOpen'
+              | 'BriefcaseMedical'
+              | 'Building2'
+              | 'CalendarDays'
+              | 'ClipboardList'
+              | 'CloudSun'
+              | 'CreditCard'
+              | 'FileText'
+              | 'FolderOpen'
+              | 'GraduationCap'
+              | 'Globe2'
+              | 'HeartHandshake'
+              | 'Hospital'
+              | 'Languages'
+              | 'LayoutDashboard'
+              | 'MapPin'
+              | 'MessageCircle'
+              | 'MessageCircleQuestion'
+              | 'Microscope'
+              | 'Phone'
+              | 'Search'
+              | 'Settings'
+              | 'Share2'
+              | 'ShieldCheck'
+              | 'Stethoscope'
+              | 'Syringe'
+              | 'UserPlus'
               | 'UserRound'
               | 'UsersRound'
             )
@@ -2312,6 +2735,24 @@ export interface DashboardProfilesSelect<T extends boolean = true> {
   roleLabel?: T;
   searchPlaceholder?: T;
   eventTitle?: T;
+  primaryNavigation?:
+    | T
+    | {
+        label?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  accountNavigation?:
+    | T
+    | {
+        label?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
   quickActions?:
     | T
     | {
@@ -2357,6 +2798,52 @@ export interface DashboardProfilesSelect<T extends boolean = true> {
         id?: T;
       };
   services?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  contentAreas?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        highlights?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  supportLinks?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  toolkits?:
+    | T
+    | {
+        label?: T;
+        detail?: T;
+        icon?: T;
+        destination?: T;
+        customUrl?: T;
+        id?: T;
+      };
+  alerts?:
     | T
     | {
         label?: T;

@@ -3,7 +3,6 @@ import { ArrowLeft, LayoutDashboard, MessageCircle } from 'lucide-react'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
-import { Logo } from '@/components/Logo/Logo'
 import { listOwnedConversations } from '@/lib/chat/store'
 import { createClient } from '@/lib/supabase/server'
 import { ChatHistoryClient } from './ChatHistoryClient'
@@ -26,9 +25,6 @@ export default async function ChatHistoryPage() {
     <div className="min-h-screen bg-[#f6f9fb] text-slate-800 lg:grid lg:grid-cols-[16rem_1fr]">
       <aside className="hidden border-r border-slate-200 bg-white lg:block">
         <div className="sticky top-0 flex h-screen flex-col">
-          <div className="border-b border-slate-200 px-6 py-5">
-            <Logo />
-          </div>
           <nav className="flex-1 space-y-1 p-4">
             <Link
               href="/dashboard"

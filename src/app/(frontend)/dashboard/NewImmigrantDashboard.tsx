@@ -1,6 +1,5 @@
 'use client'
 
-import { Logo } from '@/components/Logo/Logo'
 import {
   Bell,
   BookOpen,
@@ -32,7 +31,7 @@ import { useMemo, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
 import { getStaticMediaURL } from '@/utilities/spacesMedia'
-import { personalizeDashboardHeading, type CmsDashboardProfile } from './dashboardCms'
+import { personalizeDashboardHeading, type NormalizedDashboardProfile } from './dashboardCms'
 import {
   getDashboardIcon,
   getDashboardProfile,
@@ -49,7 +48,7 @@ export type DashboardTopicSuggestion = {
 
 type DashboardProps = {
   audiences: Audience[]
-  cmsDashboardProfile?: CmsDashboardProfile | null
+  cmsDashboardProfile?: NormalizedDashboardProfile | null
   dashboardProfile?: DashboardProfile
   firstName: string
   role: UserRole
@@ -153,42 +152,37 @@ export function PersonalizedDashboard({
 
   const sidebar = (
     <div className="flex h-full flex-col bg-white">
-      <div className="border-b border-slate-200 px-6 py-5">
-        <Logo />
-        <p className="ml-10 mt-1 text-[10px] text-slate-500">
-          Your bridge to better health in Canada
-        </p>
-      </div>
       <nav className="flex-1 overflow-y-auto px-4 py-5">
         <div className="space-y-1">
-          {navigation.map(({ label, icon: Icon, href, badge }) => (
-            <Link
-              key={label}
-              href={href}
-              className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${label === 'Dashboard' ? 'bg-teal-50 text-teal-700' : 'text-slate-600 hover:bg-slate-50 hover:text-teal-700'}`}
-            >
-              <Icon className="h-4 w-4" />
-              <span>{label}</span>
-              {badge ? (
-                <span className="ml-auto rounded-full bg-teal-600 px-2 py-0.5 text-xs text-white">
-                  {badge}
-                </span>
-              ) : null}
-            </Link>
-          ))}
+          {(cmsDashboardProfile?.primaryNavigation || []).map(({ label, iconName, href }) => {
+            const Icon = getDashboardIcon(iconName)
+            return (
+              <Link
+                key={label}
+                href={href}
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium ${label === 'Dashboard' ? 'bg-teal-50 text-teal-700' : 'text-slate-600 hover:bg-slate-50 hover:text-teal-700'}`}
+              >
+                {Icon ? <Icon className="h-4 w-4" /> : null}
+                <span>{label}</span>
+              </Link>
+            )
+          })}
         </div>
         <div className="my-4 border-t border-slate-200" />
         <div className="space-y-1">
-          {accountNavigation.map(({ label, icon: Icon, href }) => (
-            <Link
-              key={label}
-              href={href}
-              className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-teal-700"
-            >
-              <Icon className="h-4 w-4" />
-              {label}
-            </Link>
-          ))}
+          {(cmsDashboardProfile?.accountNavigation || []).map(({ label, iconName, href }) => {
+            const Icon = getDashboardIcon(iconName)
+            return (
+              <Link
+                key={label}
+                href={href}
+                className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-teal-700"
+              >
+                {Icon ? <Icon className="h-4 w-4" /> : null}
+                {label}
+              </Link>
+            )
+          })}
         </div>
         <div className="my-4 border-t border-slate-200" />
         <button
@@ -215,11 +209,11 @@ export function PersonalizedDashboard({
 
   return (
     <div className="min-h-screen bg-[#f6f9fb] text-slate-800">
-      <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 border-r border-slate-200 lg:block">
+      <aside className="fixed bottom-0 left-0 top-[84px] z-40 hidden w-64 border-r border-slate-200 md:top-[88px] lg:block">
         {sidebar}
       </aside>
       {mobileOpen ? (
-        <div className="fixed inset-0 z-50 lg:hidden">
+        <div className="fixed inset-x-0 bottom-0 top-[84px] z-40 md:top-[88px] lg:hidden">
           <button
             aria-label="Close navigation"
             className="absolute inset-0 bg-slate-950/30"
@@ -246,15 +240,6 @@ export function PersonalizedDashboard({
             <Menu className="h-5 w-5" />
           </button>
           <div className="ml-auto flex items-center gap-4 text-sm">
-            <span className="hidden items-center gap-2 sm:flex">
-              <Globe2 className="h-4 w-4" /> EN
-            </span>
-            <span className="relative rounded-full p-2">
-              <Bell className="h-5 w-5" />
-              <b className="absolute right-0 top-0 rounded-full bg-red-500 px-1 text-[9px] text-white">
-                3
-              </b>
-            </span>
             <div className="relative">
               <button
                 type="button"
@@ -404,8 +389,8 @@ export function PersonalizedDashboard({
                 ) : null}
               </div>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                {dashboard.quickActions.map(({ label, href, icon, iconName }) => {
-                  const Icon = icon || getDashboardIcon(iconName)
+                {(cmsDashboardProfile?.quickActions || []).map(({ label, href, iconName }) => {
+                  const Icon = getDashboardIcon(iconName)
                   return (
                     <Link
                       key={label}
@@ -421,116 +406,110 @@ export function PersonalizedDashboard({
           </section>
 
           <div className="grid gap-4 xl:grid-cols-3">
-            <Card
-              title="Your Health Journey"
-              subtitle="Track important steps as you settle in and navigate the Canadian healthcare system."
-              icon={HeartHandshake}
-              footer={
-                <Link
-                  className="text-sm font-semibold text-teal-700"
-                  href="/topic/healthcare-system"
-                >
-                  View full checklist →
-                </Link>
-              }
-            >
-              <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-                {dashboard.journey.map(({ label, detail }) => (
-                  <div key={label} className="flex items-center gap-3 px-3 py-2.5 text-xs">
-                    <span
-                      className={`flex h-5 w-5 items-center justify-center rounded-full border ${detail === 'completed' ? 'border-teal-600 bg-teal-600 text-white' : 'border-slate-400'}`}
-                    >
-                      {detail === 'completed' ? <Check className="h-3 w-3" /> : null}
-                    </span>
-                    <span>{label}</span>
-                    {detail === 'completed' ? (
-                      <b className="ml-auto text-[10px] text-teal-600">Completed</b>
-                    ) : (
-                      <ChevronRight className="ml-auto h-4 w-4" />
-                    )}
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <div className="space-y-4">
+            {cmsDashboardProfile?.journey.length ? (
               <Card
-                title="Continue Learning"
-                subtitle="Pick up where you left off."
-                icon={BookOpen}
+                title="Your Health Journey"
+                subtitle="Track important steps as you settle in and navigate the Canadian healthcare system."
+                icon={HeartHandshake}
                 footer={
                   <Link
                     className="text-sm font-semibold text-teal-700"
-                    href={dashboard.learning.href}
+                    href="/topic/healthcare-system"
                   >
-                    Go to My Learning →
+                    View full checklist →
                   </Link>
                 }
               >
-                <div className="rounded-xl border border-slate-200 p-3">
-                  <p className="text-sm font-bold">{dashboard.learning.label}</p>
-                  <div className="mt-3 flex items-center gap-3">
-                    <div className="h-2 flex-1 rounded-full bg-slate-200">
-                      <div
-                        className="h-full rounded-full bg-teal-600"
-                        style={{ width: `${dashboard.learning.progress}%` }}
-                      />
-                    </div>
-                    <span className="text-xs text-slate-500">{dashboard.learning.progress}%</span>
-                  </div>
-                </div>
-              </Card>
-              <Card
-                title="Recommended for You"
-                subtitle="Based on your profile and interests."
-                icon={Languages}
-                footer={
-                  <Link className="text-sm font-semibold text-teal-700" href="/resources">
-                    See all recommendations →
-                  </Link>
-                }
-              >
-                {dashboard.recommendations.map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    className="flex items-center border-b border-slate-100 py-2 text-xs last:border-0"
-                  >
-                    {item.label}
-                    <ChevronRight className="ml-auto h-4 w-4" />
-                  </Link>
-                ))}
-              </Card>
-            </div>
-
-            <Card
-              title="Find Services Near You"
-              subtitle="Services near Winnipeg, MB"
-              icon={MapPin}
-              footer={
-                <Link className="text-sm font-semibold text-teal-700" href="/resources">
-                  View all services →
-                </Link>
-              }
-            >
-              <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
-                {dashboard.services.map(({ label, detail, href, icon, iconName }) => {
-                  const Icon = icon || getDashboardIcon(iconName)
-                  return (
-                    <Link key={label} href={href} className="flex items-center gap-3 px-3 py-3">
-                      <span className="rounded-lg bg-teal-50 p-2 text-teal-700">
-                        {Icon ? <Icon className="h-5 w-5" /> : null}
-                      </span>
-                      <span>
-                        <b className="block text-xs">{label}</b>
-                        <small className="text-slate-500">{detail}</small>
-                      </span>
+                <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
+                  {cmsDashboardProfile.journey.map(({ label, href }) => (
+                    <Link
+                      href={href}
+                      key={label}
+                      className="flex items-center gap-3 px-3 py-2.5 text-xs"
+                    >
+                      <span className="flex h-5 w-5 items-center justify-center rounded-full border border-slate-400" />
+                      <span>{label}</span>
                       <ChevronRight className="ml-auto h-4 w-4" />
                     </Link>
-                  )
-                })}
-              </div>
-            </Card>
+                  ))}
+                </div>
+              </Card>
+            ) : null}
+
+            <div className="space-y-4">
+              {cmsDashboardProfile?.continueLearning ? (
+                <Card
+                  title="Continue Learning"
+                  subtitle="Pick up where you left off."
+                  icon={BookOpen}
+                  footer={
+                    <Link className="text-sm font-semibold text-teal-700" href="/topic">
+                      Go to My Learning →
+                    </Link>
+                  }
+                >
+                  <div className="rounded-xl border border-slate-200 p-3">
+                    <p className="text-sm font-bold">
+                      {cmsDashboardProfile.continueLearning.label}
+                    </p>
+                  </div>
+                </Card>
+              ) : null}
+              {cmsDashboardProfile?.recommendations.length ? (
+                <Card
+                  title="Recommended for You"
+                  subtitle="Based on your profile and interests."
+                  icon={Languages}
+                  footer={
+                    <Link className="text-sm font-semibold text-teal-700" href="/resources">
+                      See all recommendations →
+                    </Link>
+                  }
+                >
+                  {cmsDashboardProfile.recommendations.map((item) => (
+                    <Link
+                      key={item.label}
+                      href={item.href}
+                      className="flex items-center border-b border-slate-100 py-2 text-xs last:border-0"
+                    >
+                      {item.label}
+                      <ChevronRight className="ml-auto h-4 w-4" />
+                    </Link>
+                  ))}
+                </Card>
+              ) : null}
+            </div>
+
+            {cmsDashboardProfile?.services.length ? (
+              <Card
+                title="Find Services Near You"
+                subtitle="Services near Winnipeg, MB"
+                icon={MapPin}
+                footer={
+                  <Link className="text-sm font-semibold text-teal-700" href="/resources">
+                    View all services →
+                  </Link>
+                }
+              >
+                <div className="divide-y divide-slate-100 rounded-xl border border-slate-200">
+                  {cmsDashboardProfile.services.map(({ label, detail, href, iconName }) => {
+                    const Icon = getDashboardIcon(iconName)
+                    return (
+                      <Link key={label} href={href} className="flex items-center gap-3 px-3 py-3">
+                        <span className="rounded-lg bg-teal-50 p-2 text-teal-700">
+                          {Icon ? <Icon className="h-5 w-5" /> : null}
+                        </span>
+                        <span>
+                          <b className="block text-xs">{label}</b>
+                          <small className="text-slate-500">{detail}</small>
+                        </span>
+                        <ChevronRight className="ml-auto h-4 w-4" />
+                      </Link>
+                    )
+                  })}
+                </div>
+              </Card>
+            ) : null}
 
             <Card
               id="events"

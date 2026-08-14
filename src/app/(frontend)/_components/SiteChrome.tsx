@@ -10,7 +10,7 @@ type SiteChromeProps = {
   header: ReactNode
 }
 
-const chromeFreeRoutes = new Set(['/dashboard', '/login'])
+const chromeFreeRoutes = new Set(['/login'])
 
 export function SiteChrome({ children, footer, header }: SiteChromeProps) {
   const pathname = usePathname()
@@ -18,6 +18,15 @@ export function SiteChrome({ children, footer, header }: SiteChromeProps) {
 
   if (chromeFreeRoutes.has(activePathname)) {
     return children
+  }
+
+  if (activePathname === '/dashboard' || activePathname.startsWith('/dashboard/')) {
+    return (
+      <>
+        {header}
+        {children}
+      </>
+    )
   }
 
   return (

@@ -1,15 +1,34 @@
 import {
+  AlertTriangle,
+  Apple,
+  Bell,
   BookOpen,
   BriefcaseMedical,
   Building2,
+  CalendarDays,
+  ClipboardList,
+  CloudSun,
   CreditCard,
+  FileText,
+  FolderOpen,
   GraduationCap,
+  Globe2,
   HeartHandshake,
   Hospital,
   Languages,
+  LayoutDashboard,
   MapPin,
+  MessageCircle,
+  MessageCircleQuestion,
+  Microscope,
+  Phone,
+  Search,
+  Settings,
+  Share2,
   ShieldCheck,
   Stethoscope,
+  Syringe,
+  UserPlus,
   UserRound,
   UsersRound,
   type LucideIcon,
@@ -18,17 +37,36 @@ import {
 import type { Audience, UserRole } from '@/lib/supabase/userProfile'
 
 export type DashboardIconName =
+  | 'AlertTriangle'
+  | 'Apple'
+  | 'Bell'
   | 'BookOpen'
   | 'BriefcaseMedical'
   | 'Building2'
+  | 'CalendarDays'
+  | 'ClipboardList'
+  | 'CloudSun'
   | 'CreditCard'
+  | 'FileText'
+  | 'FolderOpen'
   | 'GraduationCap'
+  | 'Globe2'
   | 'HeartHandshake'
   | 'Hospital'
   | 'Languages'
+  | 'LayoutDashboard'
   | 'MapPin'
+  | 'MessageCircle'
+  | 'MessageCircleQuestion'
+  | 'Microscope'
+  | 'Phone'
+  | 'Search'
+  | 'Settings'
+  | 'Share2'
   | 'ShieldCheck'
   | 'Stethoscope'
+  | 'Syringe'
+  | 'UserPlus'
   | 'UserRound'
   | 'UsersRound'
 
@@ -64,17 +102,36 @@ type ProfileSeed = {
 }
 
 const dashboardIcons: Record<DashboardIconName, LucideIcon> = {
+  AlertTriangle,
+  Apple,
+  Bell,
   BookOpen,
   BriefcaseMedical,
   Building2,
+  CalendarDays,
+  ClipboardList,
+  CloudSun,
   CreditCard,
+  FileText,
+  FolderOpen,
   GraduationCap,
+  Globe2,
   HeartHandshake,
   Hospital,
   Languages,
+  LayoutDashboard,
   MapPin,
+  MessageCircle,
+  MessageCircleQuestion,
+  Microscope,
+  Phone,
+  Search,
+  Settings,
+  Share2,
   ShieldCheck,
   Stethoscope,
+  Syringe,
+  UserPlus,
   UserRound,
   UsersRound,
 }
